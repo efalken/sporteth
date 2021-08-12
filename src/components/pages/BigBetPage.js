@@ -142,14 +142,14 @@ class BigBetPagejs extends Component {
     const web3b = this.context.drizzle.web3;
     const contractweb3b = new web3b.eth.Contract(
       BettingContract.abi,
-      BettingContract.address
+      BettingContract.arbitrumaddress
     );
     var eventdata = [];
     var takes = {};
 
     contractweb3b
       .getPastEvents("BetBigRecord", {
-        fromBlock: 7000123,
+        fromBlock: 1700000,
         toBlock: "latest",
         filter: { bettor: this.props.accounts[0] },
       })

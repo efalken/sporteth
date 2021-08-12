@@ -21,14 +21,14 @@ class CustomLoader extends Component {
       contractName: "BettingMain",
       web3Contract: new drizz.web3.eth.Contract(
         Betting.abi,
-        "0x131c66DC2C2a7D1b614aF9A778931F701C4945a1"
+        Betting.arbitrumaddress
       )
     };
     var FOOT1Config = {
       contractName: "OracleMain",
       web3Contract: new drizz.web3.eth.Contract(
         Oracle.abi,
-        "0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826"
+        Betting.arbitrumaddress
       )
     };
 
@@ -36,7 +36,7 @@ class CustomLoader extends Component {
       contractName: "TokenMain",
       web3Contract: new drizz.web3.eth.Contract(
         Token.abi,
-        "0x60Fe97890599d0C9707EA4f8De46887Ce6c908bc"
+        Betting.arbitrumaddress
       )
     };
 
