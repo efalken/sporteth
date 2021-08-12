@@ -1,6 +1,7 @@
 {
   "contractName": "Oracle",
   "address": "0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826",
+  "arbitrumaddress": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
 	"abi": [
 		{
 			"inputs": [

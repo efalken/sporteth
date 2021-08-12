@@ -940,7 +940,7 @@ class BigBetPagejs extends Component {
                     this.handleOddsOffered(value * 1000)
                   }
                   width="151px"
-                  placeholder={"DecOddstt, eg 1.909"}
+                  placeholder={"DecOdds e.g. 1.909"}
                   marginLeft="10px"
                   marginRignt="5px"
                   value={this.state.decOddsOff}
@@ -1034,7 +1034,6 @@ class BigBetPagejs extends Component {
                           color="white"
                         />
                       </td>
-                      <td>activeWeek</td>
                       <td>Offered Odds</td>
                       <td>ContractID</td>
                     </tr>
@@ -1062,7 +1061,6 @@ class BigBetPagejs extends Component {
                                 />
                               </td>
                               <td>{Number(bet.BigBetSize).toFixed(3)}</td>
-                              <td>{Number(bet.OfferedEpoch)}</td>
                               <td>{Number(bet.BigOdds).toFixed(3)}</td>
                               <td>
                                 <TruncatedAddress
