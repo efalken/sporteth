@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { drizzleConnect } from "@drizzle/react-plugin";
+
 // import * as _ from underscore;
 // import { useAsync } from "react-use";
 // import { useThrottleRequests } from "./useThrottleRequests";
+
 import PropTypes from "prop-types";
 import web3 from "web3-utils";
 import Split from "../layout/Split";
@@ -34,8 +36,6 @@ class BigBetPagejs extends Component {
     this.web3 = web3;
     this.yourBetHistory = [];
     this.currentOffers = [];
-    this.checker1 = false;
-    this.checker2 = false;
     this.takekeys = {};
     this.takekeys2 = {};
     this.scheduleStringkey = [];
@@ -69,7 +69,7 @@ class BigBetPagejs extends Component {
       this.findValues();
       this.getWeek2();
       this.getbetHistoryArray();
-      this.getbetHistoryArray2();
+    //  this.getbetHistoryArray2();
       this.checkOffer0();
       this.checkOffer2();
     }, 1000);
@@ -146,118 +146,56 @@ class BigBetPagejs extends Component {
     );
     var eventdata = [];
     var takes = {};
+    var eventdata2 = [];
+    var takes2 = {};
 
     contractweb3b
-      .getPastEvents("BetBigRecord", {
-        fromBlock: 1700000,
-        toBlock: "latest",
-        filter: { bettor: this.props.accounts[0] },
-      })
-      .then(
-        function (events) {
-          events.forEach(function (element) {
-            this.checker1 = true;
-            eventdata.push({
-              Hashoutput: element.returnValues.contractHash,
+          .getPastEvents("BetBigRecord", {
+            fromBlock: 1700000,
+            toBlock: "latest",
+      //    filter: { bettor: this.props.accounts[0], epoch: this.state.currW },
+          })
+          .then(
+            function (events) {
+
+    events.forEach(function(element) {
+      if(element.returnValues.bettor === this.props.accounts[0])
+ {
+        eventdata.push({
+         Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
               timestamp: element.returnValues.timestamp,
               Epoch: element.returnValues.epoch,
               LongPick: element.returnValues.pick,
               MatchNum: element.returnValues.matchnum,
-              BetSize: web3.fromWei(
-                element.returnValues.betsize.toString(),
-                "finney"
-              ),
-            });
-            takes[element.returnValues.contractHash] = this.contracts[
-              "BettingMain"
-            ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
-          }, this);
-          this.yourBetHistory[0] = eventdata;
-          this.takekeys = takes;
-        }.bind(this)
-      );
+              BetSize: web3.fromWei(element.returnValues.betsize.toString(), "finney"),
+    });
+    takes[element.returnValues.contractHash] = this.contracts["BettingMain"
+    ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
+  };
+  if(element.returnValues.epoch === this.state.currW)
+  {
+    eventdata2.push({
+    Hashoutput2: element.returnValues.contractHash,
+                  BetSizeOffered2: Number(
+                    web3.fromWei(element.returnValues.payoff.toString(), "finney")),
+                  OfferedTeam2: 1 - element.returnValues.pick,
+                  OfferEpoch2: element.returnValues.epoch,
+                  OfferedMatch2: element.returnValues.matchnum,
+                  BetPayoffOffered2: Number(web3.fromWei(
+                    element.returnValues.betsize.toString(),"finney")),
+    });
+    takes2[element.returnValues.contractHash] =
+    this.contracts["BettingMain"
+    ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
+  };
 
-      contractweb3b.events.BetBigRecord({filter: { bettor: this.props.accounts[0] }}, function(error, log){
-        this.yourBetHistory[0].push({
-          Hashoutput: log.returnValues.contractHash,
-          BettorAddress: log.returnValues.bettor,
-          timestamp: log.returnValues.timestamp,
-          Epoch: log.returnValues.epoch,
-          LongPick: log.returnValues.pick,
-          MatchNum: log.returnValues.matchnum,
-          BetSize: web3.fromWei(
-            log.returnValues.betsize.toString(),
-            "finney"
-          ),
-        });
-        this.takekeys[log.returnValues.contractHash] = this.contracts[
-          "BettingMain"
-        ].methods.checkOffer.cacheCall(log.returnValues.contractHash);
-      }.bind(this))
-
-  }
-
-  getbetHistoryArray2() {
-    const web3b = this.context.drizzle.web3;
-    const contractweb3b = new web3b.eth.Contract(
-      BettingContract.abi,
-      BettingContract.address
-    );
-    var eventdata2 = [];
-    var takes2 = {};
-    contractweb3b
-      .getPastEvents("BetBigRecord", {
-        fromBlock: 7000123,
-        toBlock: "latest",
-        filter: { epoch: this.state.currW },
-       //filter: { epoch: 7 },
-      })
-      .then(
-        function (events) {
-          events.forEach(function (element) {
-            //this.state.bigBetsSet = true
-            this.checker2 = true;
-            eventdata2.push({
-              Hashoutput2: element.returnValues.contractHash,
-              BetSizeOffered2: Number(
-                web3.fromWei(element.returnValues.payoff.toString(), "finney")
-              ),
-              OfferedTeam2: 1 - element.returnValues.pick,
-              OfferEpoch2: element.returnValues.epoch,
-              OfferedMatch2: element.returnValues.matchnum,
-              BetPayoffOffered2: Number(web3.fromWei(
-                element.returnValues.betsize.toString(),
-                "finney"
-              )),
-            });
-            takes2[element.returnValues.contractHash] = this.contracts[
-              "BettingMain"
-            ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
-
-          }, this);
-          this.currentOffers = eventdata2;
-          this.takekeys2 = takes2;
-        }.bind(this)
-      );
-      contractweb3b.events.BetBigRecord({filter: { epoch: this.state.currW }}, function(error, log){
-        this.currentOffers.push({
-          Hashoutput2: log.returnValues.contractHash,
-          BetSizeOffered2: Number(
-            web3.fromWei(log.returnValues.payoff.toString(), "finney")
-          ),
-          OfferedTeam2: 1 - log.returnValues.pick,
-          OfferEpoch2: log.returnValues.epoch,
-          OfferedMatch2: log.returnValues.matchnum,
-          BetPayoffOffered2: web3.fromWei(
-            log.returnValues.betsize.toString(),
-            "finney"
-          ),
-        });
-        this.takekeys2[log.returnValues.contractHash] = this.contracts[
-          "BettingMain"
-        ].methods.checkOffer.cacheCall(log.returnValues.contractHash);
-      }.bind(this))
+    }, this);
+    this.yourBetHistory[0] = eventdata;
+    this.takekeys = takes;
+    this.currentOffers = eventdata2;
+    this.takekeys2 = takes2;
+    }.bind(this));
 
   }
 
@@ -715,8 +653,7 @@ class BigBetPagejs extends Component {
               </Flex>
               <br />
 
-              <Box>
-                {this.checker1 ? (
+
                   <Flex>
                     {Object.keys(this.yourBetHistory).map((id) => (
                       <div style={{ width: "100%", float: "left" }}>
@@ -769,10 +706,7 @@ class BigBetPagejs extends Component {
                       </div>
                     ))}
                   </Flex>
-                ) : (
-                  <Text size="14px">you have no open Big Bets</Text>
-                )}
-              </Box>
+
 
               <Box>
                 <Flex

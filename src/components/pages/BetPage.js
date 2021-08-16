@@ -142,7 +142,7 @@ class BetPagejs extends Component {
     );
     var eventdata = [];
     var takes = {};
-    
+
     contractweb3b
       .getPastEvents("BetRecord", {
         fromBlock: 1700000,
