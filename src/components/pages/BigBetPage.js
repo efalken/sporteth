@@ -197,6 +197,7 @@ class BigBetPagejs extends Component {
     this.takekeys2 = takes2;
     }.bind(this));
 
+
   }
 
   checkOffer0(){
@@ -345,27 +346,35 @@ class BigBetPagejs extends Component {
       minBet = this.props.contracts["BettingMain"].minBet[this.minBetKey].value;
     }
 
-    let decodds0 = [];
+    let decodds0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (this.decOddsKey in this.props.contracts["BettingMain"].showDecimalOdds) {
-      decodds0 = this.props.contracts["BettingMain"].showDecimalOdds[
+      let d0 = this.props.contracts["BettingMain"].showDecimalOdds[
         this.decOddsKey
       ].value;
+      if (d0) {
+        decodds0 = d0;
+      }
     }
 
-    let startTimeColumn = [];
+    let startTimeColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (this.startTimeKey in this.props.contracts["BettingMain"].showStartTime) {
-      startTimeColumn = this.props.contracts["BettingMain"].showStartTime[
+      let st = this.props.contracts["BettingMain"].showStartTime[
         this.startTimeKey
       ].value;
+      if (st) {
+        startTimeColumn = st;
+      }
     }
 
     let userBalance = "0";
     if (this.userBalKey in this.props.contracts["BettingMain"].userBalance) {
-      userBalance = web3.fromWei(
-        this.props.contracts["BettingMain"].userBalance[this.userBalKey].value,
-        "finney"
-      );
+      let userBalance0 = this.props.contracts["BettingMain"].userBalance[this.userBalKey].value;
+      if (userBalance0) {
+      userBalance = web3.fromWei(userBalance0.toString(),
+        "szabo");}
     }
+    console.log("decodds", decodds0);
+
 
     let oddsTot = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
@@ -376,54 +385,24 @@ class BigBetPagejs extends Component {
 
 
 
-    let scheduleString = [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-    ];
+    let scheduleString = ["NFL:ARI:LAC","NFL:ATL:LAR","NFL:BAL:MIA","NFL:BUF:MIN","NFL:CAR:NE","NFL:CHI:NO","NFL:CIN:NYG","NFL:CLE:NYJ","NFL:DAL:OAK","NFL:DEN:PHI","NFL:DET:PIT","NFL:GB:SEA","NFL:HOU:SF","NFL:IND:TB","NFL:JAX:TEN","NFL:KC:WSH","UFC:Holloway:Kattar","UFC:Ponzinibbio:Li","UFC:Kelleher:Simon","UFC:Hernandez:Vieria","UFC:Akhemedov:Breese","UFC:Memphis:Brooklyn","UFC:Boston:Charlotte","UFC:Milwaukee:Dallas","UFC:miami:LALakers","UFC:Atlanta:SanAntonia","NHL:Colorado:Washington","NHL:Vegas:StLouis","NHL:TampaBay:Dallas","NHL:Boston:Carolina","NHL:Philadelphia:Edmonton","NHL:Pittsburgh:NYIslanders"];
 
     if (
       this.scheduleStringKey in this.props.contracts["BettingMain"].showSchedString
     ) {
-      scheduleString = this.props.contracts["BettingMain"].showSchedString[
+      let sctring = this.props.contracts["BettingMain"].showSchedString[
         this.scheduleStringKey
       ].value;
+      if (sctring) {
+        scheduleString = sctring;
+      }
     }
 
     let faveSplit = [];
     let underSplit = [];
     let sport = [];
     let teamSplit = [];
-
+console.log("schedstring", scheduleString);
     for (let i = 0; i < 32; i++) {
       if (scheduleString[i] !== "") {
         teamSplit[i] = scheduleString[i].split(":");
@@ -437,7 +416,8 @@ class BigBetPagejs extends Component {
       }
     }
 
-    console.log("currweek", this.state.currW);
+
+    console.log("starttime", startTimeColumn);
 
     // console.log("bigBets", this.state.bigBets);
 

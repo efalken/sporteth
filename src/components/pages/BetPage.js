@@ -342,100 +342,95 @@ class BetPagejs extends Component {
 
     let unusedCapital = "0";
     if (this.unusedKey in this.props.contracts["BettingMain"].margin) {
-      unusedCapital = web3.fromWei(
-        this.props.contracts["BettingMain"].margin[this.unusedKey].value.toString(),
+      let unusedCapital0 = this.props.contracts["BettingMain"].margin[this.unusedKey].value;
+      if (unusedCapital0) {
+      unusedCapital = web3.fromWei(unusedCapital0.toString(),
         "szabo"
-      );
+      );}
     }
 
     let usedCapital = "0";
+    //let usedCapital0 = 0;
     if (this.usedKey in this.props.contracts["BettingMain"].margin) {
-      usedCapital = web3.fromWei(
-        this.props.contracts["BettingMain"].margin[this.usedKey].value.toString(),
+      let usedCapital0 = this.props.contracts["BettingMain"].margin[this.usedKey].value;
+      if (usedCapital0) {
+      usedCapital = web3.fromWei(usedCapital0.toString(),
         "szabo"
-      );
+      );}
     }
 
-    let startTimeColumn = [];
+    let startTimeColumn = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];;
     if (this.startTimeKey in this.props.contracts["BettingMain"].showStartTime) {
-      startTimeColumn = this.props.contracts["BettingMain"].showStartTime[
+      let st = this.props.contracts["BettingMain"].showStartTime[
         this.startTimeKey
       ].value;
+      if (st) {
+        startTimeColumn = st;
+      }
     }
 
-    let decodds0 = [];
+    let decodds0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];;
     if (this.decOddsKey in this.props.contracts["BettingMain"].showDecimalOdds) {
-      decodds0 = this.props.contracts["BettingMain"].showDecimalOdds[
+      let d0 = this.props.contracts["BettingMain"].showDecimalOdds[
         this.decOddsKey
       ].value;
+      if (d0) {
+        decodds0 = d0;
+      }
     }
 
-    let bets0 = [];
+    let bets0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (this.bets0Key in this.props.contracts["BettingMain"].showLongs) {
-      bets0 = this.props.contracts["BettingMain"].showLongs[this.bets0Key].value;
+      let b0 = this.props.contracts["BettingMain"].showLongs[this.bets0Key].value;
+      if (b0) {
+        bets0 = b0;
+      }
     }
 
-    let bets1 = [];
+    let bets1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (this.bets1Key in this.props.contracts["BettingMain"].showLongs) {
-      bets1 = this.props.contracts["BettingMain"].showLongs[this.bets1Key].value;
+      let b1 = this.props.contracts["BettingMain"].showLongs[this.bets1Key].value;
+      if (b1) {
+        bets1 = b1;
+      }
     }
 
-    let payoff0 = [];
+    let payoff0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (this.payoffsHomeKey in this.props.contracts["BettingMain"].showPayout) {
-      payoff0 = this.props.contracts["BettingMain"].showPayout[this.payoffsHomeKey]
+      let p0 = this.props.contracts["BettingMain"].showPayout[this.payoffsHomeKey]
         .value;
+        if (p0) {
+          payoff0 = p0;
+        }
     }
 
-    let payoff1 = [];
+    let payoff1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     if (this.payoffsAwayKey in this.props.contracts["BettingMain"].showPayout) {
-      payoff1 = this.props.contracts["BettingMain"].showPayout[this.payoffsAwayKey]
+      let p1 = this.props.contracts["BettingMain"].showPayout[this.payoffsAwayKey]
         .value;
+        if (p1) {
+          payoff1 = p1;
+        }
     }
 
-    let scheduleString = [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-    ];
+    let scheduleString = ["NFL:ARI:LAC","NFL:ATL:LAR","NFL:BAL:MIA","NFL:BUF:MIN","NFL:CAR:NE","NFL:CHI:NO","NFL:CIN:NYG","NFL:CLE:NYJ","NFL:DAL:OAK","NFL:DEN:PHI","NFL:DET:PIT","NFL:GB:SEA","NFL:HOU:SF","NFL:IND:TB","NFL:JAX:TEN","NFL:KC:WSH","UFC:Holloway:Kattar","UFC:Ponzinibbio:Li","UFC:Kelleher:Simon","UFC:Hernandez:Vieria","UFC:Akhemedov:Breese","UFC:Memphis:Brooklyn","UFC:Boston:Charlotte","UFC:Milwaukee:Dallas","UFC:miami:LALakers","UFC:Atlanta:SanAntonia","NHL:Colorado:Washington","NHL:Vegas:StLouis","NHL:TampaBay:Dallas","NHL:Boston:Carolina","NHL:Philadelphia:Edmonton","NHL:Pittsburgh:NYIslanders"];
     if (
       this.scheduleStringKey in this.props.contracts["BettingMain"].showSchedString
     ) {
-      scheduleString = this.props.contracts["BettingMain"].showSchedString[
+      let sctring = this.props.contracts["BettingMain"].showSchedString[
         this.scheduleStringKey
       ].value;
+      if (sctring) {
+        scheduleString = sctring;
+      }
     }
 
-    let liab0 = [];
-    let liab1 = [];
+    let liab0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let liab1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    console.log("payoff0", payoff0);
+    console.log("payoff1", payoff1);
+    console.log("bets0", bets0);
+    console.log("bets1", bets1);
     for (let ii = 0; ii < 32; ii++) {
       liab0[ii] = (Number(payoff0[ii]) - Number(bets1[ii])) / 1e12;
       liab1[ii] = (Number(payoff1[ii]) - Number(bets0[ii])) / 1e12;
@@ -453,17 +448,18 @@ class BetPagejs extends Component {
 
     let userBalance = "0";
     if (this.userBalKey in this.props.contracts["BettingMain"].userBalance) {
-      userBalance = web3.fromWei(
-        this.props.contracts["BettingMain"].userBalance[this.userBalKey].value,
-        "finney"
+      let ub = this.props.contracts["BettingMain"].userBalance[this.userBalKey].value;
+      if (ub) {
+      userBalance = web3.fromWei(ub,"finney"
       );
+    }
     }
 
 
     /*
     console.log("oddsFave[2]", probability0[2]);*/
     console.log("currW", this.state.currW);
-    console.log("this.state.showDecimalOdds", this.state.showDecimalOdds);
+    console.log("schedstring", scheduleString);
 
     let teamSplit = [];
     let faveSplit = [];
