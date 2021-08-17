@@ -139,13 +139,13 @@ class BetPagejs extends Component {
     contractweb3b
       .getPastEvents("BetRecord", {
         fromBlock: 1700000,
-        toBlock: "latest",
-        filter: { bettor: this.props.accounts[0] },
+        toBlock: "latest"
+        //filter: { bettor: this.props.accounts[0] },
       })
       .then(
         function (events) {
           events.forEach(function (element) {
-            //  if(element.returnValues.bettor === this.props.accounts[0])
+              if(element.returnValues.bettor === this.props.accounts[0]) {
             eventdata.push({
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
@@ -170,6 +170,7 @@ class BetPagejs extends Component {
             takes[element.returnValues.contractHash] = this.contracts[
               "BettingMain"
             ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
+          }
           }, this);
           this.betHistory[0] = eventdata;
           this.takekeys = takes;
@@ -179,7 +180,7 @@ class BetPagejs extends Component {
     contractweb3b.events.BetRecord(
       { filter: { bettor: this.props.accounts[0] } },
       function (error, log) {
-        console.log({ log });
+        // // console.log({ log });
         this.betHistory[0].push({
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
@@ -465,10 +466,10 @@ class BetPagejs extends Component {
     let liab0 = [];
     let liab1 = [];
 
-    console.log("payoff0", payoff0);
-    console.log("payoff1", payoff1);
-    console.log("bets0", bets0);
-    console.log("bets1", bets1);
+    // console.log("payoff0", payoff0);
+    // console.log("payoff1", payoff1);
+    // console.log("bets0", bets0);
+    // console.log("bets1", bets1);
     for (let ii = 0; ii < 32; ii++) {
       liab0[ii] = (Number(payoff0[ii]) - Number(bets1[ii])) / 1e12;
       liab1[ii] = (Number(payoff1[ii]) - Number(bets0[ii])) / 1e12;
@@ -492,8 +493,8 @@ class BetPagejs extends Component {
       }
     }
 
-    console.log("currW", this.state.currW);
-    console.log("schedstring", scheduleString);
+    // console.log("currW", this.state.currW);
+    // console.log("schedstring", scheduleString);
 
     let teamSplit = [];
     let faveSplit = [];
@@ -568,7 +569,7 @@ class BetPagejs extends Component {
       );
     }
 
-    //  console.log("subcon", subcontracts);
+    //  // console.log("subcon", subcontracts);
     return (
       <div>
         <VBackgroundCom />

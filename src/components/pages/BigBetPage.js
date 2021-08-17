@@ -360,7 +360,7 @@ class BigBetPagejs extends Component {
         userBalance = web3.fromWei(ub.toString(), "finney");
       }
     }
-    console.log("decodds", decodds0);
+    // // console.log("decodds", decodds0);
 
     let oddsTot = [[],[]];
 
@@ -420,7 +420,7 @@ class BigBetPagejs extends Component {
     let underSplit = [];
     let sport = [];
     let teamSplit = [];
-    console.log("schedstring", scheduleString);
+    // // console.log("schedstring", scheduleString);
     for (let i = 0; i < 32; i++) {
       if (scheduleString[i] !== "") {
         teamSplit[i] = scheduleString[i].split(":");
@@ -434,9 +434,9 @@ class BigBetPagejs extends Component {
       }
     }
 
-    console.log("starttime", startTimeColumn);
+    // // console.log("starttime", startTimeColumn);
 
-    // console.log("bigBets", this.state.bigBets);
+    // // // console.log("bigBets", this.state.bigBets);
 
     let teamList = [];
 
@@ -446,7 +446,7 @@ class BigBetPagejs extends Component {
       teamList.push(
         <tr
           className={(i + 1) % borderCells === 0 ? "border-row" : ""}
-          key={i}
+         key={i}
           style={{ width: "60%", textAlign: "left" }}
         >
           <td>{i}</td>
