@@ -54,6 +54,7 @@ class BigBetPagejs extends Component {
       bigBetsSet: false,
       subcontracts: {},
       subcontracts2: {},
+      decTransform1: ""
     };
   }
 
@@ -312,6 +313,17 @@ class BigBetPagejs extends Component {
     return moneyline;
   }
 
+  translateMoneyLine(moneyline0) {
+    let decTransform1 = 0;
+    if (moneyline0 < 0) {
+      decTransform1 = -(100-moneyline0) / moneyline0;
+    } else {
+      decTransform1 = moneyline0/100 + 1;
+    }
+    decTransform1 = decTransform1.toFixed(3);
+    this.setState({ decTransform1 });
+  }
+
   getTeamSplit() {}
 
   getWeek2() {
@@ -360,7 +372,7 @@ class BigBetPagejs extends Component {
         userBalance = web3.fromWei(ub.toString(), "finney");
       }
     }
-    // // console.log("decodds", decodds0);
+console.log("decTrans", this.state.decTransform1);
 
     let oddsTot = [[],[]];
 
@@ -761,7 +773,27 @@ class BigBetPagejs extends Component {
                 </Box>
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
+
               </Flex>
+
+              <Flex>
+              <Text> MoneyLine to Decimal odds converter</Text>
+              <br></br>
+                <Box mt="10px" mb="10px">
+            <Input
+              onChange={({ target: { value } }) =>
+                this.translateMoneyLine(value)
+              }
+              width="151px"
+              placeholder={"enterML"}
+              marginLeft="10px"
+              marginRignt="5px"
+              //value={this.state.decTransform1}
+            />
+
+              <Text>   {this.state.decTransform1}</Text>
+            </Box>
+            </Flex>
             </Box>
           }
         >
@@ -879,6 +911,8 @@ class BigBetPagejs extends Component {
                 </Box>
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
+
+
               </Flex>
             ) : null}
           </Flex>
