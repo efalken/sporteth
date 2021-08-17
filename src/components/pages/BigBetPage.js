@@ -776,24 +776,26 @@ console.log("decTrans", this.state.decTransform1);
 
               </Flex>
 
-              <Flex>
-              <Text> MoneyLine to Decimal odds converter</Text>
-              <br></br>
-                <Box mt="10px" mb="10px">
-            <Input
-              onChange={({ target: { value } }) =>
-                this.translateMoneyLine(value)
-              }
-              width="151px"
-              placeholder={"enterML"}
-              marginLeft="10px"
-              marginRignt="5px"
-              //value={this.state.decTransform1}
-            />
-
-              <Text>   {this.state.decTransform1}</Text>
+              <Box>
+                <Box><Text> MoneyLine to Decimal odds converter</Text></Box>
+              
+                <Flex mt="10px" mb="10px">
+                  <Text width="50%">MoneyLine: </Text>
+                  <Input
+                    onChange={({ target: { value } }) =>
+                      this.translateMoneyLine(value)
+                    }
+                    width="151px"
+                    placeholder={"enterML"}
+                    marginLeft="10px"
+                    marginRignt="5px"
+                    //value={this.state.decTransform1}
+                  />
+                </Flex>
+                <Flex>
+                  <Text width="50%">Decimal odds:</Text><Text> {this.state.decTransform1}</Text>
+                </Flex>
             </Box>
-            </Flex>
             </Box>
           }
         >

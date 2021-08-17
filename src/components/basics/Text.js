@@ -9,7 +9,7 @@ export default
             border-bottom: ${({underline}) => underline ? `thin solid ${underline}` : "none"};
             margin-right: ${({margin}) => margin};
             text-transform: ${({transform}) => transform};
-  
+            width: ${({width}) => width};
         `
 
         //          word-break: break-all;
