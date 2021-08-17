@@ -357,7 +357,7 @@ class BigBetPagejs extends Component {
       let ub = this.props.contracts["BettingMain"].userBalance[this.userBalKey]
         .value;
       if (ub) {
-        userBalance = web3.fromWei(ub.toString(), "szabo");
+        userBalance = web3.fromWei(ub.toString(), "finney");
       }
     }
     console.log("decodds", decodds0);

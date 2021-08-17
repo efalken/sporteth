@@ -646,7 +646,7 @@ class BetPagejs extends Component {
                   spacing="1px"
                 />
                 <Text>Your available margin: </Text>
-                <Text>{Number(userBalance).toFixed(2)}</Text>
+                <Text>{Number(userBalance).toFixed(3)}</Text>
               </Box>
               <Box>
                 <Flex
