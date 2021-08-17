@@ -59,7 +59,7 @@ class EventStartTime extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("StartTimesPosted", {
-        fromBlock: 6000123,
+        fromBlock: 1700000,
         toBlock: "latest",
       })
       .then(

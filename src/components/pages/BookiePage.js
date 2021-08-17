@@ -30,7 +30,7 @@ class BookiePagejs extends Component {
       fundAmount: "",
       shareAmount: "",
       sharesToSell: "",
-      contractTokens: "",
+      contractTokens: 0,
       currentWeek: "",
       showDecimalOdds: false,
       teamPick: "",
@@ -59,7 +59,6 @@ class BookiePagejs extends Component {
     });
   }
 
-
   openEtherscan(txhash) {
     const url = "https://rinkeby.etherscan.io/tx/" + txhash;
     window.open(url, "_blank");
@@ -72,14 +71,17 @@ class BookiePagejs extends Component {
   }
 
   wdShares() {
-    const stackId = this.contracts["BettingMain"].methods.withdrawBook.cacheSend({
+    const stackId = this.contracts[
+      "BettingMain"
+    ].methods.withdrawBook.cacheSend({
       from: this.props.accounts[0],
     });
   }
 
   wdBook() {
-    //const { sharesToSell } = this.state.sharesToSell
-    const stackId = this.contracts["BettingMain"].methods.withdrawBook.cacheSend(
+    const stackId = this.contracts[
+      "BettingMain"
+    ].methods.withdrawBook.cacheSend(
       web3.toWei(this.state.sharesToSell.toString(), "finney"),
       {
         from: this.props.accounts[0],
@@ -88,37 +90,26 @@ class BookiePagejs extends Component {
   }
 
   fundBook() {
-    this.contracts["BettingMain"].methods.fundBook.cacheSend(
-      {
-        from: this.props.accounts[0],
-        value: web3.toWei(this.state.fundAmount, "finney"),
-      }
-    );
+    this.contracts["BettingMain"].methods.fundBook.cacheSend({
+      from: this.props.accounts[0],
+      value: web3.toWei(this.state.fundAmount, "finney"),
+    });
   }
 
   inactivateBook() {
-    const stackId = this.contracts["BettingMain"].methods.inactiveBook.cacheSend();
+    const stackId = this.contracts[
+      "BettingMain"
+    ].methods.inactiveBook.cacheSend();
   }
-/*
-  getTokenBalance() {
-    const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Token1.abi, Token1.address);
-    const tokenBal0 = contractweb3.methods.balanceOf("0x01381ac2D1c45B21e449669E832574a40C391bcf");
-    return tokenBal0;
-  }*/
-
-
 
   findValues() {
-
-
     this.unusedKey = this.contracts["BettingMain"].methods.margin.cacheCall(0);
-/*
-    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0x01381ac2D1c45B21e449669E832574a40C391bcf");*/
 
     this.usedKey = this.contracts["BettingMain"].methods.margin.cacheCall(1);
 
-    this.betCapitalKey = this.contracts["BettingMain"].methods.margin.cacheCall(2);
+    this.betCapitalKey = this.contracts["BettingMain"].methods.margin.cacheCall(
+      2
+    );
 
     this.totalSharesKey = this.contracts[
       "BettingMain"
@@ -126,13 +117,17 @@ class BookiePagejs extends Component {
 
     this.weekKey = this.contracts["BettingMain"].methods.betEpoch.cacheCall();
 
-    this.betsHomeKey = this.contracts["BettingMain"].methods.showLongs.cacheCall(0);
+    this.bets0Key = this.contracts["BettingMain"].methods.showLongs.cacheCall(
+      0
+    );
 
     this.payoffsHomeKey = this.contracts[
       "BettingMain"
     ].methods.showPayout.cacheCall(0);
 
-    this.betsAwayKey = this.contracts["BettingMain"].methods.showLongs.cacheCall(1);
+    this.bets1Key = this.contracts["BettingMain"].methods.showLongs.cacheCall(
+      1
+    );
 
     this.payoffsAwayKey = this.contracts[
       "BettingMain"
@@ -163,51 +158,32 @@ class BookiePagejs extends Component {
     return outspread;
   }
 
-
   render() {
     let unusedCapital = "0";
     if (this.unusedKey in this.props.contracts["BettingMain"].margin) {
-      unusedCapital = web3.fromWei(
-        this.props.contracts["BettingMain"].margin[this.unusedKey].value.toString(),
-        "finney"
-      );
+      let uc = this.props.contracts["BettingMain"].margin[this.unusedKey].value;
+      if (uc) {
+        unusedCapital = web3.fromWei(uc, "finney");
+      }
     }
-/*
-    let baltok="0";
-    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
-      baltok = web3.fromWei(
-        this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value.toString(),
-        "finney"
-      );
-    }*/
-/*
-    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
-      this.tokenBal = this.props.contracts["TokenMain"].balanceOf[
-        this.tokenKey
-      ].value;
-    }*/
 
- // let tokenBal1 = this.getTokenBalance();
-      console.log("contract tokens", this.tokenKey);
-
-
+    console.log("contract tokens", this.tokenKey);
 
     let usedCapital = "0";
     if (this.usedKey in this.props.contracts["BettingMain"].margin) {
-      usedCapital = web3.fromWei(
-        this.props.contracts["BettingMain"].margin[this.usedKey].value.toString(),
-        "finney"
-      );
+      let uc = this.props.contracts["BettingMain"].margin[this.usedKey].value;
+      if (uc) {
+        usedCapital = web3.fromWei(uc, "finney");
+      }
     }
 
     let betCapital = "0";
     if (this.betCapitalKey in this.props.contracts["BettingMain"].margin) {
-      betCapital = web3.fromWei(
-        this.props.contracts["BettingMain"].margin[
-          this.betCapitalKey
-        ].value.toString(),
-        "finney"
-      );
+      let bc = this.props.contracts["BettingMain"].margin[this.betCapitalKey]
+        .value;
+      if (bc) {
+        usedCapital = web3.fromWei(bc, "finney");
+      }
     }
 
     if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
@@ -225,20 +201,28 @@ class BookiePagejs extends Component {
     let bookieShares = "0";
     let bookieEpoch = "0";
     if (this.sharesKey in this.props.contracts["BettingMain"].lpStruct) {
-      bookieStruct = this.props.contracts["BettingMain"].lpStruct[this.sharesKey]
+      let bs = this.props.contracts["BettingMain"].lpStruct[this.sharesKey]
         .value;
-      bookieShares = web3.fromWei(bookieStruct.shares.toString(), "finney");
-      bookieEpoch = bookieStruct.outEpoch.toString();
+      if (bs) {
+        bookieStruct = bs;
+        bookieShares = web3.fromWei(bs.shares.toString(), "finney");
+        bookieEpoch = bs.outEpoch.toString();
+      }
     }
 
     let totalShares = "0";
-    if (this.totalSharesKey in this.props.contracts["BettingMain"].totalShares) {
-      totalShares = web3.fromWei(
+    if (
+      this.totalSharesKey in this.props.contracts["BettingMain"].totalShares
+    ) {
+      let ts = web3.fromWei(
         this.props.contracts["BettingMain"].totalShares[
           this.totalSharesKey
         ].value.toString(),
         "finney"
       );
+      if (ts) {
+        totalShares = ts;
+      }
     }
 
     let ethBookie =
@@ -246,93 +230,99 @@ class BookiePagejs extends Component {
       Number(totalShares);
 
     let startTimeColumn = [];
-    if (this.startTimeKey in this.props.contracts["BettingMain"].showStartTime) {
-      startTimeColumn = this.props.contracts["BettingMain"].showStartTime[
+    if (
+      this.startTimeKey in this.props.contracts["BettingMain"].showStartTime
+    ) {
+      let st = this.props.contracts["BettingMain"].showStartTime[
         this.startTimeKey
       ].value;
+      if (st) {
+        startTimeColumn = st;
+      }
     }
 
-    let oddsFave0 = [];
-    if (this.oddsFaveKey in this.props.contracts["BettingMain"].showDecimalOdds) {
-      oddsFave0 = this.props.contracts["BettingMain"].showDecimalOdds[
-        this.oddsFaveKey
-      ].value;
-    }
-
-    let betsHome = [];
-    if (this.betsHomeKey in this.props.contracts["BettingMain"].showLongs) {
-      betsHome = this.props.contracts["BettingMain"].showLongs[this.betsHomeKey]
+    let bets0 = [];
+    if (this.bets0Key in this.props.contracts["BettingMain"].showLongs) {
+      let b0 = this.props.contracts["BettingMain"].showLongs[this.bets0Key]
         .value;
+      if (b0) {
+        bets0 = b0;
+      }
     }
 
-    let betsAway = [];
-    if (this.betsAwayKey in this.props.contracts["BettingMain"].showLongs) {
-      betsAway = this.props.contracts["BettingMain"].showLongs[this.betsAwayKey]
+    let bets1 = [];
+    if (this.bets1Key in this.props.contracts["BettingMain"].showLongs) {
+      let b1 = this.props.contracts["BettingMain"].showLongs[this.bets1Key]
         .value;
+      if (b1) {
+        bets1 = b1;
+      }
     }
 
-    let payoffAway = [];
-    if (this.payoffsAwayKey in this.props.contracts["BettingMain"].showPayout) {
-      payoffAway = this.props.contracts["BettingMain"].showPayout[
-        this.payoffsAwayKey
-      ].value;
-    }
-
-    let payoffHome = [];
+    let payoff0 = [];
     if (this.payoffsHomeKey in this.props.contracts["BettingMain"].showPayout) {
-      payoffHome = this.props.contracts["BettingMain"].showPayout[
+      let p0 = this.props.contracts["BettingMain"].showPayout[
         this.payoffsHomeKey
       ].value;
+      if (p0) {
+        payoff0 = p0;
+      }
+    }
+
+    let payoff1 = [];
+    if (this.payoffsAwayKey in this.props.contracts["BettingMain"].showPayout) {
+      let p1 = this.props.contracts["BettingMain"].showPayout[
+        this.payoffsAwayKey
+      ].value;
+      if (p1) {
+        payoff1 = p1;
+      }
     }
 
     let scheduleString = [
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
+      "NFL:ARI:LAC",
+      "NFL:ATL:LAR",
+      "NFL:BAL:MIA",
+      "NFL:BUF:MIN",
+      "NFL:CAR:NE",
+      "NFL:CHI:NO",
+      "NFL:CIN:NYG",
+      "NFL:CLE:NYJ",
+      "NFL:DAL:OAK",
+      "NFL:DEN:PHI",
+      "NFL:DET:PIT",
+      "NFL:GB:SEA",
+      "NFL:HOU:SF",
+      "NFL:IND:TB",
+      "NFL:JAX:TEN",
+      "NFL:KC:WSH",
+      "UFC:Holloway:Kattar",
+      "UFC:Ponzinibbio:Li",
+      "UFC:Kelleher:Simon",
+      "UFC:Hernandez:Vieria",
+      "UFC:Akhemedov:Breese",
+      "UFC:Memphis:Brooklyn",
+      "UFC:Boston:Charlotte",
+      "UFC:Milwaukee:Dallas",
+      "UFC:miami:LALakers",
+      "UFC:Atlanta:SanAntonia",
+      "NHL:Colorado:Washington",
+      "NHL:Vegas:StLouis",
+      "NHL:TampaBay:Dallas",
+      "NHL:Boston:Carolina",
+      "NHL:Philadelphia:Edmonton",
+      "NHL:Pittsburgh:NYIslanders",
     ];
-
     if (
-      this.scheduleStringKey in this.props.contracts["BettingMain"].showSchedString
+      this.scheduleStringKey in
+      this.props.contracts["BettingMain"].showSchedString
     ) {
-      scheduleString = this.props.contracts["BettingMain"].showSchedString[
+      let sctring = this.props.contracts["BettingMain"].showSchedString[
         this.scheduleStringKey
       ].value;
-    }
-
-    let oddsFave = [];
-    let oddsUnder = [];
-    for (let ii = 0; ii < 32; ii++) {
-      oddsFave[ii] = Number(oddsFave0[ii]);
-      oddsUnder[ii] = 1000000 / (Number(oddsFave[ii]) + 90) - 90;
+      if (sctring) {
+        scheduleString = sctring;
+      }
     }
 
     let teamSplit = [];
@@ -349,10 +339,10 @@ class BookiePagejs extends Component {
           <td>{teamSplit[i][0]}</td>
           <td>{teamSplit[i][1]}</td>
           <td>{teamSplit[i][2]}</td>
-          <td>{(betsHome[i] / 1e15).toFixed(3)}</td>
-          <td>{(betsAway[i] / 1e15).toFixed(3)}</td>
-          <td>{(payoffHome[i] / 1e15 - betsAway[i] / 1e15).toFixed(1)}</td>
-          <td>{(payoffAway[i] / 1e15 - betsHome[i] / 1e15).toFixed(1)}</td>
+          <td>{(bets0[i] / 1e15).toFixed(3)}</td>
+          <td>{(bets1[i] / 1e15).toFixed(3)}</td>
+          <td>{(payoff0[i] / 1e15 - bets1[i] / 1e15).toFixed(1)}</td>
+          <td>{(payoff1[i] / 1e15 - bets0[i] / 1e15).toFixed(1)}</td>
         </tr>
       );
     }
@@ -473,7 +463,6 @@ class BookiePagejs extends Component {
                     " finney"}
                 </Text>
               </Box>
-
 
               <Box>
                 <Flex>

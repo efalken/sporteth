@@ -51,7 +51,7 @@ class EventBetRecord extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {
-        fromBlock: 6000123,
+        fromBlock: 1700000,
         toBlock: "latest",
       })
       .then(

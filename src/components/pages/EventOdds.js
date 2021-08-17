@@ -51,7 +51,7 @@ class EventOdds extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("DecOddsPosted", {
-        fromBlock: 7000123,
+        fromBlock: 1700000,
         toBlock: "latest",
         filter: { posted: true },
       })

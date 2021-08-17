@@ -58,7 +58,7 @@ class EventSchedule extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("SchedulePosted", {
-        fromBlock: 7000123,
+        fromBlock: 1700000,
         toBlock: "latest",
       })
       .then(
