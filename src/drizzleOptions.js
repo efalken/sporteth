@@ -15,6 +15,17 @@ const drizzleOptions = {
   },
 
   contracts: [Betting],
+/*  events: {
+    Betting: [
+      'BetRecord',
+      'BetBigRecord'
+    ],
+    Oracle: [
+      'ResultsPosted',
+      'DecOddsPosted',
+      'SchedulePosted'
+    ]
+  },*/
   polls: {
     accounts: 1500
   }

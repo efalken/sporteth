@@ -11,6 +11,7 @@ const offset = _dateo.getTimezoneOffset() * 60  * 1000 - 7200000;
 var _timestamp;
 var _date;
 var _hour;
+var nextStart = 1629332808;
 
 
 require('chai').use(require('chai-as-promised')).should();
@@ -64,7 +65,8 @@ contract('Betting', function (accounts) {
        })
 
         it("send initial data to Oracle", async () => {
-            await oracle.initPost(["NFL:ARI:LAC","NFL:ATL:LAR","NFL:BAL:MIA","NFL:BUF:MIN","NFL:CAR:NE","NFL:CHI:NO","NFL:CIN:NYG","NFL:CLE:NYJ","NFL:DAL:OAK","NFL:DEN:PHI","NFL:DET:PIT","NFL:GB:SEA","NFL:HOU:SF","NFL:IND:TB","NFL:JAX:TEN","NFL:KC:WSH","UFC:Holloway:Kattar","UFC:Ponzinibbio:Li","UFC:Kelleher:Simon","UFC:Hernandez:Vieria","UFC:Akhemedov:Breese","UFC:Memphis:Brooklyn","UFC:Boston:Charlotte","UFC:Milwaukee:Dallas","UFC:miami:LALakers","UFC:Atlanta:SanAntonia","NHL:Colorado:Washington","NHL:Vegas:StLouis","NHL:TampaBay:Dallas","NHL:Boston:Carolina","NHL:Philadelphia:Edmonton","NHL:Pittsburgh:NYIslanders"], [1629095839, 1629095839, 1629095839, 1629095839, 1629095839, 1629095839, 1629095839, 1629095839, 1629095839, 1629095839, 1609290000, 1629095839, 1629095839, 1629095839, 1629095839, 1609290000, 1629095839, 1629095839, 1629095839, 1629095839, 1609290000, 1629095839, 1629095839, 1629095839, 1629095839, 1609290000, 1629095839, 1629095839, 1629095839, 1629095839, 1609290000, 1629095839], [955, 2000, 500, 1000, 909, 800, 510, 1240, 1470, 960, 650, 1330, 970, 730, 1310, 1040, 520, 1020, 1470, 1200, 1080, 820, 770, 790, 730, 690, 970, 760, 1000, 720, 1360, 800], 1629095839);
+            nextStart = nextStart + 7*86400;
+await oracle.initPost(["NFL:ARI:LAC","NFL:ATL:LAR","NFL:BAL:MIA","NFL:BUF:MIN","NFL:CAR:NE","NFL:CHI:NO","NFL:CIN:NYG","NFL:CLE:NYJ","NFL:DAL:OAK","NFL:DEN:PHI","NFL:DET:PIT","NFL:GB:SEA","NFL:HOU:SF","NFL:IND:TB","NFL:JAX:TEN","NFL:KC:WSH","UFC:Holloway:Kattar","UFC:Ponzinibbio:Li","UFC:Kelleher:Simon","UFC:Hernandez:Vieria","UFC:Akhemedov:Breese","UFC:Memphis:Brooklyn","UFC:Boston:Charlotte","UFC:Milwaukee:Dallas","UFC:miami:LALakers","UFC:Atlanta:SanAntonia","NHL:Colorado:Washington","NHL:Vegas:StLouis","NHL:TampaBay:Dallas","NHL:Boston:Carolina","NHL:Philadelphia:Edmonton","NHL:Pittsburgh:NYIslanders"],[nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart], [955, 2000, 500, 1000, 909, 800, 510, 1240, 1470, 960, 650, 1330, 970, 730, 1310, 1040, 520, 1020, 1470, 1200, 1080, 820, 770, 790, 730, 690, 970, 760, 1000, 720, 1360, 800], nextStart);
         })
 
         it("approve and send to betting contract", async () => {
@@ -111,7 +113,7 @@ contract('Betting', function (accounts) {
         })
 
         it('fast forward 24 days after earliest start time', async () => {
-        await helper.advanceTimeAndBlock(1628547467 - _timestamp);
+        await helper.advanceTimeAndBlock(nextStart - _timestamp);
        await helper.advanceTimeAndBlock(secondsInHour * 576);
        })
 
@@ -122,12 +124,16 @@ contract('Betting', function (accounts) {
               })
 
        it("should reset book so everyone can withdraw ", async () => {
+         const earlStart = await betting.earliestStart();
+         console.log(`earliestStart ${earlStart}`);
+         _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
+         console.log(`currTime = ${_timestamp}`);
            await betting.inactiveBook();
        })
 
          it("should pull all ether ", async () => {
         //const bookbal = web3.utils.fromWei(await web3.eth.getBalance(betting.address), "finney");
-         await betting.withdrawBook("300000000000000000", {from: accounts[0]});
+        await betting.withdrawBook("300000000000000000", {from: accounts[0]});
         await betting.redeem(contractHash1, { from: accounts[3] });
         const bookbal = web3.utils.fromWei(await betting.userBalance(accounts[3]), "finney");
         const userBalanceAcct2 = web3.utils.fromWei(await betting.userBalance(accounts[2]), "finney");

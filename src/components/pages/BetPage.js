@@ -139,7 +139,7 @@ class BetPagejs extends Component {
     contractweb3b
       .getPastEvents("BetRecord", {
         fromBlock: 1700000,
-        toBlock: "latest"
+        toBlock: 2153910
         //filter: { bettor: this.props.accounts[0] },
       })
       .then(

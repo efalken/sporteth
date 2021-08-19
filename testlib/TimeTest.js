@@ -41,13 +41,16 @@ contract('Betting', function (accounts) {
         it('Finalize Betting/Oracle contract to Token', async () => {
             await token.processVote();
         })
-/*
+
         it('Authorize Oracle Token', async () => {
-            await token.approve(oracle.address, "100000000000000000000000");
-        })
-        it("Deposit Tokens in Oracle Contract2", async () => {
-            await oracle.depositTokens("100000000000000000000000", {from: accounts[0]});
-        })*/
+            _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
+            console.log(`ts0 = ${_timestamp}`);});
+            var nextStart = firstStart + 7*86400;
+            await helper.advanceTimeAndBlock(nextStart - _timestamp);
+            _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
+            console.log(`ts1 = ${_timestamp}`);});
+
+
     })
 
     describe("set up contract for taking bets", async () => {
@@ -133,7 +136,7 @@ contract('Betting', function (accounts) {
        _hourk = await oracle.hourOfDay();
        console.log(`ts0 = ${_timestamp}`);
        console.log(`hour0 = ${_hour}`);
-       console.log(`hourk = ${_hourk}`);*/
+       console.log(`hourk = ${_hourk}`);
        })
     });
 

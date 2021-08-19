@@ -146,8 +146,8 @@ class BigBetPagejs extends Component {
 
     contractweb3b
       .getPastEvents("BetBigRecord", {
-        fromBlock: 1700000,
-        toBlock: "latest",
+        fromBlock: 1900000,
+        toBlock: 2153910,
         //    filter: { bettor: this.props.accounts[0], epoch: this.state.currW },
       })
       .then(
@@ -778,7 +778,7 @@ console.log("decTrans", this.state.decTransform1);
 
               <Box>
                 <Box><Text> MoneyLine to Decimal odds converter</Text></Box>
-              
+
                 <Flex mt="10px" mb="10px">
                   <Text width="50%">MoneyLine: </Text>
                   <Input

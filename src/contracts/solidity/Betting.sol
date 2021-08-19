@@ -589,7 +589,7 @@ contract Betting {
         returns (uint256)
     {
         uint256 betOdds = decOdds[_match];
-        if (_player == 1) {
+        if (_player == 1 && betOdds <9999) {
             betOdds = 1e6 / (45 + betOdds) - 45;
         }
         return betOdds;

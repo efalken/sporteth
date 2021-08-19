@@ -47,12 +47,12 @@ class EventBetRecord extends Component {
 
   getbetHistoryArray() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Betting.abi, Betting.address);
+    const contractweb3 = new web3.eth.Contract(Betting.abi, Betting.arbitrumaddress);
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {
-        fromBlock: 1700000,
-        toBlock: "latest",
+        fromBlock: 2000000,
+        toBlock: 2126238,
       })
       .then(
         function (events) {
@@ -75,7 +75,7 @@ class EventBetRecord extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby.etherscan.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
+      "https://rinkeby-explorer.arbitrum.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
     window.open(url, "_blank");
   }
 

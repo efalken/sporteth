@@ -16,7 +16,7 @@ class EventStartTime extends Component {
 
     this.assets = [
       {
-        contract: context.drizzle.contracts.OracleJson,
+        contract: context.drizzle.contracts.OracleMain,
         id: 1,
       },
     ];
@@ -55,12 +55,12 @@ class EventStartTime extends Component {
 
   getbetHistoryArray() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.address);
+    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.arbitrumaddress);
     var pricedata = [];
     contractweb3
       .getPastEvents("StartTimesPosted", {
-        fromBlock: 1700000,
-        toBlock: "latest",
+        fromBlock: 2000000,
+        toBlock: 2153983,
       })
       .then(
         function (events) {
@@ -79,7 +79,7 @@ class EventStartTime extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby.etherscan.io/address/0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826";
+      "https://rinkeby-explorer.arbitrum.io/address/0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826";
     window.open(url, "_blank");
   }
 

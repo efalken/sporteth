@@ -125,6 +125,7 @@ contract Oracle {
         betEpoch = 1;
         propNumber = 1;
         feePool=0;
+        earliestStart = 2e9;
     }
 
     function vote(bool sendData) external {
@@ -156,7 +157,7 @@ contract Oracle {
     ) external {
         // this requirement makes sure a post occurs only if there is not a current post under consideration, or
         // it is an amend for an earlier post with these data
-        require(underReview == 0, "Already under Review");
+        require(underReview == 0 && earliestStart == 2e9, "Already under Review");
         underReview = 1;
         post();
         propSchedule = teamsched;
@@ -246,6 +247,7 @@ contract Oracle {
         }
         // resets various data (eg, timer)
         reset();
+        earliestStart = 2e9;
         // delete propResults;
     }
 

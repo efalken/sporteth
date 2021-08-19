@@ -60,7 +60,7 @@ class BookiePagejs extends Component {
   }
 
   openEtherscan(txhash) {
-    const url = "https://rinkeby.etherscan.io/tx/" + txhash;
+    const url = "https://rinkeby-explorer.arbitrum.io/tx/" + txhash;
     window.open(url, "_blank");
   }
 
