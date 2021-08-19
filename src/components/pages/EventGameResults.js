@@ -13,15 +13,8 @@ class EventGameoutcomes extends Component {
     super(props);
     autoBind(this);
 
-    this.assets = [
-      {
-        contract: context.drizzle.contracts.OracleMain,
-        id: 1,
-      },
-    ];
 
     this.currentContract = this.props.routeParams.contract;
-    this.asset_id = 1;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
     this.priceHistory = {};
@@ -29,9 +22,7 @@ class EventGameoutcomes extends Component {
 
   componentDidMount() {
     document.title = "Match Result Event Logs";
-    Object.keys(this.assets).forEach(function (asset) {
-      this.getgameHistoryArray(asset);
-    }, this);
+      this.getgameHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -61,7 +52,7 @@ class EventGameoutcomes extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("ResultsPosted", {
-        fromBlock: 2000000,
+        fromBlock: 1800000,
         toBlock: 2153983,
         filter: { posted: true },
       })

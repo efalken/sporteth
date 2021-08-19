@@ -17,6 +17,8 @@ import ButtonI from "../basics/ButtonI.js";
 import TruncatedAddress from "../basics/TruncatedAddress.js";
 import VBackgroundCom from "../basics/VBackgroundCom";
 import BettingContract from "../../contracts/solidityjson/Betting.json";
+import TokenContract from "../../contracts/solidityjson/Token.json";
+
 var moment = require("moment");
 
 class BetPagejs extends Component {
@@ -40,7 +42,8 @@ class BetPagejs extends Component {
       matchPick: null,
       showDecimalOdds: false,
       subcontracts: {},
-      currW: ""
+      currW: "",
+      tokenAmount: ""
     };
   }
 
@@ -51,7 +54,8 @@ class BetPagejs extends Component {
       this.getbetHistoryArray();
       this.checkRedeem();
       this.getWeek2();
-    }, 1000);
+      this.getTokens();
+    }, 5000);
   }
 
   handleBetSize(betAmount) {
@@ -75,6 +79,9 @@ class BetPagejs extends Component {
       wdAmount: value2,
     });
   }
+
+
+
 
   fundBettor(x) {
     const stackId = this.contracts["BettingMain"].methods.fundBettor.cacheSend({
@@ -138,7 +145,7 @@ class BetPagejs extends Component {
 
     contractweb3b
       .getPastEvents("BetRecord", {
-        fromBlock: 1700000,
+        fromBlock: 2000000,
         toBlock: 2153910
         //filter: { bettor: this.props.accounts[0] },
       })
@@ -180,7 +187,7 @@ class BetPagejs extends Component {
     contractweb3b.events.BetRecord(
       { filter: { bettor: this.props.accounts[0] } },
       function (error, log) {
-        // // console.log({ log });
+        console.log({ log });
         this.betHistory[0].push({
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
@@ -226,6 +233,10 @@ class BetPagejs extends Component {
       1
     );
 
+    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall(
+      this.props.accounts[0]
+    );
+
     this.userBalKey = this.contracts[
       "BettingMain"
     ].methods.userBalance.cacheCall(this.props.accounts[0]);
@@ -244,6 +255,8 @@ class BetPagejs extends Component {
     this.startTimeKey = this.contracts[
       "BettingMain"
     ].methods.showStartTime.cacheCall();
+
+
 
     this.sharesKey = this.contracts["BettingMain"].methods.lpStruct.cacheCall(
       this.props.accounts[0]
@@ -307,6 +320,14 @@ class BetPagejs extends Component {
       currW = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
     }
     this.setState({ currW });
+  }
+
+  getTokens() {
+    let tokenAmount = 0;
+    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
+      tokenAmount = this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value;
+    }
+    this.setState({ tokenAmount });
   }
 
   render() {
@@ -466,7 +487,7 @@ class BetPagejs extends Component {
     let liab0 = [];
     let liab1 = [];
 
-    // console.log("payoff0", payoff0);
+    console.log("tokens", this.state.tokenAmount);
     // console.log("payoff1", payoff1);
     // console.log("bets0", bets0);
     // console.log("bets1", bets1);

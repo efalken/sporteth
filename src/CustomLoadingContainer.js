@@ -41,8 +41,8 @@ class CustomLoader extends Component {
     };
 
     this.context.drizzle.addContract(FOOT0Config);
-    this.context.drizzle.addContract(FOOT1Config);
-    //this.context.drizzle.addContract(FOOT2Config);
+    //this.context.drizzle.addContract(FOOT1Config);
+    this.context.drizzle.addContract(FOOT2Config);
   }
 
   componentDidMount() {

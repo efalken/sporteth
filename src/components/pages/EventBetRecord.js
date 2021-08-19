@@ -8,20 +8,14 @@ import Betting from "../../contracts/solidityjson/Betting.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
+
 class EventBetRecord extends Component {
   constructor(props, context) {
     super(props);
     autoBind(this);
 
-    this.assets = [
-      {
-        contract: context.drizzle.contracts.Betting,
-        id: 0,
-      },
-    ];
 
     this.currentContract = this.props.routeParams.contract;
-    this.asset_id = 0;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
     this.priceHistory = {};
@@ -29,9 +23,7 @@ class EventBetRecord extends Component {
 
   componentDidMount() {
     document.title = "Bet Event Logs";
-    Object.keys(this.assets).forEach(function (asset) {
-      this.getbetHistoryArray(asset);
-    }, this);
+      this.getbetHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -51,7 +43,7 @@ class EventBetRecord extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {
-        fromBlock: 2000000,
+        fromBlock: 1800000,
         toBlock: 2126238,
       })
       .then(

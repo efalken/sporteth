@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
-import BettingContract from "../../contracts/solidityjson/Betting.json";
+import Betting from "../../contracts/solidityjson/Betting.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
@@ -13,16 +13,25 @@ class EventBetRecord extends Component {
     super(props);
     autoBind(this);
 
+    this.assets = [
+      {
+        contract: context.drizzle.contracts.Betting,
+        id: 0,
+      },
+    ];
 
     this.currentContract = this.props.routeParams.contract;
+    this.asset_id = 0;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
-    this.bigBetHistory = {};
+    this.priceHistory = {};
   }
 
   componentDidMount() {
-    document.title = "Big Bet Event Logs";
-      this.getbetHistoryArray();
+    document.title = "Bet Event Logs";
+    Object.keys(this.assets).forEach(function (asset) {
+      this.getbetHistoryArray(asset);
+    }, this);
   }
 
   timeConverter(UNIX_timestamp) {
@@ -38,31 +47,28 @@ class EventBetRecord extends Component {
 
   getbetHistoryArray() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(
-      BettingContract.abi,
-      BettingContract.arbitrumaddress
-    );
-    //console.log("add", BettingContract.arbitrumaddress);
+    const contractweb3 = new web3.eth.Contract(Betting.abi, Betting.arbitrumaddress);
     var pricedata = [];
     contractweb3
-      .getPastEvents("BetBigRecord", {
+      .getPastEvents("BetRecord", {
         fromBlock: 1800000,
-        toBlock: 2153983,
+        toBlock: 2126238,
       })
       .then(
         function (events) {
           events.forEach(function (element) {
             pricedata.push({
-              Hashoutput: element.returnValues.contractHash,
-              BettorAddress: element.returnValues.bettor,
-              NFLWeek: element.returnValues.epoch,
+              Epoch: element.returnValues.epoch,
               time: element.returnValues.timestamp,
               BetSize: element.returnValues.betsize / 1e15,
               LongPick: element.returnValues.pick,
               MatchNum: element.returnValues.matchnum,
+              Payoff: element.returnValues.payoff / 1e15,
+              Hashoutput: element.returnValues.contractHash,
+              BettorAddress: element.returnValues.bettor,
             });
           }, this);
-          this.bigBetHistory = pricedata;
+          this.priceHistory = pricedata;
         }.bind(this)
       );
   }
@@ -74,9 +80,7 @@ class EventBetRecord extends Component {
   }
 
   render() {
-    console.log("bestHistory", this.bigBetHistory);
-
-    if (Object.keys(this.bigBetHistory).length === 0)
+    if (Object.keys(this.priceHistory).length === 0)
       return (
         <Text size="20px" weight="200">
           Waiting...
@@ -99,16 +103,18 @@ class EventBetRecord extends Component {
           />
           <Text size="12px" weight="200">
             {" "}
-            Week, Match, Pick, BetSize, BettorAddress, Hash
+            Time, Epoch, MatchNum, LongPick, Betsize, Payoff, BettorAddress,
+            betHash
           </Text>{" "}
           <br />
-          {this.bigBetHistory.map((event) => (
+          {this.priceHistory.map((event) => (
             <div>
               <Text size="12px" weight="200">
                 {" "}
-                {event.NFLWeek}, {event.MatchNum}, {event.LongPick},{" "}
-                {event.BetSize.toFixed(3)}, {event.BettorAddress},{" "}
-                {event.Hashoutput}
+                {moment.unix(event.time).format("DD-MM-YYTHH:mm")},{" "}
+                {event.Epoch}, {event.MatchNum}, {event.LongPick},{" "}
+                {event.BetSize.toFixed(3)}, {event.Payoff.toFixed(3)},{" "}
+                {event.BettorAddress}, {event.Hashoutput},{" "}
               </Text>
               <br />
             </div>

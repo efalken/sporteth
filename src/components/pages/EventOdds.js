@@ -13,15 +13,8 @@ class EventOdds extends Component {
     super(props);
     autoBind(this);
 
-    this.assets = [
-      {
-        contract: context.drizzle.contracts.OracleMain,
-        id: 1,
-      },
-    ];
 
     this.currentContract = this.props.routeParams.contract;
-    this.asset_id = 1;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
     this.priceHistory = {};
@@ -29,9 +22,7 @@ class EventOdds extends Component {
 
   componentDidMount() {
     document.title = "Posted Odds Event Logs";
-    Object.keys(this.assets).forEach(function (asset) {
-      this.getbetHistoryArray(asset);
-    }, this);
+      this.getbetHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -51,8 +42,8 @@ class EventOdds extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("DecOddsPosted", {
-        fromBlock: 2000000,
-        toBlock: 2153983,
+        fromBlock: 1600000,
+        toBlock: 1953983,
         filter: { posted: true },
       })
       .then(

@@ -66,7 +66,7 @@ class BigBetPagejs extends Component {
       this.getbetHistoryArray();
       this.checkOffer0();
       this.checkOffer2();
-    }, 5000);
+    }, 1000);
   }
 
   openEtherscan(txhash) {
@@ -197,48 +197,6 @@ class BigBetPagejs extends Component {
           this.takekeys2 = takes2;
         }.bind(this)
       );
-
-      contractweb3b.events.BetBigRecord(
-      function (error, log) {
-         console.log({ log });
-          this.yourBetHistory[0].push({
-          Hashoutput: log.returnValues.contractHash,
-          BettorAddress: log.returnValues.bettor,
-          Epoch: log.returnValues.epoch,
-          timestamp: log.returnValues.timestamp,
-          BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
-          LongPick: log.returnValues.pick,
-          MatchNum: log.returnValues.matchnum,
-            });
-        this.takekeys[log.returnValues.contractHash] = this.contracts[
-          "BettingMain"
-        ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
-      }.bind(this)
-    );
-
-    contractweb3b.events.BetBigRecord(
-          function (error, log) {
-             console.log({ log });
-              this.currentOffers.push({
-                Hashoutput2: log.returnValues.contractHash,
-                  BetSizeOffered2: Number(
-                    web3.fromWei(log.returnValues.payoff.toString(), "finney")
-                  ),
-                  OfferedTeam2: 1 - log.returnValues.pick,
-                  OfferEpoch2: log.returnValues.epoch,
-                  OfferedMatch2: log.returnValues.matchnum,
-                  BetPayoffOffered2: Number(
-                    web3.fromWei(
-                      log.returnValues.betsize.toString(),
-                      "finney"
-                    )
-                  ),
-                    });
-            this.takekeys2[log.returnValues.contractHash] = this.contracts[
-              "BettingMain"
-            ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
-          }.bind(this)
-        );
   }
 
   checkOffer0() {

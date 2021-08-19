@@ -13,8 +13,15 @@ class EventBetRecord extends Component {
     super(props);
     autoBind(this);
 
+    this.assets = [
+      {
+        contract: context.drizzle.contracts.Betting,
+        id: 0,
+      },
+    ];
 
     this.currentContract = this.props.routeParams.contract;
+    this.asset_id = 0;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
     this.bigBetHistory = {};
@@ -22,7 +29,9 @@ class EventBetRecord extends Component {
 
   componentDidMount() {
     document.title = "Big Bet Event Logs";
-      this.getbetHistoryArray();
+    Object.keys(this.assets).forEach(function (asset) {
+      this.getbetHistoryArray(asset);
+    }, this);
   }
 
   timeConverter(UNIX_timestamp) {
@@ -42,11 +51,11 @@ class EventBetRecord extends Component {
       BettingContract.abi,
       BettingContract.arbitrumaddress
     );
-    //console.log("add", BettingContract.arbitrumaddress);
+    console.log("add", BettingContract.arbitrumaddress);
     var pricedata = [];
     contractweb3
       .getPastEvents("BetBigRecord", {
-        fromBlock: 1800000,
+        fromBlock: 2100000,
         toBlock: 2153983,
       })
       .then(

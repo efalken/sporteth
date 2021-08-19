@@ -14,13 +14,6 @@ class EventSchedule extends Component {
     super(props);
     autoBind(this);
 
-    this.assets = [
-      {
-        contract: context.drizzle.contracts.OracleMain,
-        id: 1,
-      },
-    ];
-
     this.currentContract = this.props.routeParams.contract;
     this.asset_id = 1;
     this.contracts = context.drizzle.contracts;
@@ -30,9 +23,7 @@ class EventSchedule extends Component {
 
   componentDidMount() {
     document.title = "Schedule Event Logs";
-    Object.keys(this.assets).forEach(function (asset) {
-      this.getbetHistoryArray(asset);
-    }, this);
+      this.getbetHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -58,7 +49,7 @@ class EventSchedule extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("SchedulePosted", {
-        fromBlock: 2000000,
+        fromBlock: 1800000,
         toBlock: 2153983,
       })
       .then(
