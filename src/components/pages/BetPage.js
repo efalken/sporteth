@@ -227,7 +227,7 @@ class BetPagejs extends Component {
       1
     );
 
-    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1");
+    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0x16B7753dAC71BcF1846cE40Dc4F040bEff1499b7");
 
     this.userBalKey = this.contracts[
       "BettingMain"
