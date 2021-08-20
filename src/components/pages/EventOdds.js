@@ -38,12 +38,12 @@ class EventOdds extends Component {
 
   getOddsHistoryArray() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.arbitrumaddress);
+    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.address);
     var pricedata = [];
     contractweb3
       .getPastEvents("DecOddsPosted", {
-        fromBlock: 1600000,
-        toBlock: 1953983,
+        fromBlock: 9149000,
+        toBlock: 'latest',
         filter: { posted: true },
       })
       .then(

@@ -46,12 +46,12 @@ class EventStartTime extends Component {
 
   getbetHistoryArray() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.arbitrumaddress);
+    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.address);
     var pricedata = [];
     contractweb3
       .getPastEvents("StartTimesPosted", {
-        fromBlock: 1800000,
-        toBlock: 2153983,
+        fromBlock: 9149000,
+        toBlock: 'latest',
       })
       .then(
         function (events) {

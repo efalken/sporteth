@@ -40,14 +40,14 @@ class EventBigBetRecord extends Component {
     const web3 = this.context.drizzle.web3;
     const contractweb3 = new web3.eth.Contract(
       BettingContract.abi,
-      BettingContract.arbitrumaddress
+      BettingContract.address
     );
-    //console.log("add", BettingContract.arbitrumaddress);
+    //console.log("add", BettingContract.address);
     var pricedata = [];
     contractweb3
       .getPastEvents("BetBigRecord", {
-        fromBlock: 1800000,
-        toBlock: 2153983,
+        fromBlock: 9149000,
+        toBlock: 'latest',
       })
       .then(
         function (events) {
