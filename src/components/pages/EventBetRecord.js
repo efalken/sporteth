@@ -23,7 +23,7 @@ class EventBetRecord extends Component {
 
   componentDidMount() {
     document.title = "Bet Event Logs";
-      this.getbetHistoryArray();
+      this.getRegBets();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -37,14 +37,14 @@ class EventBetRecord extends Component {
     return time;
   }
 
-  getbetHistoryArray() {
+  getRegBets() {
     const web3 = this.context.drizzle.web3;
     const contractweb3 = new web3.eth.Contract(Betting.abi, Betting.arbitrumaddress);
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {
-        fromBlock: 1800000,
-        toBlock: 2126238,
+        fromBlock: 2000000,
+        toBlock: 2153983,
       })
       .then(
         function (events) {
@@ -52,10 +52,10 @@ class EventBetRecord extends Component {
             pricedata.push({
               Epoch: element.returnValues.epoch,
               time: element.returnValues.timestamp,
-              BetSize: element.returnValues.betsize / 1e15,
+              BetSize: Number(element.returnValues.betsize) / 1e15,
               LongPick: element.returnValues.pick,
               MatchNum: element.returnValues.matchnum,
-              Payoff: element.returnValues.payoff / 1e15,
+          //    Payoff: Number(element.returnValues.payoff) / 1e15,
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
             });
@@ -103,9 +103,9 @@ class EventBetRecord extends Component {
             <div>
               <Text size="12px" weight="200">
                 {" "}
-                {moment.unix(event.time).format("DD-MM-YYTHH:mm")},{" "}
+                {event.time},{" "}
                 {event.Epoch}, {event.MatchNum}, {event.LongPick},{" "}
-                {event.BetSize.toFixed(3)}, {event.Payoff.toFixed(3)},{" "}
+                {event.BetSize.toFixed(3)}, {" "}
                 {event.BettorAddress}, {event.Hashoutput},{" "}
               </Text>
               <br />

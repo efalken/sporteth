@@ -22,7 +22,7 @@ class EventOdds extends Component {
 
   componentDidMount() {
     document.title = "Posted Odds Event Logs";
-      this.getbetHistoryArray();
+      this.getOddsHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -36,7 +36,7 @@ class EventOdds extends Component {
     return time;
   }
 
-  getbetHistoryArray() {
+  getOddsHistoryArray() {
     const web3 = this.context.drizzle.web3;
     const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.arbitrumaddress);
     var pricedata = [];

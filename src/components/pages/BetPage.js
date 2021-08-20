@@ -28,35 +28,38 @@ class BetPagejs extends Component {
 
     this.contracts = context.drizzle.contracts;
     this.web3 = web3;
-    this.betHistory = {};
+    this.betHistory = [];
+    this.currentOfferts = [];
     this.takekeys = {};
-    this.scheduleStringkey = [];
+  //  this.scheduleStringkey = [];
 
     this.state = {
       betAmount: "",
       fundAmount: "",
       wdAmount: "",
-      gameResult: "",
       sharesToSell: "",
       teamPick: null,
       matchPick: null,
       showDecimalOdds: false,
-      subcontracts: {},
-      currW: "",
-      tokenAmount: ""
+  //    subcontracts: {},
+  //    currW: ""
+  /*    ,
+      tokenAmount: ""*/
     };
   }
 
   componentDidMount() {
     document.title = "Bet Page";
+    this.findValues();
     setInterval(() => {
       this.findValues();
       this.getbetHistoryArray();
       this.checkRedeem();
-      this.getWeek2();
-      this.getTokens();
-    }, 5000);
+    //  this.getWeek2();
+    //  this.getTokens();
+  }, 1000);
   }
+
 
   handleBetSize(betAmount) {
     this.setState({ betAmount });
@@ -146,8 +149,7 @@ class BetPagejs extends Component {
     contractweb3b
       .getPastEvents("BetRecord", {
         fromBlock: 2000000,
-        toBlock: 2153910
-        //filter: { bettor: this.props.accounts[0] },
+        toBlock: 2153910,
       })
       .then(
         function (events) {
@@ -158,21 +160,14 @@ class BetPagejs extends Component {
               BettorAddress: element.returnValues.bettor,
               Epoch: element.returnValues.epoch,
               timestamp: element.returnValues.timestamp,
-              BetSize: web3.fromWei(
-                element.returnValues.betsize.toString(),
-                "finney"
-              ),
-              LongPick: Number(element.returnValues.pick),
-              MatchNum: Number(element.returnValues.matchnum),
-              DecimalOdds: (
-                (0.95 * element.returnValues.payoff) /
-                  element.returnValues.betsize +
-                1
-              ).toFixed(3),
-              Payoff: web3.fromWei(
-                element.returnValues.payoff.toString(),
-                "finney"
-              ),
+              BetSize: Number(web3.fromWei(element.returnValues.betsize,
+              "finney"
+            )),
+              LongPick: element.returnValues.pick,
+              MatchNum: element.returnValues.matchnum,
+              Payoff: Number(web3.fromWei(element.returnValues.payoff,
+              "finney"
+            )),
             });
             takes[element.returnValues.contractHash] = this.contracts[
               "BettingMain"
@@ -185,7 +180,6 @@ class BetPagejs extends Component {
       );
 
     contractweb3b.events.BetRecord(
-      { filter: { bettor: this.props.accounts[0] } },
       function (error, log) {
         console.log({ log });
         this.betHistory[0].push({
@@ -193,14 +187,14 @@ class BetPagejs extends Component {
           BettorAddress: log.returnValues.bettor,
           Epoch: log.returnValues.epoch,
           timestamp: log.returnValues.timestamp,
-          BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
-          LongPick: Number(log.returnValues.pick),
-          MatchNum: Number(log.returnValues.matchnum),
-          DecimalOdds: (
-            (0.95 * log.returnValues.payoff) / log.returnValues.betsize +
-            1
-          ).toFixed(3),
-          Payoff: web3.fromWei(log.returnValues.payoff.toString(), "finney"),
+          BetSize: Number(web3.fromWei(log.returnValues.betsize,
+          "finney"
+        )),
+          LongPick: log.returnValues.pick,
+          MatchNum: log.returnValues.matchnum,
+          Payoff: Number(web3.fromWei(log.returnValues.payoff,
+          "finney"
+        )),
         });
         this.takekeys[log.returnValues.contractHash] = this.contracts[
           "BettingMain"
@@ -233,9 +227,7 @@ class BetPagejs extends Component {
       1
     );
 
-    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall(
-      this.props.accounts[0]
-    );
+    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1");
 
     this.userBalKey = this.contracts[
       "BettingMain"
@@ -272,6 +264,15 @@ class BetPagejs extends Component {
       "BettingMain"
     ].methods.showSchedString.cacheCall();
   }
+
+/*
+getTokens() {
+  let tokenAmount = "0";
+   if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
+     tokenAmount =web3.fromWei( this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value, "finney");
+   }
+   this.setState({ tokenAmount });
+}*/
 
   getMaxSize(unused0, used0, climit0, long0) {
     let unused = Number(unused0);
@@ -313,7 +314,7 @@ class BetPagejs extends Component {
     }
     return moneyline;
   }
-
+/*
   getWeek2() {
     let currW = 0;
     if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
@@ -321,22 +322,25 @@ class BetPagejs extends Component {
     }
     this.setState({ currW });
   }
+*/
 
-  getTokens() {
-    let tokenAmount = 0;
-    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
-      tokenAmount = this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value;
-    }
-    this.setState({ tokenAmount });
-  }
 
   render() {
+
     let concentrationLimit = 0;
     if (
       this.concKey in this.props.contracts["BettingMain"].concentrationLimit
     ) {
       concentrationLimit = this.props.contracts["BettingMain"]
         .concentrationLimit[this.concKey].value;
+    }
+
+    let currW4 = 0;
+    if (
+      this.weekKey in this.props.contracts["BettingMain"].betEpoch
+    ) {
+      currW4 = this.props.contracts["BettingMain"]
+        .betEpoch[this.weekKey].value;
     }
 
     let subcontracts2 = {};
@@ -365,8 +369,17 @@ class BetPagejs extends Component {
       }
     }
 
+    let tokenAmount = "0";
+    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
+      let ta = this.props.contracts["TokenMain"].balanceOf[
+        this.tokenKey
+      ].value;
+      if (ta) {
+        tokenAmount = web3.fromWei(ta.toString(), "ether");
+      }
+    }
+
     let usedCapital = "0";
-    //let usedCapital0 = 0;
     if (this.usedKey in this.props.contracts["BettingMain"].margin) {
       let usedCapital0 = this.props.contracts["BettingMain"].margin[
         this.usedKey
@@ -472,6 +485,7 @@ class BetPagejs extends Component {
       "NHL:Philadelphia:Edmonton",
       "NHL:Pittsburgh:NYIslanders",
     ];
+
     if (
       this.scheduleStringKey in
       this.props.contracts["BettingMain"].showSchedString
@@ -484,12 +498,15 @@ class BetPagejs extends Component {
       }
     }
 
+
+
     let liab0 = [];
     let liab1 = [];
 
-    console.log("tokens", this.state.tokenAmount);
-    // console.log("payoff1", payoff1);
-    // console.log("bets0", bets0);
+
+
+    console.log("tokens", tokenAmount);
+  //console.log("tokenstate", this.state.tokenAmount);
     // console.log("bets1", bets1);
     for (let ii = 0; ii < 32; ii++) {
       liab0[ii] = (Number(payoff0[ii]) - Number(bets1[ii])) / 1e12;
@@ -705,14 +722,7 @@ class BetPagejs extends Component {
                   }}
                 ></Flex>
               </Box>
-              <Box>
-                {" "}
-                <Text size="14px">
-                  {"Your unused margin: " +
-                    Number(userBalance).toFixed(2) +
-                    " finney"}
-                </Text>
-              </Box>
+
               {this.props.transactionStack.length > 0 &&
               this.props.transactionStack[0].length === 66 ? (
                 <Flex alignItems="center">
@@ -743,7 +753,7 @@ class BetPagejs extends Component {
                           </tr>
                           {this.betHistory[id].map(
                             (event, index) =>
-                              event.Epoch === this.state.currW && (
+                              event.Epoch === this.currW4 && (
                                 <tr key={index} style={{ width: "33%" }}>
                                   <td>{event.Epoch}</td>
                                   <td>{teamSplit[event.MatchNum][0]}</td>
@@ -757,7 +767,7 @@ class BetPagejs extends Component {
                                   <td>
                                     {parseFloat(event.BetSize).toFixed(2)}
                                   </td>
-                                  <td>{event.DecimalOdds}</td>
+                                  <td>{event.Payoff/event.BetSize}</td>
                                 </tr>
                               )
                           )}
@@ -784,7 +794,7 @@ class BetPagejs extends Component {
                     {Object.keys(this.betHistory).map((id) => (
                       <div key={id} style={{ width: "100%", float: "left" }}>
                         <Text size="15px">
-                          Active Epoch: {this.state.currW}
+                          Active Epoch: {currW4}
                         </Text>
                         <br />
                         <Text> Your unclaimed winning bets</Text>
@@ -806,7 +816,7 @@ class BetPagejs extends Component {
                             </tr>
                             {this.betHistory[id].map(
                               (event, index) =>
-                                this.state.subcontracts[event.Hashoutput] && (
+                                subcontracts2[event.Hashoutput] && (
                                   <tr key={index} style={{ width: "33%" }}>
                                     <td>{event.Epoch}</td>
                                     <td>{teamSplit[event.MatchNum][0]}</td>
@@ -855,25 +865,24 @@ class BetPagejs extends Component {
                   flexDirection="row"
                   justifyContent="space-between"
                 ></Flex>
-                <Flex
-                  style={{
-                    borderTop: `thin solid ${G}`,
-                  }}
-                ></Flex>
-              </Box>
+
+                </Box>
+
+              <Flex>
+
+              <Text size="14px">
+                {"Your unused margin: " +
+                  Number(userBalance).toFixed(3) +
+                  " finney"}
+              </Text>
+              </Flex>
               <Flex
                 mt="5px"
                 flexDirection="row"
                 justifyContent="flex-start"
                 alignItems="center"
               >
-                <Box>
-                  <Flex
-                    mt="20px"
-                    flexDirection="row"
-                    justifyContent="space-between"
-                  ></Flex>
-                </Box>
+
 
                 <Box>
                   <Form
@@ -891,6 +900,35 @@ class BetPagejs extends Component {
                 </Box>
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
+              </Flex>
+
+              <Box>
+                <Flex
+                  mt="20px"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                ></Flex>
+                <Flex
+                  style={{
+                    borderTop: `thin solid ${G}`,
+                  }}
+                ></Flex>
+                <Box>
+                  <Flex
+                    mt="20px"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                  ></Flex>
+
+                  <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
+                </Box>
+              </Box>
+
+              <Flex>
+              <Text size="14px">
+                {"matching tokens in contract: " +
+                  Number(tokenAmount).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}
+              </Text>
               </Flex>
               <Flex
                 mt="5px"

@@ -29,7 +29,7 @@ class BigBetPagejs extends Component {
 
     this.contracts = context.drizzle.contracts;
     this.web3 = web3;
-    this.yourBetHistory = [];
+    this.BetHistory = [];
     this.currentOffers = [];
     this.takekeys = {};
     this.takekeys2 = {};
@@ -43,11 +43,8 @@ class BigBetPagejs extends Component {
       matchPick: null,
       teamTake: false,
       showDecimalOdds: false,
-      teamName: false,
       BetSize: false,
-      MoneyLine: false,
-      decOdds: "",
-      decOddsOff: 0,
+      decOddsOffered: 0,
       fundAmount: 0,
       wdAmount: "",
       bigBets: [],
@@ -88,8 +85,8 @@ class BigBetPagejs extends Component {
     this.setState({ fundAmount });
   }
 
-  handleOddsOffered(decOddsOff) {
-    this.setState({ decOddsOff });
+  handleOddsOffered(decOddsOffered) {
+    this.setState({ decOddsOffered });
   }
 
   toggle() {
@@ -148,10 +145,10 @@ class BigBetPagejs extends Component {
       .getPastEvents("BetBigRecord", {
         fromBlock: 2000000,
         toBlock: 2153910,
-        //    filter: { bettor: this.props.accounts[0], epoch: this.state.currW },
       })
       .then(
         function (events) {
+        //  console.log("weekhere", x);
           events.forEach(function (element) {
             if (element.returnValues.bettor === this.props.accounts[0]) {
               eventdata.push({
@@ -161,15 +158,16 @@ class BigBetPagejs extends Component {
                 Epoch: element.returnValues.epoch,
                 LongPick: element.returnValues.pick,
                 MatchNum: element.returnValues.matchnum,
-                BetSize: web3.fromWei(
+                BetSize: Number(web3.fromWei(
                   element.returnValues.betsize.toString(),
                   "finney"
-                ),
+                )),
               });
               takes[element.returnValues.contractHash] = this.contracts[
                 "BettingMain"
               ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
             }
+
             if (element.returnValues.epoch === this.state.currW) {
               eventdata2.push({
                 Hashoutput2: element.returnValues.contractHash,
@@ -191,7 +189,7 @@ class BigBetPagejs extends Component {
               ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
             }
           }, this);
-          this.yourBetHistory[0] = eventdata;
+          this.BetHistory[0] = eventdata;
           this.takekeys = takes;
           this.currentOffers = eventdata2;
           this.takekeys2 = takes2;
@@ -201,7 +199,7 @@ class BigBetPagejs extends Component {
       contractweb3b.events.BetBigRecord(
       function (error, log) {
          console.log({ log });
-          this.yourBetHistory[0].push({
+          this.BetHistory[0].push({
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
           Epoch: log.returnValues.epoch,
@@ -272,7 +270,7 @@ class BigBetPagejs extends Component {
       this.state.matchPick,
       this.state.teamPick,
       web3.toWei(this.state.betAmount, "finney"),
-      this.state.decOddsOff,
+      this.state.decOddsOffered,
       {
         from: this.props.accounts[0],
       }
@@ -303,7 +301,7 @@ class BigBetPagejs extends Component {
       teamTake: true,
       contractID: hash0,
       betAmount: betamt0,
-      decOddsOff: odds0,
+      decOddsOffered: odds0,
     });
   }
 
@@ -375,12 +373,23 @@ class BigBetPagejs extends Component {
     }
     this.setState({ currW });
   }
+  getWeek5() {
+    let currW5 = 0;
+    if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
+      currW5 = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
+    }
+    console.log("currW5", currW5);
+    return currW5;
+  }
 
   render() {
     let minBet = 0;
     if (this.minBetKey in this.props.contracts["BettingMain"].minBet) {
       minBet = this.props.contracts["BettingMain"].minBet[this.minBetKey].value;
     }
+
+    console.log("currW", this.state.currW);
+
 
     let decodds0 = [];
     if (
@@ -698,7 +707,7 @@ console.log("decTrans", this.state.decTransform1);
               </Flex>
               <br />
               <Flex>
-                {Object.keys(this.yourBetHistory).map((id) => (
+                {Object.keys(this.BetHistory).map((id) => (
                   <div style={{ width: "100%", float: "left" }}>
                     <Text> Your Unclaimed Offers</Text>
                     <br />
@@ -710,7 +719,7 @@ console.log("decTrans", this.state.decTransform1);
                           <td>contractID</td>
                           <td>Click to Cancel</td>
                         </tr>
-                        {this.yourBetHistory[id].map(
+                        {this.BetHistory[id].map(
                           (event, index) =>
                             this.state.subcontracts[event.Hashoutput] && (
                               <tr key={index} style={{ width: "50%" }}>
@@ -830,8 +839,7 @@ console.log("decTrans", this.state.decTransform1);
                     width="151px"
                     placeholder={"enterML"}
                     marginLeft="10px"
-                    marginRignt="5px"
-                    //value={this.state.decTransform1}
+                    marginRight="5px"
                   />
                 </Flex>
                 <Flex>
@@ -937,7 +945,7 @@ console.log("decTrans", this.state.decTransform1);
                   placeholder={"DecOdds e.g. 1.909"}
                   marginLeft="10px"
                   marginRignt="5px"
-                  value={this.state.decOddsOff}
+                  value={this.state.decOddsOffered}
                 />
 
                 <Box mt="10px" mb="10px">
@@ -987,10 +995,10 @@ console.log("decTrans", this.state.decTransform1);
                       ]
                     }{" "}
                     {"  "}
-                    at odds {Number(this.state.decOddsOff).toFixed(3)}
+                    at odds {Number(this.state.decOddsOffered).toFixed(3)}
                     {" (MoneyLine "}
                     {this.getMoneyLine(
-                      Number(this.state.decOddsOff) * 1000 - 1000
+                      Number(this.state.decOddsOffered) * 1000 - 1000
                     )}
                     {")"}{" "}
                   </Button>{" "}

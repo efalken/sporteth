@@ -8,7 +8,7 @@ import BettingContract from "../../contracts/solidityjson/Betting.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
-class EventBetRecord extends Component {
+class EventBigBetRecord extends Component {
   constructor(props, context) {
     super(props);
     autoBind(this);
@@ -57,7 +57,7 @@ class EventBetRecord extends Component {
               BettorAddress: element.returnValues.bettor,
               NFLWeek: element.returnValues.epoch,
               time: element.returnValues.timestamp,
-              BetSize: element.returnValues.betsize / 1e15,
+              BetSize: Number(element.returnValues.betsize) / 1e15,
               LongPick: element.returnValues.pick,
               MatchNum: element.returnValues.matchnum,
             });
@@ -75,7 +75,6 @@ class EventBetRecord extends Component {
 
   render() {
     console.log("bestHistory", this.bigBetHistory);
-
     if (Object.keys(this.bigBetHistory).length === 0)
       return (
         <Text size="20px" weight="200">
@@ -108,7 +107,7 @@ class EventBetRecord extends Component {
                 {" "}
                 {event.NFLWeek}, {event.MatchNum}, {event.LongPick},{" "}
                 {event.BetSize.toFixed(3)}, {event.BettorAddress},{" "}
-                {event.Hashoutput}
+                {event.Hashoutput}, {" "}
               </Text>
               <br />
             </div>
@@ -119,7 +118,7 @@ class EventBetRecord extends Component {
   }
 }
 
-EventBetRecord.contextTypes = {
+EventBigBetRecord.contextTypes = {
   drizzle: PropTypes.object,
 };
 
@@ -132,4 +131,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default drizzleConnect(EventBetRecord, mapStateToProps);
+export default drizzleConnect(EventBigBetRecord, mapStateToProps);
