@@ -185,7 +185,7 @@ class BigBetPagejs extends Component {
                 BettorAddress: element.returnValues.bettor,
                 timestamp: element.returnValues.timestamp,
                 Epoch: element.returnValues.epoch,
-                LongPick: element.returnValues.pick,
+                LongPick: Number(element.returnValues.pick),
                 MatchNum: element.returnValues.matchnum,
                 BetSize: Number(web3.fromWei(
                   element.returnValues.betsize.toString(),
@@ -203,7 +203,7 @@ class BigBetPagejs extends Component {
                 BetSizeOffered2: Number(
                   web3.fromWei(element.returnValues.payoff.toString(), "finney")
                 ),
-                OfferedTeam2: 1 - element.returnValues.pick,
+                OfferedTeam2: Number(1 - element.returnValues.pick),
                 OfferEpoch2: element.returnValues.epoch,
                 OfferedMatch2: element.returnValues.matchnum,
                 BetPayoffOffered2: Number(
@@ -234,7 +234,7 @@ class BigBetPagejs extends Component {
           Epoch: log.returnValues.epoch,
           timestamp: log.blockNumber.timestamp,
           BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
-          LongPick: log.returnValues.pick,
+          LongPick: Number(log.returnValues.pick),
           MatchNum: log.returnValues.matchnum,
             });
         this.takekeys[log.returnValues.contractHash] = this.contracts[
@@ -251,7 +251,7 @@ class BigBetPagejs extends Component {
                   BetSizeOffered2: Number(
                     web3.fromWei(log.returnValues.payoff.toString(), "finney")
                   ),
-                  OfferedTeam2: 1 - log.returnValues.pick,
+                  OfferedTeam2: Number(1 - log.returnValues.pick),
                   OfferEpoch2: log.returnValues.epoch,
                   OfferedMatch2: log.returnValues.matchnum,
                   BetPayoffOffered2: Number(

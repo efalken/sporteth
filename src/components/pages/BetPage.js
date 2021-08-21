@@ -40,7 +40,6 @@ class BetPagejs extends Component {
       teamPick: null,
       matchPick: null,
       showDecimalOdds: false,
-      subcontracts: {},
     };
   }
 
@@ -50,9 +49,6 @@ class BetPagejs extends Component {
     setInterval(() => {
       this.findValues();
       this.getbetHistoryArray();
-      this.checkRedeem();
-    //  this.getWeek2();
-    //  this.getTokens();
   }, 1000);
   }
 
@@ -163,7 +159,7 @@ class BetPagejs extends Component {
               BetSize: Number(web3.fromWei(element.returnValues.betsize,
               "finney"
             )),
-              LongPick: element.returnValues.pick,
+              LongPick: Number(element.returnValues.pick),
               MatchNum: element.returnValues.matchnum,
               Payoff: Number(web3.fromWei(element.returnValues.payoff,
               "finney"
@@ -190,7 +186,7 @@ class BetPagejs extends Component {
           BetSize: Number(web3.fromWei(log.returnValues.betsize,
           "finney"
         )),
-          LongPick: log.returnValues.pick,
+          LongPick: Number(log.returnValues.pick),
           MatchNum: log.returnValues.matchnum,
           Payoff: Number(web3.fromWei(log.returnValues.payoff,
           "finney"
@@ -212,7 +208,7 @@ class BetPagejs extends Component {
   }
 
   findValues() {
-    // getMinBet
+
     this.minBetKey = this.contracts["BettingMain"].methods.minBet.cacheCall();
 
     this.decOddsKey = this.contracts[
@@ -279,19 +275,6 @@ class BetPagejs extends Component {
     return maxSize;
   }
 
-  checkRedeem() {
-    let subcontracts = {};
-    Object.keys(this.takekeys).forEach(function (id) {
-      if (
-        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
-      ) {
-        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys[id]
-        ].value;
-      }
-    }, this);
-    this.setState({ subcontracts });
-  }
 
   getMoneyLine(decOddsi) {
     let moneyline = 0;
@@ -327,12 +310,13 @@ class BetPagejs extends Component {
         .betEpoch[this.weekKey].value;
     }
 
-    let subcontracts2 = {};
+
+    let subcontracts = {};
     Object.keys(this.takekeys).forEach(function (id) {
       if (
         this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
       ) {
-        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
+        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
           this.takekeys[id]
         ].value;
       }
@@ -489,7 +473,7 @@ class BetPagejs extends Component {
 
 
 
-    console.log("tokens", tokenAmount);
+
 
     for (let ii = 0; ii < 32; ii++) {
       liab0[ii] = (Number(payoff0[ii]) - Number(bets1[ii])) / 1e12;
@@ -515,7 +499,6 @@ class BetPagejs extends Component {
     }
 
      console.log("subk", this.state.subcontracts);
-     console.log("subk2", subcontracts2);
 
     let teamSplit = [];
     let faveSplit = [];
@@ -534,6 +517,8 @@ class BetPagejs extends Component {
         underSplit[i] = "na";
       }
     }
+
+        console.log("teamSplit", teamSplit);
 
     let teamList = [];
     const borderCells = 5;
@@ -590,7 +575,6 @@ class BetPagejs extends Component {
       );
     }
 
-    //  // console.log("subcon", subcontracts);
     return (
       <div>
         <VBackgroundCom />
@@ -741,11 +725,7 @@ class BetPagejs extends Component {
                                   <td>{event.Epoch}</td>
                                   <td>{teamSplit[event.MatchNum][0]}</td>
                                   <td>
-                                    {
-                                      teamSplit[event.MatchNum][
-                                        event.LongPick + 1
-                                      ]
-                                    }
+                                    {teamSplit[event.MatchNum][event.LongPick + 1]}
                                   </td>
                                   <td>
                                     {parseFloat(event.BetSize).toFixed(2)}
@@ -799,7 +779,7 @@ class BetPagejs extends Component {
                             </tr>
                             {this.betHistory[id].map(
                               (event, index) =>
-                                subcontracts2[event.Hashoutput] && (
+                                subcontracts[event.Hashoutput] && (
                                   <tr key={index} style={{ width: "33%" }}>
                                     <td>{event.Epoch}</td>
                                     <td>{teamSplit[event.MatchNum][0]}</td>
