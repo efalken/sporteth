@@ -49,8 +49,6 @@ class BigBetPagejs extends Component {
       wdAmount: "",
       bigBets: [],
       bigBetsSet: false,
-      subcontracts: {},
-      subcontracts2: {},
       decTransform1: ""
     };
   }
@@ -61,8 +59,6 @@ class BigBetPagejs extends Component {
       this.findValues();
       this.getWeek2();
       this.getbetHistoryArray();
-      this.checkRedeem0();
-      this.checkRedeem2();
     }, 5000);
   }
 
@@ -268,41 +264,13 @@ class BigBetPagejs extends Component {
         );
   }
 
-  checkRedeem0() {
-    let subcontracts = {};
-    Object.keys(this.takekeys).forEach(function (id) {
-      if (this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem) {
-        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys[id]
-        ].value;
-      }
-    }, this);
-    this.setState({ subcontracts });
-  }
-
-  checkRedeem2() {
-    let subcontracts2 = {};
-    Object.keys(this.takekeys2).forEach(function (id) {
-      if (
-        this.takekeys2[id] in this.props.contracts["BettingMain"].checkRedeem
-      ) {
-        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys2[id]
-        ].value;
-      }
-    }, this);
-    this.setState({ subcontracts2 });
-  }
-
 
   radioFavePick(matchpic) {
     this.setState({ matchPick: matchpic, teamTake: false, teamPick: 0 });
-    this.checkRedeem2();
   }
 
   radioUnderPick(matchpic) {
     this.setState({ matchPick: matchpic, teamTake: false, teamPick: 1 });
-    this.checkRedeem2();
   }
 
   radioTeamPickTake(betamt0, hash0, odds0) {
@@ -392,6 +360,7 @@ class BigBetPagejs extends Component {
   }
 
   render() {
+
     let minBet = 0;
     if (this.minBetKey in this.props.contracts["BettingMain"].minBet) {
       minBet = this.props.contracts["BettingMain"].minBet[this.minBetKey].value;
@@ -399,6 +368,28 @@ class BigBetPagejs extends Component {
 
     console.log("currW", this.state.currW);
 
+
+    let subcontracts = {};
+    Object.keys(this.takekeys).forEach(function (id) {
+      if (
+        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
+      ) {
+        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
+          this.takekeys[id]
+        ].value;
+      }
+    }, this);
+
+    let subcontracts2 = {};
+    Object.keys(this.takekeys2).forEach(function (id) {
+      if (
+        this.takekeys2[id] in this.props.contracts["BettingMain"].checkRedeem
+      ) {
+        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
+          this.takekeys2[id]
+        ].value;
+      }
+    }, this);
 
     let decodds0 = [];
     if (
@@ -730,7 +721,7 @@ console.log("decTrans", this.state.decTransform1);
                         </tr>
                         {this.BetHistory[id].map(
                           (event, index) =>
-                            this.state.subcontracts[event.Hashoutput] && (
+                            subcontracts[event.Hashoutput] && (
                               <tr key={index} style={{ width: "50%" }}>
                                 <td>{event.Epoch}</td>
                                 <td>{Number(event.BetSize).toFixed(2)}</td>
@@ -1056,7 +1047,7 @@ console.log("decTrans", this.state.decTransform1);
                       this.state.bigBets.map(
                         (bet, index) =>
                           bet.OfferTeamNum == this.state.teamPick &&
-                          this.state.subcontracts2[bet.OfferHash] &&
+                          subcontracts2[bet.OfferHash] &&
                           bet.BigMatch == this.state.matchPick && (
                             <tr style={{ width: "100%" }}>
                               <td>
