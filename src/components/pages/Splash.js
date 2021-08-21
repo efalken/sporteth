@@ -112,7 +112,7 @@ class Splash extends Component {
                           textDecoration: "none",
                           cursor: "pointer",
                         }}
-                        href="https://rinkeby-explorer.arbitrum.io/address/0xEA3609F8194B149DeDfbE742A8188A18dBdF0e9e"
+                        href="https://rinkeby.etherscan.io/address/0xEA3609F8194B149DeDfbE742A8188A18dBdF0e9e"
                         target="_blank"
                       >
                         EtherScan

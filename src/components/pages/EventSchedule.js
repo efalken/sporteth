@@ -58,7 +58,7 @@ class EventSchedule extends Component {
             pricedata.push({
               games: element.returnValues.sched,
               Epoch: element.returnValues.epoch,
-              time: element.returnValues.timestamp,
+              time: element.blockNumber.timestamp,
               post1: element.returnValues.posted,
             });
           }, this);
@@ -69,7 +69,7 @@ class EventSchedule extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby-explorer.arbitrum.io/address/0xBA8f31a128f1CF6f1A50B87DAeee0AE1e1cf98f3";
+      "https://rinkeby.etherscan.io/address/0xBA8f31a128f1CF6f1A50B87DAeee0AE1e1cf98f3";
     window.open(url, "_blank");
   }
 

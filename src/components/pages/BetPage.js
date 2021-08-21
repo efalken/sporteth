@@ -31,7 +31,6 @@ class BetPagejs extends Component {
     this.betHistory = [];
     this.currentOfferts = [];
     this.takekeys = {};
-  //  this.scheduleStringkey = [];
 
     this.state = {
       betAmount: "",
@@ -41,10 +40,7 @@ class BetPagejs extends Component {
       teamPick: null,
       matchPick: null,
       showDecimalOdds: false,
-  //    subcontracts: {},
-  //    currW: ""
-  /*    ,
-      tokenAmount: ""*/
+      subcontracts: {},
     };
   }
 
@@ -84,12 +80,11 @@ class BetPagejs extends Component {
   }
 
 
-
-
   fundBettor(x) {
     const stackId = this.contracts["BettingMain"].methods.fundBettor.cacheSend({
       from: this.props.accounts[0],
       value: web3.toWei(this.state.fundAmount, "finney"),
+      type: "0x2",
     });
   }
 
@@ -100,19 +95,12 @@ class BetPagejs extends Component {
       web3.toWei(this.state.wdAmount.toString(), "finney"),
       {
         from: this.props.accounts[0],
+        type: "0x2",
       }
     );
   }
 
-  openEtherscan(txhash) {
-    const url = "https://rinkeby.etherscan.io/tx/" + txhash;
-    const urltest = "https://rinkeby-explorer.arbitrum.io/tx/" + txhash;
-    window.open(urltest, "_blank");
-  }
 
-  handletakeBookTeam(teamPick) {
-    this.setState({ teamPick });
-  }
 
   takeBet() {
     const stackId = this.contracts[
@@ -123,18 +111,30 @@ class BetPagejs extends Component {
       web3.toWei(this.state.betAmount, "finney"),
       {
         from: this.props.accounts[0],
+        type: "0x2",
       }
     );
+  }
+
+  redeemBet(x) {
+    const stackId = this.contracts["BettingMain"].methods.redeem.cacheSend(x, {
+      from: this.props.accounts[0],
+      type: "0x2",
+    });
   }
 
   switchOdds() {
     this.setState({ showDecimalOdds: !this.state.showDecimalOdds });
   }
 
-  redeemBet(x) {
-    const stackId = this.contracts["BettingMain"].methods.redeem.cacheSend(x, {
-      from: this.props.accounts[0],
-    });
+  openEtherscan(txhash) {
+    const url = "https://rinkeby.etherscan.io/tx/" + txhash;
+    const urltest = "https://rinkeby.etherscan.io/tx/" + txhash;
+    window.open(urltest, "_blank");
+  }
+
+  handletakeBookTeam(teamPick) {
+    this.setState({ teamPick });
   }
 
   getbetHistoryArray() {
@@ -159,7 +159,7 @@ class BetPagejs extends Component {
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
               Epoch: element.returnValues.epoch,
-              timestamp: element.returnValues.timestamp,
+              timestamp: element.blockNumber.timestamp,
               BetSize: Number(web3.fromWei(element.returnValues.betsize,
               "finney"
             )),
@@ -186,7 +186,7 @@ class BetPagejs extends Component {
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
           Epoch: log.returnValues.epoch,
-          timestamp: log.returnValues.timestamp,
+          timestamp: log.blockNumber.timestamp,
           BetSize: Number(web3.fromWei(log.returnValues.betsize,
           "finney"
         )),
@@ -227,7 +227,7 @@ class BetPagejs extends Component {
       1
     );
 
-    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0x16B7753dAC71BcF1846cE40Dc4F040bEff1499b7");
+    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0x53d62FDa36599B2974C8878735B26cE513F0De3E");
 
     this.userBalKey = this.contracts[
       "BettingMain"
@@ -265,14 +265,6 @@ class BetPagejs extends Component {
     ].methods.showSchedString.cacheCall();
   }
 
-/*
-getTokens() {
-  let tokenAmount = "0";
-   if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
-     tokenAmount =web3.fromWei( this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value, "finney");
-   }
-   this.setState({ tokenAmount });
-}*/
 
   getMaxSize(unused0, used0, climit0, long0) {
     let unused = Number(unused0);
@@ -314,15 +306,7 @@ getTokens() {
     }
     return moneyline;
   }
-/*
-  getWeek2() {
-    let currW = 0;
-    if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
-      currW = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
-    }
-    this.setState({ currW });
-  }
-*/
+
 
 
   render() {
@@ -506,8 +490,7 @@ getTokens() {
 
 
     console.log("tokens", tokenAmount);
-  //console.log("tokenstate", this.state.tokenAmount);
-    // console.log("bets1", bets1);
+
     for (let ii = 0; ii < 32; ii++) {
       liab0[ii] = (Number(payoff0[ii]) - Number(bets1[ii])) / 1e12;
       liab1[ii] = (Number(payoff1[ii]) - Number(bets0[ii])) / 1e12;
@@ -531,8 +514,8 @@ getTokens() {
       }
     }
 
-    // console.log("currW", this.state.currW);
-    // console.log("schedstring", scheduleString);
+     console.log("subk", this.state.subcontracts);
+     console.log("subk2", subcontracts2);
 
     let teamSplit = [];
     let faveSplit = [];
@@ -753,7 +736,7 @@ getTokens() {
                           </tr>
                           {this.betHistory[id].map(
                             (event, index) =>
-                              event.Epoch === this.currW4 && (
+                              event.Epoch === currW4 && (
                                 <tr key={index} style={{ width: "33%" }}>
                                   <td>{event.Epoch}</td>
                                   <td>{teamSplit[event.MatchNum][0]}</td>
@@ -767,7 +750,7 @@ getTokens() {
                                   <td>
                                     {parseFloat(event.BetSize).toFixed(2)}
                                   </td>
-                                  <td>{event.Payoff/event.BetSize}</td>
+                                  <td>{Number(event.Payoff/event.BetSize).toFixed(3)}</td>
                                 </tr>
                               )
                           )}

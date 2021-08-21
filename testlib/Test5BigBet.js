@@ -100,10 +100,17 @@ await oracle.initPost(["NFL:ARI:LAC","NFL:ATL:LAR","NFL:BAL:MIA","NFL:BUF:MIN","
         it("Offer Big Bet for 100 on 1:0", async () => {
             const result3 = await betting.postBigBet(1, 0, "100000000000000000", 1909, { from: accounts[2] });
             contractHash3 = result3.logs[0].args.contractHash;
+            const checkO = await betting.checkOffer(contractHash3);
+            const check1 = await betting.offercontracts(contractHash3).betAmount;
+            console.log(`checkOfferFn ${check0}`);
+            console.log(`checkOfferGetter ${check1}`);
+
         })
 
         let contractHash4;
         it("take above Big Bet, putting 95.5 on 1:1", async () => {
+
+
             const result4 = await betting.takeBigBet(contractHash3, { from: accounts[3] });
             contractHash4 = result4.logs[1].args.contractHash;
         })

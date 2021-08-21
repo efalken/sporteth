@@ -72,7 +72,6 @@ contract Oracle {
         bool indexed posted,
         uint16 propnum,
         uint8[32] winner,
-        uint256 timestamp,
         uint8 epoch,
         address proposer
         );
@@ -81,7 +80,6 @@ contract Oracle {
         bool indexed posted,
         uint16 propnum,
         uint256[32] decOdds,
-        uint256 timestamp,
         uint8 epoch,
         address proposer
         );
@@ -89,7 +87,6 @@ contract Oracle {
     event ParamsPosted(
         uint256 minBet,
         uint256 concLimit,
-        uint256 timestamp,
         uint8 epoch,
         address proposer
     );
@@ -98,7 +95,6 @@ contract Oracle {
         bool indexed posted,
         uint16 propnum,
         string[32] sched,
-        uint256 timestamp,
         uint8 epoch,
         address proposer
         );
@@ -107,7 +103,6 @@ contract Oracle {
         bool indexed posted,
         uint16 propnum,
         uint256[32] starttimes,
-        uint256 timestamp,
         uint8 epoch,
         address proposer
     );
@@ -165,9 +160,9 @@ contract Oracle {
         propOdds = decimalOdds;
         earliestStart = earlyStart;
         // this tells users that an inimtial proposal has been sent, which is useful for oracle administrators who are monitoring this contract
-        emit SchedulePosted(false, propNumber, teamsched, block.timestamp, betEpoch, msg.sender);
-        emit StartTimesPosted(false, propNumber, starts, block.timestamp, betEpoch, msg.sender);
-        emit DecOddsPosted(false, propNumber, decimalOdds, block.timestamp, betEpoch, msg.sender);
+        emit SchedulePosted(false, propNumber, teamsched, betEpoch, msg.sender);
+        emit StartTimesPosted(false, propNumber, starts, betEpoch, msg.sender);
+        emit DecOddsPosted(false, propNumber, decimalOdds, betEpoch, msg.sender);
     }
 
     function oddsPost(uint256[32] memory decimalOdds) external {
@@ -175,7 +170,7 @@ contract Oracle {
         underReview = 2;
         post();
         propOdds = decimalOdds;
-        emit DecOddsPosted(false, propNumber, propOdds, block.timestamp, betEpoch, msg.sender);
+        emit DecOddsPosted(false, propNumber, propOdds, betEpoch, msg.sender);
     }
 
     function settlePost(uint8[32] memory resultVector) external {
@@ -184,7 +179,7 @@ contract Oracle {
         underReview = 3;
         post();
         propResults = resultVector;
-        emit ResultsPosted(false, propNumber, propResults, block.timestamp, betEpoch, msg.sender);
+        emit ResultsPosted(false, propNumber, propResults, betEpoch, msg.sender);
     }
 
     function initProcess() external {

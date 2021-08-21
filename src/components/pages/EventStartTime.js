@@ -59,7 +59,7 @@ class EventStartTime extends Component {
             pricedata.push({
               games: element.returnValues.starttimes,
               Epoch: element.returnValues.epoch,
-              time: element.returnValues.timestamp,
+              time: element.blockNumber.timestamp,
               post1: element.returnValues.posted,
             });
           }, this);
@@ -70,7 +70,7 @@ class EventStartTime extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby-explorer.arbitrum.io/address/0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826";
+      "https://rinkeby.etherscan.io/address/0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826";
     window.open(url, "_blank");
   }
 

@@ -60,7 +60,7 @@ class EventGameoutcomes extends Component {
         function (events) {
           events.forEach(function (element) {
             pricedata.push({
-              timestamp: element.returnValues.timestamp,
+              timestamp: element.blockNumber.timestamp,
               outcome: element.returnValues.winner,
               Epoch: element.returnValues.epoch,
               post1: element.returnValues.posted,
@@ -73,7 +73,7 @@ class EventGameoutcomes extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby-explorer.arbitrum.io/address/0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826";
+      "https://rinkeby.etherscan.io/address/0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826";
     window.open(url, "_blank");
   }
 

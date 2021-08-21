@@ -61,8 +61,8 @@ class BigBetPagejs extends Component {
       this.findValues();
       this.getWeek2();
       this.getbetHistoryArray();
-      this.checkOffer0();
-      this.checkOffer2();
+      this.checkRedeem0();
+      this.checkRedeem2();
     }, 5000);
   }
 
@@ -103,12 +103,14 @@ class BigBetPagejs extends Component {
       "BettingMain"
     ].methods.cancelBigBet.cacheSend(x, {
       from: this.props.accounts[0],
+      type: "0x2",
     });
   }
 
   handleBettorWD(value2) {
     this.setState({
       wdAmount: value2,
+      type: "0x2",
     });
   }
 
@@ -116,6 +118,7 @@ class BigBetPagejs extends Component {
     const stackId = this.contracts["BettingMain"].methods.fundBettor.cacheSend({
       from: this.props.accounts[0],
       value: web3.toWei(this.state.fundAmount, "finney"),
+      type: "0x2",
     });
   }
 
@@ -126,9 +129,35 @@ class BigBetPagejs extends Component {
       web3.toWei(this.state.wdAmount.toString(), "finney"),
       {
         from: this.props.accounts[0],
+        type: "0x2",
       }
     );
   }
+
+
+    makeBigBet() {
+      const stackId = this.contracts["BettingMain"].methods.postBigBet.cacheSend(
+        this.state.matchPick,
+        this.state.teamPick,
+        web3.toWei(this.state.betAmount, "finney"),
+        this.state.decOddsOffered,
+        {
+          from: this.props.accounts[0],
+          type: "0x2",
+        }
+      );
+    }
+
+    takeBigBet() {
+      const stackId = this.contracts["BettingMain"].methods.takeBigBet.cacheSend(
+        this.state.contractID,
+        {
+          from: this.props.accounts[0],
+          type: "0x2",
+          type: "0x2",
+        }
+      );
+    }
 
   getbetHistoryArray() {
     const web3b = this.context.drizzle.web3;
@@ -165,7 +194,7 @@ class BigBetPagejs extends Component {
               });
               takes[element.returnValues.contractHash] = this.contracts[
                 "BettingMain"
-              ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
+              ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
             }
 
             if (element.returnValues.epoch === this.state.currW) {
@@ -186,7 +215,7 @@ class BigBetPagejs extends Component {
               });
               takes2[element.returnValues.contractHash] = this.contracts[
                 "BettingMain"
-              ].methods.checkOffer.cacheCall(element.returnValues.contractHash);
+              ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
             }
           }, this);
           this.BetHistory[0] = eventdata;
@@ -203,7 +232,7 @@ class BigBetPagejs extends Component {
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
           Epoch: log.returnValues.epoch,
-          timestamp: log.returnValues.timestamp,
+          timestamp: log.blockNumber.timestamp,
           BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
           LongPick: log.returnValues.pick,
           MatchNum: log.returnValues.matchnum,
@@ -239,11 +268,11 @@ class BigBetPagejs extends Component {
         );
   }
 
-  checkOffer0() {
+  checkRedeem0() {
     let subcontracts = {};
     Object.keys(this.takekeys).forEach(function (id) {
-      if (this.takekeys[id] in this.props.contracts["BettingMain"].checkOffer) {
-        subcontracts[id] = this.props.contracts["BettingMain"].checkOffer[
+      if (this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem) {
+        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
           this.takekeys[id]
         ].value;
       }
@@ -251,13 +280,13 @@ class BigBetPagejs extends Component {
     this.setState({ subcontracts });
   }
 
-  checkOffer2() {
+  checkRedeem2() {
     let subcontracts2 = {};
     Object.keys(this.takekeys2).forEach(function (id) {
       if (
-        this.takekeys2[id] in this.props.contracts["BettingMain"].checkOffer
+        this.takekeys2[id] in this.props.contracts["BettingMain"].checkRedeem
       ) {
-        subcontracts2[id] = this.props.contracts["BettingMain"].checkOffer[
+        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
           this.takekeys2[id]
         ].value;
       }
@@ -265,35 +294,15 @@ class BigBetPagejs extends Component {
     this.setState({ subcontracts2 });
   }
 
-  makeBigBet() {
-    const stackId = this.contracts["BettingMain"].methods.postBigBet.cacheSend(
-      this.state.matchPick,
-      this.state.teamPick,
-      web3.toWei(this.state.betAmount, "finney"),
-      this.state.decOddsOffered,
-      {
-        from: this.props.accounts[0],
-      }
-    );
-  }
-
-  takeBigBet() {
-    const stackId = this.contracts["BettingMain"].methods.takeBigBet.cacheSend(
-      this.state.contractID,
-      {
-        from: this.props.accounts[0],
-      }
-    );
-  }
 
   radioFavePick(matchpic) {
     this.setState({ matchPick: matchpic, teamTake: false, teamPick: 0 });
-    this.checkOffer2();
+    this.checkRedeem2();
   }
 
   radioUnderPick(matchpic) {
     this.setState({ matchPick: matchpic, teamTake: false, teamPick: 1 });
-    this.checkOffer2();
+    this.checkRedeem2();
   }
 
   radioTeamPickTake(betamt0, hash0, odds0) {

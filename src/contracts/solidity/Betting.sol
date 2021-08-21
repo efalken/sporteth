@@ -92,7 +92,6 @@ contract Betting {
         bytes32 contractHash,
         uint8 pick,
         uint8 matchnum,
-        uint256 timestamp,
         uint256 betsize,
         uint256 payoff
     );
@@ -103,7 +102,6 @@ contract Betting {
         bytes32 contractHash,
         uint8 pick,
         uint8 matchnum,
-        uint256 timestamp,
         uint256 betsize,
         uint256 payoff
     );
@@ -216,7 +214,6 @@ contract Betting {
             subkID,
             team0or1,
             matchNumber,
-            block.timestamp,
             amt,
             _payoff
         );
@@ -253,7 +250,6 @@ contract Betting {
             subkID,
             _team0or1,
             order.matchNum,
-            block.timestamp,
             order.betAmount,
             order.payoff
         );
@@ -284,7 +280,6 @@ contract Betting {
             subkid,
             order.pick,
             order.matchNum,
-            block.timestamp,
             order.betAmount,
             order.payoff
         );
@@ -315,7 +310,6 @@ contract Betting {
             subkID2,
             order2.pick,
             order2.matchNum,
-            block.timestamp,
             order2.betAmount,
             order2.payoff
         );
@@ -571,7 +565,7 @@ contract Betting {
         Subcontract storage k = subcontracts[_subkID];
         bytes32 teamEpochHash =
             keccak256(abi.encodePacked(k.matchNum, k.epoch, k.pick));
-        bool redeemable = (pickEpochResult[teamEpochHash] > 0);
+        bool redeemable = (pickEpochResult[teamEpochHash] > 0 || offercontracts[_subkID].betAmount > 0);
         return redeemable;
     }
 

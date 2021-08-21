@@ -78,7 +78,7 @@ class EventBetRecord extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby-explorer.arbitrum.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
+      "https://rinkeby.etherscan.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
     window.open(url, "_blank");
   }
 

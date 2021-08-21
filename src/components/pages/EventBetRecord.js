@@ -51,7 +51,7 @@ class EventBetRecord extends Component {
           events.forEach(function (element) {
             pricedata.push({
               Epoch: element.returnValues.epoch,
-              time: element.returnValues.timestamp,
+            //  time: element.blockNumber.timestamp,
               BetSize: Number(element.returnValues.betsize) / 1e15,
               LongPick: element.returnValues.pick,
               MatchNum: element.returnValues.matchnum,
@@ -67,7 +67,7 @@ class EventBetRecord extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby-explorer.arbitrum.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
+      "https://rinkeby.etherscan.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
     window.open(url, "_blank");
   }
 
@@ -103,7 +103,7 @@ class EventBetRecord extends Component {
             <div>
               <Text size="12px" weight="200">
                 {" "}
-                {event.time},{" "}
+              //  {event.time},{" "}
                 {event.Epoch}, {event.MatchNum}, {event.LongPick},{" "}
                 {event.BetSize.toFixed(3)}, {" "}
                 {event.BettorAddress}, {event.Hashoutput},{" "}

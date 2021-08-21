@@ -56,7 +56,7 @@ class EventBigBetRecord extends Component {
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
               NFLWeek: element.returnValues.epoch,
-              time: element.returnValues.timestamp,
+              time: element.blockNumber.timestamp,
               BetSize: Number(element.returnValues.betsize) / 1e15,
               LongPick: element.returnValues.pick,
               MatchNum: element.returnValues.matchnum,
@@ -69,7 +69,7 @@ class EventBigBetRecord extends Component {
 
   openEtherscan() {
     const url =
-      "https://rinkeby-explorer.arbitrum.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
+      "https://rinkeby.etherscan.io/address/0x131c66DC2C2a7D1b614aF9A778931F701C4945a1";
     window.open(url, "_blank");
   }
 
