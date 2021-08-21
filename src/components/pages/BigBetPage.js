@@ -31,8 +31,6 @@ class BigBetPagejs extends Component {
     this.web3 = web3;
     this.BetHistory = [];
     this.currentOffers = [];
-    this.takekeys = {};
-    this.takekeys2 = {};
     this.scheduleStringkey = [];
 
     this.state = {
@@ -175,7 +173,11 @@ class BigBetPagejs extends Component {
         function (events) {
         //  console.log("weekhere", x);
           events.forEach(function (element) {
-            if (element.returnValues.bettor === this.props.accounts[0]) {
+            if (element.returnValues.bettor === this.props.accounts[0] &&
+              this.contracts["BettingMain"
+            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
+          )
+            {
               eventdata.push({
                 Hashoutput: element.returnValues.contractHash,
                 BettorAddress: element.returnValues.bettor,
@@ -188,12 +190,10 @@ class BigBetPagejs extends Component {
                   "finney"
                 )),
               });
-              takes[element.returnValues.contractHash] = this.contracts[
-                "BettingMain"
-              ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
             }
-
-            if (element.returnValues.epoch === this.state.currW) {
+            if (element.returnValues.epoch === this.state.currW &&
+              this.contracts["BettingMain"
+            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)) {
               eventdata2.push({
                 Hashoutput2: element.returnValues.contractHash,
                 BetSizeOffered2: Number(
@@ -209,15 +209,11 @@ class BigBetPagejs extends Component {
                   )
                 ),
               });
-              takes2[element.returnValues.contractHash] = this.contracts[
-                "BettingMain"
-              ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
+
             }
           }, this);
           this.BetHistory[0] = eventdata;
-          this.takekeys = takes;
           this.currentOffers = eventdata2;
-          this.takekeys2 = takes2;
         }.bind(this)
       );
 
@@ -233,9 +229,6 @@ class BigBetPagejs extends Component {
           LongPick: Number(log.returnValues.pick),
           MatchNum: log.returnValues.matchnum,
             });
-        this.takekeys[log.returnValues.contractHash] = this.contracts[
-          "BettingMain"
-        ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
       }.bind(this)
     );
 
@@ -257,9 +250,6 @@ class BigBetPagejs extends Component {
                     )
                   ),
                     });
-            this.takekeys2[log.returnValues.contractHash] = this.contracts[
-              "BettingMain"
-            ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
           }.bind(this)
         );
   }
@@ -341,7 +331,6 @@ class BigBetPagejs extends Component {
     this.setState({ decTransform1 });
   }
 
-  getTeamSplit() {}
 
   getWeek2() {
     let currW = 0;
@@ -349,17 +338,19 @@ class BigBetPagejs extends Component {
       currW = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
     }
     this.setState({ currW });
-  }
-  getWeek5() {
-    let currW5 = 0;
-    if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
-      currW5 = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
-    }
-    console.log("currW5", currW5);
-    return currW5;
+    return currW;
   }
 
+
   render() {
+
+    let currW4 = 0;
+    if (
+      this.weekKey in this.props.contracts["BettingMain"].betEpoch
+    ) {
+      currW4 = this.props.contracts["BettingMain"]
+        .betEpoch[this.weekKey].value;
+    }
 
     let minBet = 0;
     if (this.minBetKey in this.props.contracts["BettingMain"].minBet) {
@@ -368,28 +359,6 @@ class BigBetPagejs extends Component {
 
     console.log("currW", this.state.currW);
 
-
-    let subcontracts = {};
-    Object.keys(this.takekeys).forEach(function (id) {
-      if (
-        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
-      ) {
-        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys[id]
-        ].value;
-      }
-    }, this);
-
-    let subcontracts2 = {};
-    Object.keys(this.takekeys2).forEach(function (id) {
-      if (
-        this.takekeys2[id] in this.props.contracts["BettingMain"].checkRedeem
-      ) {
-        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys2[id]
-        ].value;
-      }
-    }, this);
 
     let decodds0 = [];
     if (
@@ -483,7 +452,6 @@ console.log("decTrans", this.state.decTransform1);
     let underSplit = [];
     let sport = [];
     let teamSplit = [];
-    // // console.log("schedstring", scheduleString);
     for (let i = 0; i < 32; i++) {
       if (scheduleString[i] !== "") {
         teamSplit[i] = scheduleString[i].split(":");
@@ -499,7 +467,6 @@ console.log("decTrans", this.state.decTransform1);
 
     // // console.log("starttime", startTimeColumn);
 
-    // // // console.log("bigBets", this.state.bigBets);
 
     let teamList = [];
 
@@ -703,7 +670,7 @@ console.log("decTrans", this.state.decTransform1);
                 </Flex>
               ) : null}
               <Flex justifyContent="left">
-                <Text size="15px">Active Week: {this.state.currW}</Text>
+                <Text size="15px">Active Week: {currW4}</Text>
               </Flex>
               <br />
               <Flex>
@@ -721,7 +688,6 @@ console.log("decTrans", this.state.decTransform1);
                         </tr>
                         {this.BetHistory[id].map(
                           (event, index) =>
-                            subcontracts[event.Hashoutput] && (
                               <tr key={index} style={{ width: "50%" }}>
                                 <td>{event.Epoch}</td>
                                 <td>{Number(event.BetSize).toFixed(2)}</td>
@@ -751,7 +717,7 @@ console.log("decTrans", this.state.decTransform1);
                                   </button>
                                 </td>
                               </tr>
-                            )
+
                         )}
                       </tbody>
                     </table>
@@ -1047,7 +1013,6 @@ console.log("decTrans", this.state.decTransform1);
                       this.state.bigBets.map(
                         (bet, index) =>
                           bet.OfferTeamNum == this.state.teamPick &&
-                          subcontracts2[bet.OfferHash] &&
                           bet.BigMatch == this.state.matchPick && (
                             <tr style={{ width: "100%" }}>
                               <td>

@@ -503,7 +503,7 @@ class BetPagejs extends Component {
       }
     }
 
-      //  console.log("teamSplit", teamSplit);
+    console.log("currw", currW4);
 
     let teamList = [];
     const borderCells = 5;
