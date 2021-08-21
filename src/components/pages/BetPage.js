@@ -144,16 +144,14 @@ class BetPagejs extends Component {
       .getPastEvents("BetRecord", {
         fromBlock: 9149000,
         toBlock: 'latest',
+        filter: {bettor: this.props.accounts[0]}
       })
       .then(
         function (events) {
           events.forEach(function (element) {
-              if(element.returnValues.bettor === this.props.accounts[0] &&
-                this.contracts["BettingMain"
+              if(this.contracts["BettingMain"
               ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
-
               )
-
               {
             eventdata.push({
               Hashoutput: element.returnValues.contractHash,

@@ -57,6 +57,7 @@ class BigBetPagejs extends Component {
       this.findValues();
       this.getWeek2();
       this.getbetHistoryArray();
+      this.getbetHistoryArray2();
     }, 5000);
   }
 
@@ -161,20 +162,19 @@ class BigBetPagejs extends Component {
     );
     var eventdata = [];
     var takes = {};
-    var eventdata2 = [];
-    var takes2 = {};
+
 
     contractweb3b
       .getPastEvents("BetBigRecord", {
         fromBlock: 9149000,
         toBlock: 'latest',
+        filter: {bettor: this.props.accounts[0]},
       })
       .then(
         function (events) {
         //  console.log("weekhere", x);
           events.forEach(function (element) {
-            if (element.returnValues.bettor === this.props.accounts[0] &&
-              this.contracts["BettingMain"
+            if (this.contracts["BettingMain"
             ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
           )
             {
@@ -191,9 +191,50 @@ class BigBetPagejs extends Component {
                 )),
               });
             }
-            if (element.returnValues.epoch === this.state.currW &&
-              this.contracts["BettingMain"
-            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)) {
+          }, this);
+          this.BetHistory[0] = eventdata;
+        }.bind(this)
+      );
+
+      contractweb3b.events.BetBigRecord(
+      function (error, log) {
+         console.log({ log });
+          this.BetHistory[0].push({
+          Hashoutput: log.returnValues.contractHash,
+          BettorAddress: log.returnValues.bettor,
+          Epoch: log.returnValues.epoch,
+          timestamp: log.blockNumber.timestamp,
+          BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
+          LongPick: Number(log.returnValues.pick),
+          MatchNum: log.returnValues.matchnum,
+            });
+      }.bind(this)
+    );
+
+  }
+
+  getbetHistoryArray2() {
+    const web3b = this.context.drizzle.web3;
+    const contractweb3b = new web3b.eth.Contract(
+      BettingContract.abi,
+      BettingContract.address
+    );
+    var eventdata2 = [];
+    var takes2 = {};
+
+    contractweb3b
+      .getPastEvents("BetBigRecord", {
+        fromBlock: 9149000,
+        toBlock: 'latest',
+        filter: {epoch: this.state.currW},
+      })
+      .then(
+        function (events) {
+        //  console.log("weekhere", x);
+          events.forEach(function (element) {
+            if (this.contracts["BettingMain"
+            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
+          ) {
               eventdata2.push({
                 Hashoutput2: element.returnValues.contractHash,
                 BetSizeOffered2: Number(
@@ -212,25 +253,9 @@ class BigBetPagejs extends Component {
 
             }
           }, this);
-          this.BetHistory[0] = eventdata;
           this.currentOffers = eventdata2;
         }.bind(this)
       );
-
-      contractweb3b.events.BetBigRecord(
-      function (error, log) {
-         console.log({ log });
-          this.BetHistory[0].push({
-          Hashoutput: log.returnValues.contractHash,
-          BettorAddress: log.returnValues.bettor,
-          Epoch: log.returnValues.epoch,
-          timestamp: log.blockNumber.timestamp,
-          BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
-          LongPick: Number(log.returnValues.pick),
-          MatchNum: log.returnValues.matchnum,
-            });
-      }.bind(this)
-    );
 
     contractweb3b.events.BetBigRecord(
           function (error, log) {
@@ -357,7 +382,8 @@ class BigBetPagejs extends Component {
       minBet = this.props.contracts["BettingMain"].minBet[this.minBetKey].value;
     }
 
-    console.log("currW", this.state.currW);
+    console.log("betHist[0]", this.BetHistory[0]);
+    console.log("betHist", this.currentOffers[0]);
 
 
     let decodds0 = [];

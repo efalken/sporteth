@@ -5,6 +5,7 @@ import Betting from "./contracts/solidityjson/Betting.json";
 import Oracle from './contracts/solidityjson/Oracle.json';
 import Token from './contracts/solidityjson/Token.json';
 
+
 /*
  * Create component.
  */
@@ -24,6 +25,7 @@ class CustomLoader extends Component {
         Betting.address
       )
     };
+
     var FOOT1Config = {
       contractName: "OracleMain",
       web3Contract: new drizz.web3.eth.Contract(
