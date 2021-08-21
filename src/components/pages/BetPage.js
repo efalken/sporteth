@@ -30,7 +30,6 @@ class BetPagejs extends Component {
     this.web3 = web3;
     this.betHistory = [];
     this.currentOfferts = [];
-    this.takekeys = {};
 
     this.state = {
       betAmount: "",
@@ -140,7 +139,6 @@ class BetPagejs extends Component {
       BettingContract.address
     );
     var eventdata = [];
-    var takes = {};
 
     contractweb3b
       .getPastEvents("BetRecord", {
@@ -150,7 +148,13 @@ class BetPagejs extends Component {
       .then(
         function (events) {
           events.forEach(function (element) {
-              if(element.returnValues.bettor === this.props.accounts[0]) {
+              if(element.returnValues.bettor === this.props.accounts[0] &&
+                this.contracts["BettingMain"
+              ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
+
+              )
+
+              {
             eventdata.push({
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
@@ -165,13 +169,9 @@ class BetPagejs extends Component {
               "finney"
             )),
             });
-            takes[element.returnValues.contractHash] = this.contracts[
-              "BettingMain"
-            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
           }
           }, this);
           this.betHistory[0] = eventdata;
-          this.takekeys = takes;
         }.bind(this)
       );
 
@@ -192,9 +192,6 @@ class BetPagejs extends Component {
           "finney"
         )),
         });
-        this.takekeys[log.returnValues.contractHash] = this.contracts[
-          "BettingMain"
-        ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
       }.bind(this)
     );
   }
@@ -309,18 +306,6 @@ class BetPagejs extends Component {
       currW4 = this.props.contracts["BettingMain"]
         .betEpoch[this.weekKey].value;
     }
-
-
-    let subcontracts = {};
-    Object.keys(this.takekeys).forEach(function (id) {
-      if (
-        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
-      ) {
-        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys[id]
-        ].value;
-      }
-    }, this);
 
     let minBet = 0;
     if (this.minBetKey in this.props.contracts["BettingMain"].minBet) {
@@ -498,7 +483,7 @@ class BetPagejs extends Component {
       }
     }
 
-     console.log("subk", this.state.subcontracts);
+
 
     let teamSplit = [];
     let faveSplit = [];
@@ -518,7 +503,7 @@ class BetPagejs extends Component {
       }
     }
 
-        console.log("teamSplit", teamSplit);
+      //  console.log("teamSplit", teamSplit);
 
     let teamList = [];
     const borderCells = 5;
@@ -779,7 +764,7 @@ class BetPagejs extends Component {
                             </tr>
                             {this.betHistory[id].map(
                               (event, index) =>
-                                subcontracts[event.Hashoutput] && (
+                              (event.Epoch != currW4) && (
                                   <tr key={index} style={{ width: "33%" }}>
                                     <td>{event.Epoch}</td>
                                     <td>{teamSplit[event.MatchNum][0]}</td>
@@ -813,7 +798,7 @@ class BetPagejs extends Component {
                                       </button>
                                     </td>
                                   </tr>
-                                )
+   )
                             )}
                           </tbody>
                         </table>
