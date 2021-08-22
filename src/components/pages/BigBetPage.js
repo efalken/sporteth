@@ -32,6 +32,8 @@ class BigBetPagejs extends Component {
     this.BetHistory = [];
     this.currentOffers = [];
     this.scheduleStringkey = [];
+    this.takekeys = {};
+    this.takekeys2 = {};
 
     this.state = {
       contractID: "",
@@ -47,7 +49,7 @@ class BigBetPagejs extends Component {
       wdAmount: "",
       bigBets: [],
       bigBetsSet: false,
-      decTransform1: ""
+      decTransform1: "",
     };
   }
 
@@ -55,7 +57,7 @@ class BigBetPagejs extends Component {
     document.title = "Big Bet Page";
     setInterval(() => {
       this.findValues();
-      this.getWeek2();
+      this.getWeek();
       this.getbetHistoryArray();
       this.getbetHistoryArray2();
     }, 5000);
@@ -100,6 +102,7 @@ class BigBetPagejs extends Component {
       from: this.props.accounts[0],
       type: "0x2",
     });
+    setTimeout(this.getbetHistoryArray(), 5000);
   }
 
   handleBettorWD(value2) {
@@ -129,30 +132,29 @@ class BigBetPagejs extends Component {
     );
   }
 
+  makeBigBet() {
+    const stackId = this.contracts["BettingMain"].methods.postBigBet.cacheSend(
+      this.state.matchPick,
+      this.state.teamPick,
+      web3.toWei(this.state.betAmount, "finney"),
+      this.state.decOddsOffered,
+      {
+        from: this.props.accounts[0],
+        type: "0x2",
+      }
+    );
+  }
 
-    makeBigBet() {
-      const stackId = this.contracts["BettingMain"].methods.postBigBet.cacheSend(
-        this.state.matchPick,
-        this.state.teamPick,
-        web3.toWei(this.state.betAmount, "finney"),
-        this.state.decOddsOffered,
-        {
-          from: this.props.accounts[0],
-          type: "0x2",
-        }
-      );
-    }
+  takeBigBet() {
+    const stackId = this.contracts["BettingMain"].methods.takeBigBet.cacheSend(
+      this.state.contractID,
+      {
+        from: this.props.accounts[0],
+        type: "0x2",
+      }
+    );
+  }
 
-    takeBigBet() {
-      const stackId = this.contracts["BettingMain"].methods.takeBigBet.cacheSend(
-        this.state.contractID,
-        {
-          from: this.props.accounts[0],
-          type: "0x2",
-          type: "0x2",
-        }
-      );
-    }
 
   getbetHistoryArray() {
     const web3b = this.context.drizzle.web3;
@@ -163,43 +165,39 @@ class BigBetPagejs extends Component {
     var eventdata = [];
     var takes = {};
 
-
     contractweb3b
       .getPastEvents("BetBigRecord", {
-        fromBlock: 9149000,
-        toBlock: 'latest',
-        filter: {bettor: this.props.accounts[0]},
+        fromBlock: 8999000,
+        toBlock: "latest",
+        filter: { bettor: this.props.accounts[0] },
       })
       .then(
         function (events) {
-        //  console.log("weekhere", x);
           events.forEach(function (element) {
-            if (this.contracts["BettingMain"
-            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
-          )
-            {
-              eventdata.push({
-                Hashoutput: element.returnValues.contractHash,
-                BettorAddress: element.returnValues.bettor,
-                timestamp: element.returnValues.timestamp,
-                Epoch: element.returnValues.epoch,
-                LongPick: Number(element.returnValues.pick),
-                MatchNum: element.returnValues.matchnum,
-                BetSize: Number(web3.fromWei(
-                  element.returnValues.betsize.toString(),
-                  "finney"
-                )),
-              });
-            }
+            eventdata.push({
+              Hashoutput: element.returnValues.contractHash,
+              BettorAddress: element.returnValues.bettor,
+              timestamp: element.returnValues.timestamp,
+              Epoch: element.returnValues.epoch,
+              LongPick: Number(element.returnValues.pick),
+              MatchNum: element.returnValues.matchnum,
+              BetSize: Number(
+                web3.fromWei(element.returnValues.betsize.toString(), "finney")
+              ),
+            });
+            takes[element.returnValues.contractHash] = this.contracts[
+              "BettingMain"
+            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
           }, this);
           this.BetHistory[0] = eventdata;
+          this.takekeys = takes;
         }.bind(this)
       );
 
-      contractweb3b.events.BetBigRecord(
+    contractweb3b.events.BetBigRecord(
       function (error, log) {
-         console.log({ log });
-          this.BetHistory[0].push({
+      //  console.log({ log });
+        this.BetHistory[0].push({
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
           Epoch: log.returnValues.epoch,
@@ -207,10 +205,12 @@ class BigBetPagejs extends Component {
           BetSize: web3.fromWei(log.returnValues.betsize.toString(), "finney"),
           LongPick: Number(log.returnValues.pick),
           MatchNum: log.returnValues.matchnum,
-            });
+        });
+        this.takekeys[log.returnValues.contractHash] = this.contracts[
+          "BettingMain"
+        ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
       }.bind(this)
     );
-
   }
 
   getbetHistoryArray2() {
@@ -224,17 +224,19 @@ class BigBetPagejs extends Component {
 
     contractweb3b
       .getPastEvents("BetBigRecord", {
-        fromBlock: 9149000,
-        toBlock: 'latest',
-        filter: {epoch: this.state.currW},
+        fromBlock: 8999000,
+        toBlock: "latest",
+        filter: { epoch: this.state.currW },
       })
       .then(
         function (events) {
-        //  console.log("weekhere", x);
+
           events.forEach(function (element) {
-            if (this.contracts["BettingMain"
-            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash)
-          ) {
+            if (
+              this.contracts["BettingMain"].methods.checkRedeem.cacheCall(
+                element.returnValues.contractHash
+              )
+            ) {
               eventdata2.push({
                 Hashoutput2: element.returnValues.contractHash,
                 BetSizeOffered2: Number(
@@ -250,35 +252,39 @@ class BigBetPagejs extends Component {
                   )
                 ),
               });
-
+              takes2[element.returnValues.contractHash] = this.contracts[
+                "BettingMain"
+              ].methods.checkRedeem.cacheCall(
+                element.returnValues.contractHash
+              );
             }
           }, this);
           this.currentOffers = eventdata2;
+          this.takekeys2 = takes2;
         }.bind(this)
       );
 
     contractweb3b.events.BetBigRecord(
-          function (error, log) {
-             console.log({ log });
-              this.currentOffers.push({
-                Hashoutput2: log.returnValues.contractHash,
-                  BetSizeOffered2: Number(
-                    web3.fromWei(log.returnValues.payoff.toString(), "finney")
-                  ),
-                  OfferedTeam2: Number(1 - log.returnValues.pick),
-                  OfferEpoch2: log.returnValues.epoch,
-                  OfferedMatch2: log.returnValues.matchnum,
-                  BetPayoffOffered2: Number(
-                    web3.fromWei(
-                      log.returnValues.betsize.toString(),
-                      "finney"
-                    )
-                  ),
-                    });
-          }.bind(this)
-        );
+      function (error, log) {
+        //console.log({ log });
+        this.currentOffers.push({
+          Hashoutput2: log.returnValues.contractHash,
+          BetSizeOffered2: Number(
+            web3.fromWei(log.returnValues.payoff.toString(), "finney")
+          ),
+          OfferedTeam2: Number(1 - log.returnValues.pick),
+          OfferEpoch2: log.returnValues.epoch,
+          OfferedMatch2: log.returnValues.matchnum,
+          BetPayoffOffered2: Number(
+            web3.fromWei(log.returnValues.betsize.toString(), "finney")
+          ),
+        });
+        this.takekeys2[log.returnValues.contractHash] = this.contracts[
+          "BettingMain"
+        ].methods.checkRedeem.cacheCall(log.returnValues.contractHash);
+      }.bind(this)
+    );
   }
-
 
   radioFavePick(matchpic) {
     this.setState({ matchPick: matchpic, teamTake: false, teamPick: 0 });
@@ -348,33 +354,26 @@ class BigBetPagejs extends Component {
   translateMoneyLine(moneyline0) {
     let decTransform1 = 0;
     if (moneyline0 < 0) {
-      decTransform1 = -(100-moneyline0) / moneyline0;
+      decTransform1 = -(100 - moneyline0) / moneyline0;
     } else {
-      decTransform1 = moneyline0/100 + 1;
+      decTransform1 = moneyline0 / 100 + 1;
     }
     decTransform1 = decTransform1.toFixed(3);
     this.setState({ decTransform1 });
   }
 
-
-  getWeek2() {
+  getWeek() {
     let currW = 0;
     if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
       currW = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
     }
     this.setState({ currW });
-    return currW;
   }
 
-
   render() {
-
     let currW4 = 0;
-    if (
-      this.weekKey in this.props.contracts["BettingMain"].betEpoch
-    ) {
-      currW4 = this.props.contracts["BettingMain"]
-        .betEpoch[this.weekKey].value;
+    if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
+      currW4 = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
     }
 
     let minBet = 0;
@@ -382,9 +381,27 @@ class BigBetPagejs extends Component {
       minBet = this.props.contracts["BettingMain"].minBet[this.minBetKey].value;
     }
 
-    console.log("betHist[0]", this.BetHistory[0]);
-    console.log("betHist", this.currentOffers[0]);
+    let subcontracts = {};
+    Object.keys(this.takekeys).forEach(function (id) {
+      if (
+        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
+      ) {
+        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
+          this.takekeys[id]
+        ].value;
+      }
+    }, this);
 
+    let subcontracts2 = {};
+    Object.keys(this.takekeys).forEach(function (id) {
+      if (
+        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
+      ) {
+        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
+          this.takekeys[id]
+        ].value;
+      }
+    }, this);
 
     let decodds0 = [];
     if (
@@ -418,9 +435,11 @@ class BigBetPagejs extends Component {
         userBalance = web3.fromWei(ub.toString(), "finney");
       }
     }
-console.log("decTrans", this.state.decTransform1);
-
-    let oddsTot = [[],[]];
+    /*
+    console.log("state", this.BetHistory[0]);
+    console.log("pass", this.currentOffers);
+*/
+    let oddsTot = [[], []];
 
     for (let i = 0; i < 32; i++) {
       oddsTot[0][i] = Number(decodds0[i]);
@@ -491,9 +510,6 @@ console.log("decTrans", this.state.decTransform1);
       }
     }
 
-    // // console.log("starttime", startTimeColumn);
-
-
     let teamList = [];
 
     const borderCells = 5;
@@ -502,7 +518,7 @@ console.log("decTrans", this.state.decTransform1);
       teamList.push(
         <tr
           className={(i + 1) % borderCells === 0 ? "border-row" : ""}
-         key={i}
+          key={i}
           style={{ width: "60%", textAlign: "left" }}
         >
           <td>{i}</td>
@@ -714,9 +730,11 @@ console.log("decTrans", this.state.decTransform1);
                         </tr>
                         {this.BetHistory[id].map(
                           (event, index) =>
+                            subcontracts[event.Hashoutput] && (
                               <tr key={index} style={{ width: "50%" }}>
                                 <td>{event.Epoch}</td>
                                 <td>{Number(event.BetSize).toFixed(2)}</td>
+
                                 <td>
                                   <TruncatedAddress
                                     addr={event.Hashoutput}
@@ -743,7 +761,7 @@ console.log("decTrans", this.state.decTransform1);
                                   </button>
                                 </td>
                               </tr>
-
+                            )
                         )}
                       </tbody>
                     </table>
@@ -816,11 +834,11 @@ console.log("decTrans", this.state.decTransform1);
                 </Box>
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
-
               </Flex>
-
               <Box>
-                <Box><Text> MoneyLine to Decimal odds converter</Text></Box>
+                <Box>
+                  <Text> MoneyLine to Decimal odds converter</Text>
+                </Box>
 
                 <Flex mt="10px" mb="10px">
                   <Text width="50%">MoneyLine: </Text>
@@ -835,9 +853,10 @@ console.log("decTrans", this.state.decTransform1);
                   />
                 </Flex>
                 <Flex>
-                  <Text width="50%">Decimal odds:</Text><Text> {this.state.decTransform1}</Text>
+                  <Text width="50%">Decimal odds:</Text>
+                  <Text> {this.state.decTransform1}</Text>
                 </Flex>
-            </Box>
+              </Box>
             </Box>
           }
         >
@@ -955,8 +974,6 @@ console.log("decTrans", this.state.decTransform1);
                 </Box>
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
-
-
               </Flex>
             ) : null}
           </Flex>
@@ -1039,7 +1056,8 @@ console.log("decTrans", this.state.decTransform1);
                       this.state.bigBets.map(
                         (bet, index) =>
                           bet.OfferTeamNum == this.state.teamPick &&
-                          bet.BigMatch == this.state.matchPick && (
+                          bet.BigMatch == this.state.matchPick &&
+                          subcontracts2[bet.OfferHash] && (
                             <tr style={{ width: "100%" }}>
                               <td>
                                 <input
