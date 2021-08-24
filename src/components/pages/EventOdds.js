@@ -38,7 +38,7 @@ class EventOdds extends Component {
 
   getOddsHistoryArray() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.address);
+    const contractweb3 = new web3.eth.Contract(Oracle.abi, Oracle.rinkebyaddress);
     var pricedata = [];
     contractweb3
       .getPastEvents("DecOddsPosted", {

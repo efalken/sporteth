@@ -88,7 +88,7 @@ class BetPagejs extends Component {
     const stackId = this.contracts[
       "BettingMain"
     ].methods.withdrawBettor.cacheSend(
-      web3.toWei(this.state.wdAmount.toString(), "finney"),
+      web3.toWei(this.state.wdAmount, "finney"),
       {
         from: this.props.accounts[0],
         type: "0x2",
@@ -138,7 +138,7 @@ class BetPagejs extends Component {
     const web3b = this.context.drizzle.web3;
     const contractweb3b = new web3b.eth.Contract(
       BettingContract.abi,
-      BettingContract.address
+      BettingContract.rinkebyaddress
     );
     var eventdata = [];
     var takes = {};
@@ -177,7 +177,7 @@ class BetPagejs extends Component {
 
     contractweb3b.events.BetRecord(
       function (error, log) {
-        console.log({ log });
+      //  console.log({ log });
         this.betHistory[0].push({
           Hashoutput: log.returnValues.contractHash,
           BettorAddress: log.returnValues.bettor,
@@ -897,8 +897,8 @@ class BetPagejs extends Component {
               >
                 <Box>
                   <Form
-                    onChange={this.changeOdds}
-                    value={this.state.mlodds}
+                    onChange={this.handleBettorFund}
+                    value={this.state.fundAmount}
                     onSubmit={this.fundBettor}
                     mb="20px"
                     justifyContent="flex-start"

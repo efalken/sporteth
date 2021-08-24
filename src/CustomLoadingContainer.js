@@ -22,7 +22,7 @@ class CustomLoader extends Component {
       contractName: "BettingMain",
       web3Contract: new drizz.web3.eth.Contract(
         Betting.abi,
-        Betting.address
+        Betting.rinkebyaddress
       )
     };
 
@@ -30,7 +30,7 @@ class CustomLoader extends Component {
       contractName: "OracleMain",
       web3Contract: new drizz.web3.eth.Contract(
         Oracle.abi,
-        Oracle.address
+        Oracle.rinkebyaddress
       )
     };
 
@@ -38,7 +38,7 @@ class CustomLoader extends Component {
       contractName: "TokenMain",
       web3Contract: new drizz.web3.eth.Contract(
         Token.abi,
-        Token.address
+        Token.rinkebyaddress
       )
     };
 

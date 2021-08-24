@@ -1,6 +1,6 @@
 {
   "contractName": "Betting",
-  "address": "0x53d62FDa36599B2974C8878735B26cE513F0De3E",
+  "rinkebyaddress": "0x53d62FDa36599B2974C8878735B26cE513F0De3E",
   "arbitrumaddress": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
 	"abi":  [
 		{
