@@ -45,9 +45,10 @@ class BetPagejs extends Component {
 
   componentDidMount() {
     document.title = "Bet Page";
+    this.getbetHistoryArray();
     setInterval(() => {
       this.findValues();
-      this.getbetHistoryArray();
+    //  this.getbetHistoryArray();
     //  this.checkRedeem();
   }, 1000);
   }
@@ -95,8 +96,6 @@ class BetPagejs extends Component {
       }
     );
   }
-
-
 
   takeBet() {
     const stackId = this.contracts[
@@ -175,28 +174,28 @@ class BetPagejs extends Component {
         }.bind(this)
       );
 
-    contractweb3b.events.BetRecord(
-      function (error, log) {
-        console.log({ log });
-        this.betHistory[0].push({
-          Hashoutput: log.returnValues.contractHash,
-          BettorAddress: log.returnValues.bettor,
-          Epoch: log.returnValues.epoch,
-          timestamp: log.blockNumber.timestamp,
-          BetSize: Number(web3.fromWei(log.returnValues.betsize,
-          "finney"
-        )),
-          LongPick: Number(log.returnValues.pick),
-          MatchNum: log.returnValues.matchnum,
-          Payoff: Number(web3.fromWei(log.returnValues.payoff,
-          "finney"
-        )),
-        });
-        this.takekeys[log.returnValues.contractHash] = this.contracts[
-      "BettingMain"
-    ].methods.checkRedeem.cacheCall(log.returnValues.contractHash)
-      }.bind(this)
-    );
+    // contractweb3b.events.BetRecord(
+    //   function (error, log) {
+    //     console.log({ log });
+    //     this.betHistory[0].push({
+    //       Hashoutput: log.returnValues.contractHash,
+    //       BettorAddress: log.returnValues.bettor,
+    //       Epoch: log.returnValues.epoch,
+    //       timestamp: log.blockNumber.timestamp,
+    //       BetSize: Number(web3.fromWei(log.returnValues.betsize,
+    //       "finney"
+    //     )),
+    //       LongPick: Number(log.returnValues.pick),
+    //       MatchNum: log.returnValues.matchnum,
+    //       Payoff: Number(web3.fromWei(log.returnValues.payoff,
+    //       "finney"
+    //     )),
+    //     });
+    //     this.takekeys[log.returnValues.contractHash] = this.contracts[
+    //   "BettingMain"
+    // ].methods.checkRedeem.cacheCall(log.returnValues.contractHash)
+    //   }.bind(this)
+    // );
   }
 
   radioFavePick(teampic) {
@@ -672,7 +671,7 @@ class BetPagejs extends Component {
                   </button>{" "}
                 </Box>
               </Flex>{" "}
-              <Box>
+              <Box>                
                 <Flex
                   mt="20px"
                   flexDirection="row"
@@ -684,7 +683,16 @@ class BetPagejs extends Component {
                   }}
                 ></Flex>
               </Box>
-
+              <button
+                    style={{
+                      backgroundColor: "#424242",
+                      borderRadius: "2px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => this.getbetHistoryArray()}
+                  >
+                    Refresh Bet History
+                  </button>{" "}
               {this.props.transactionStack.length > 0 &&
               this.props.transactionStack[0].length === 66 ? (
                 <Flex alignItems="center">
@@ -696,6 +704,7 @@ class BetPagejs extends Component {
                   >
                     See Transaction Detail on Ethscan
                   </ButtonEthScan>
+                  
                 </Flex>
               ) : null}
               <Box>
