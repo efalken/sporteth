@@ -140,7 +140,7 @@ contract Betting {
         require(amt >= minBet, "bet below minimum");
         require(amt <= userBalance[msg.sender] && amt <= margin[4], "NSF ");
         require(
-            startTime[matchNumber] > block.timestamp,
+            startTime[matchNumber] > block.timestamp && earliestStart != 2e9,
             "game started or not playing"
         );
         // current LP exposure if team/player wins, which is the net of the LP obligation to the winner minus
@@ -569,11 +569,6 @@ contract Betting {
         return redeemable;
     }
 
-    // this makes it easy for programs to check if a bigbet is open
-    function checkOffer(bytes32 _subkID) external view returns (bool) {
-      bool open = (offercontracts[_subkID].betAmount > 0);
-      return open;
-    }
 
     // odds are loaded for the Favorite team/player,
     // the Underdog odds calculated using this function

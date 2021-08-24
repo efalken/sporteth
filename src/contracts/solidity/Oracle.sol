@@ -198,9 +198,9 @@ contract Oracle {
                 propOdds,
                 earliestStart
             );
-            emit SchedulePosted(true, propNumber, propSchedule, block.timestamp, betEpoch,  proposer);
-            emit StartTimesPosted(true, propNumber, propStartTime, block.timestamp, betEpoch,  proposer);
-            emit DecOddsPosted(true, propNumber, propOdds, block.timestamp, betEpoch,  proposer);
+            emit SchedulePosted(true, propNumber, propSchedule, betEpoch,  proposer);
+            emit StartTimesPosted(true, propNumber, propStartTime, betEpoch,  proposer);
+            emit DecOddsPosted(true, propNumber, propOdds, betEpoch,  proposer);
         }
         // resets various data (eg, timer)
         reset();
@@ -221,7 +221,7 @@ contract Oracle {
             // proposer gets back their bonding amount
             adminStruct[proposer].tokens += MIN_BOND;
             bettingContract.transmitOdds(propOdds);
-            emit DecOddsPosted(true, propNumber, propOdds, block.timestamp, betEpoch,  proposer);
+            emit DecOddsPosted(true, propNumber, propOdds, betEpoch,  proposer);
         }
         // resets various data (eg, timer)
         reset();
@@ -237,7 +237,7 @@ contract Oracle {
         // proposer gets back their bonding amount
             adminStruct[proposer].tokens += MIN_BOND;
             (betEpoch, ethDividend) = bettingContract.settle(propResults);
-            emit ResultsPosted(true, propNumber, propResults, block.timestamp, betEpoch,  proposer);
+            emit ResultsPosted(true, propNumber, propResults, betEpoch,  proposer);
             feePool += (ethDividend * 1e18 / totKontractTokens);
         }
         // resets various data (eg, timer)
@@ -255,7 +255,6 @@ contract Oracle {
         emit ParamsPosted(
             minbet,
             concentrationLim,
-            block.timestamp,
             betEpoch,
             msg.sender
         );
