@@ -1,6 +1,7 @@
 {
   "contractName": "Oracle",
-  "address": "0xF2a86D7F05d017e0A82F06Ee59b4098FE8B07826",
+  "address": "0x685c9027ca736ACfA73f68b81465cA4bc4e28aCd",
+  "arbitrumaddress": "0xc10A1469F4AaC75daC9d1B91cdF00cEd0bA0FD10",
 	"abi": [
 		{
 			"inputs": [
@@ -18,7 +19,7 @@
 			"stateMutability": "nonpayable",
 			"type": "constructor"
 		},
-    {
+		{
 			"anonymous": false,
 			"inputs": [
 				{
@@ -38,12 +39,6 @@
 					"internalType": "uint256[32]",
 					"name": "decOdds",
 					"type": "uint256[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
 				},
 				{
 					"indexed": false,
@@ -103,12 +98,6 @@
 				},
 				{
 					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
 					"internalType": "uint8",
 					"name": "epoch",
 					"type": "uint8"
@@ -143,12 +132,6 @@
 					"internalType": "uint8[32]",
 					"name": "winner",
 					"type": "uint8[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
 				},
 				{
 					"indexed": false,
@@ -189,12 +172,6 @@
 				},
 				{
 					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
 					"internalType": "uint8",
 					"name": "epoch",
 					"type": "uint8"
@@ -229,12 +206,6 @@
 					"internalType": "uint256[32]",
 					"name": "starttimes",
 					"type": "uint256[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
 				},
 				{
 					"indexed": false,
@@ -292,6 +263,19 @@
 			"type": "function"
 		},
 		{
+			"inputs": [],
+			"name": "MIN_SUBMIT",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
 			"inputs": [
 				{
 					"internalType": "address",
@@ -312,9 +296,9 @@
 					"type": "uint16"
 				},
 				{
-					"internalType": "uint8",
-					"name": "epoch",
-					"type": "uint8"
+					"internalType": "uint256",
+					"name": "initFeePool",
+					"type": "uint256"
 				}
 			],
 			"stateMutability": "view",
@@ -374,6 +358,19 @@
 		},
 		{
 			"inputs": [],
+			"name": "feePool",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
 			"name": "hourOfDay",
 			"outputs": [
 				{
@@ -418,25 +415,6 @@
 			"name": "initProcess",
 			"outputs": [],
 			"stateMutability": "nonpayable",
-			"type": "function"
-		},
-		{
-			"inputs": [
-				{
-					"internalType": "uint8",
-					"name": "",
-					"type": "uint8"
-				}
-			],
-			"name": "liqPool",
-			"outputs": [
-				{
-					"internalType": "uint256",
-					"name": "",
-					"type": "uint256"
-				}
-			],
-			"stateMutability": "view",
 			"type": "function"
 		},
 		{
@@ -710,218 +688,215 @@
 	]
 ,
   "networks": {
-   "4": {
-     "events" : [	{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": false,
-						"internalType": "uint256[32]",
-						"name": "decOdds",
-						"type": "uint256[32]"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint8",
-						"name": "epoch",
-						"type": "uint8"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"name": "DecOddsPosted",
-				"type": "event"
-			},
-      {
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "uint256[32]",
-					"name": "decOdds",
-					"type": "uint256[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint8",
-					"name": "epoch",
-					"type": "uint8"
-				},
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "DecOddsPosted",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "tokensChange",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "etherChange",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "transactor",
-					"type": "address"
-				}
-			],
-			"name": "Funding",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "minBet",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "concLimit",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint8",
-					"name": "epoch",
-					"type": "uint8"
-				},
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "ParamsPosted",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "uint8[32]",
-					"name": "winner",
-					"type": "uint8[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint8",
-					"name": "epoch",
-					"type": "uint8"
-				},
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "ResultsPosted",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "string[32]",
-					"name": "sched",
-					"type": "string[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint8",
-					"name": "epoch",
-					"type": "uint8"
-				},
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "SchedulePosted",
-			"type": "event"
-		},
-		{
-			"anonymous": false,
-			"inputs": [
-				{
-					"indexed": false,
-					"internalType": "uint256[32]",
-					"name": "starttimes",
-					"type": "uint256[32]"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint256",
-					"name": "timestamp",
-					"type": "uint256"
-				},
-				{
-					"indexed": false,
-					"internalType": "uint8",
-					"name": "epoch",
-					"type": "uint8"
-				},
-				{
-					"indexed": false,
-					"internalType": "address",
-					"name": "sender",
-					"type": "address"
-				}
-			],
-			"name": "StartTimesPosted",
-			"type": "event"
-		}]
+    "4": {
+     "events" : [
+
+       {
+         "anonymous": false,
+         "inputs": [
+           {
+             "indexed": true,
+             "internalType": "bool",
+             "name": "posted",
+             "type": "bool"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint16",
+             "name": "propnum",
+             "type": "uint16"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint256[32]",
+             "name": "decOdds",
+             "type": "uint256[32]"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint8",
+             "name": "epoch",
+             "type": "uint8"
+           },
+           {
+             "indexed": false,
+             "internalType": "address",
+             "name": "proposer",
+             "type": "address"
+           }
+         ],
+         "name": "DecOddsPosted",
+         "type": "event"
+       },
+       {
+         "anonymous": false,
+         "inputs": [
+           {
+             "indexed": false,
+             "internalType": "uint256",
+             "name": "tokensChange",
+             "type": "uint256"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint256",
+             "name": "etherChange",
+             "type": "uint256"
+           },
+           {
+             "indexed": false,
+             "internalType": "address",
+             "name": "transactor",
+             "type": "address"
+           }
+         ],
+         "name": "Funding",
+         "type": "event"
+       },
+       {
+         "anonymous": false,
+         "inputs": [
+           {
+             "indexed": false,
+             "internalType": "uint256",
+             "name": "minBet",
+             "type": "uint256"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint256",
+             "name": "concLimit",
+             "type": "uint256"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint8",
+             "name": "epoch",
+             "type": "uint8"
+           },
+           {
+             "indexed": false,
+             "internalType": "address",
+             "name": "proposer",
+             "type": "address"
+           }
+         ],
+         "name": "ParamsPosted",
+         "type": "event"
+       },
+       {
+         "anonymous": false,
+         "inputs": [
+           {
+             "indexed": true,
+             "internalType": "bool",
+             "name": "posted",
+             "type": "bool"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint16",
+             "name": "propnum",
+             "type": "uint16"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint8[32]",
+             "name": "winner",
+             "type": "uint8[32]"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint8",
+             "name": "epoch",
+             "type": "uint8"
+           },
+           {
+             "indexed": false,
+             "internalType": "address",
+             "name": "proposer",
+             "type": "address"
+           }
+         ],
+         "name": "ResultsPosted",
+         "type": "event"
+       },
+       {
+         "anonymous": false,
+         "inputs": [
+           {
+             "indexed": true,
+             "internalType": "bool",
+             "name": "posted",
+             "type": "bool"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint16",
+             "name": "propnum",
+             "type": "uint16"
+           },
+           {
+             "indexed": false,
+             "internalType": "string[32]",
+             "name": "sched",
+             "type": "string[32]"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint8",
+             "name": "epoch",
+             "type": "uint8"
+           },
+           {
+             "indexed": false,
+             "internalType": "address",
+             "name": "proposer",
+             "type": "address"
+           }
+         ],
+         "name": "SchedulePosted",
+         "type": "event"
+       },
+       {
+         "anonymous": false,
+         "inputs": [
+           {
+             "indexed": true,
+             "internalType": "bool",
+             "name": "posted",
+             "type": "bool"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint16",
+             "name": "propnum",
+             "type": "uint16"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint256[32]",
+             "name": "starttimes",
+             "type": "uint256[32]"
+           },
+           {
+             "indexed": false,
+             "internalType": "uint8",
+             "name": "epoch",
+             "type": "uint8"
+           },
+           {
+             "indexed": false,
+             "internalType": "address",
+             "name": "proposer",
+             "type": "address"
+           }
+         ],
+         "name": "StartTimesPosted",
+         "type": "event"
+       }
+
+  ]
     }
   }
 }

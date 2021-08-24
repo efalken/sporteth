@@ -160,7 +160,7 @@ class BigBetPagejs extends Component {
     const web3b = this.context.drizzle.web3;
     const contractweb3b = new web3b.eth.Contract(
       BettingContract.abi,
-      BettingContract.rinkebyaddress
+      BettingContract.address
     );
     var eventdata = [];
     var takes = {};
@@ -217,7 +217,7 @@ class BigBetPagejs extends Component {
     const web3b = this.context.drizzle.web3;
     const contractweb3b = new web3b.eth.Contract(
       BettingContract.abi,
-      BettingContract.rinkebyaddress
+      BettingContract.address
     );
     var eventdata2 = [];
     var takes2 = {};

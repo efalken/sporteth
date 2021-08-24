@@ -39,7 +39,7 @@ class EventBetRecord extends Component {
 
   getRegBets() {
     const web3 = this.context.drizzle.web3;
-    const contractweb3 = new web3.eth.Contract(Betting.abi, Betting.rinkebyaddress);
+    const contractweb3 = new web3.eth.Contract(Betting.abi, Betting.address);
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {

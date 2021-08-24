@@ -4,13 +4,13 @@ const Oracle = artifacts.require("Oracle");
 
 module.exports = function (deployer) {
   deployer.deploy(Token).then(() => {
-    return deployer.deploy(Betting, Token.rinkebyaddress);
+    return deployer.deploy(Betting, Token.address);
   }).then(() => {
-    return deployer.deploy(Oracle, Betting.rinkebyaddress, Token.rinkebyaddress);
+    return deployer.deploy(Oracle, Betting.address, Token.address);
   }).then(() => {
     return Betting.deployed();
   }).then((betting) => {
-    betting.setOracleAddress(Oracle.rinkebyaddress);
+    betting.setOracleAddress(Oracle.address);
   });
 
 /*
