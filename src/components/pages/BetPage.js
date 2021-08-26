@@ -683,7 +683,7 @@ class BetPagejs extends Component {
                   }}
                 ></Flex>
               </Box>
-              <button
+                <button
                     style={{
                       backgroundColor: "#424242",
                       borderRadius: "2px",
@@ -692,7 +692,7 @@ class BetPagejs extends Component {
                     onClick={() => this.getbetHistoryArray()}
                   >
                     Refresh Bet History
-                  </button>{" "}
+                </button>{" "}
               {this.props.transactionStack.length > 0 &&
               this.props.transactionStack[0].length === 66 ? (
                 <Flex alignItems="center">
