@@ -55,17 +55,14 @@ class BigBetPagejs extends Component {
 
   componentDidMount() {
     document.title = "Big Bet Page";
-    this.getAllBetHistoryArrays();
     setInterval(() => {
       this.findValues();
       this.getWeek();
+      this.getbetHistoryArray();
+      this.getbetHistoryArray2();
     }, 5000);
   }
 
-  getAllBetHistoryArrays(){
-    this.getbetHistoryArray();
-    this.getbetHistoryArray2();
-  }
   openEtherscan(txhash) {
     const url = "https://rinkeby.etherscan.io/tx/" + txhash;
     window.open(url, "_blank");
@@ -167,7 +164,7 @@ class BigBetPagejs extends Component {
     );
     var eventdata = [];
     var takes = {};
-    console.log("getbetHistoryArray");
+
     contractweb3b
       .getPastEvents("BetBigRecord", {
         fromBlock: 8999000,
@@ -720,20 +717,7 @@ class BigBetPagejs extends Component {
               <br />
               <Flex>
                 {Object.keys(this.BetHistory).map((id) => (
-
                   <div style={{ width: "100%", float: "left" }}>
-                    <div>
-                        <button
-                        style={{
-                          backgroundColor: "#424242",
-                          borderRadius: "2px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => this.getAllBetHistoryArrays()}
-                      >
-                        Refresh Bet History
-                      </button>
-                    </div>
                     <Text> Your Unclaimed Offers</Text>
                     <br />
                     <table style={{ width: "100%", fontSize: "12px" }}>
