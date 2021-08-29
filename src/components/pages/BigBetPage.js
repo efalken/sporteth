@@ -406,7 +406,7 @@ class BigBetPagejs extends Component {
       }
     }, this);
 
-    let decodds0 = [];
+    let decodds0 = [950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950];
     if (
       this.decOddsKey in this.props.contracts["BettingMain"].showDecimalOdds
     ) {
@@ -418,7 +418,7 @@ class BigBetPagejs extends Component {
       }
     }
 
-    let startTimeColumn = [];
+    let startTimeColumn = [1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932];
     if (
       this.startTimeKey in this.props.contracts["BettingMain"].showStartTime
     ) {
@@ -450,38 +450,38 @@ class BigBetPagejs extends Component {
     }
 
     let scheduleString = [
-      "NFL:ARI:LAC",
-      "NFL:ATL:LAR",
-      "NFL:BAL:MIA",
-      "NFL:BUF:MIN",
-      "NFL:CAR:NE",
-      "NFL:CHI:NO",
-      "NFL:CIN:NYG",
-      "NFL:CLE:NYJ",
-      "NFL:DAL:OAK",
-      "NFL:DEN:PHI",
-      "NFL:DET:PIT",
-      "NFL:GB:SEA",
-      "NFL:HOU:SF",
-      "NFL:IND:TB",
-      "NFL:JAX:TEN",
-      "NFL:KC:WSH",
-      "UFC:Holloway:Kattar",
-      "UFC:Ponzinibbio:Li",
-      "UFC:Kelleher:Simon",
-      "UFC:Hernandez:Vieria",
-      "UFC:Akhemedov:Breese",
-      "UFC:Memphis:Brooklyn",
-      "UFC:Boston:Charlotte",
-      "UFC:Milwaukee:Dallas",
-      "UFC:miami:LALakers",
-      "UFC:Atlanta:SanAntonia",
-      "NHL:Colorado:Washington",
-      "NHL:Vegas:StLouis",
-      "NHL:TampaBay:Dallas",
-      "NHL:Boston:Carolina",
-      "NHL:Philadelphia:Edmonton",
-      "NHL:Pittsburgh:NYIslanders",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
+      "loading:...:...",
     ];
 
     if (

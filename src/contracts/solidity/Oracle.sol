@@ -28,7 +28,7 @@ contract Oracle {
     uint256[32] public propOdds;
     // this is the UTC at which LPs can no longer withdraw or deposit until the next settlement
     // it is the time of the earliest game start. It is more efficient to load this in separately rather than
-    // take the minimum of the data in the unedited propStartTime array
+    // take the minimum of the data in the propStartTime array
     uint256 public earliestStart;
     // timer is used so that each proposal has at least a 3 hours for voters to respond
     uint256 public timer;
@@ -40,8 +40,6 @@ contract Oracle {
     // and submitters should anticipate such an event
     uint256 public voteYes;
     uint256 public voteNo;
-    // uint256 public constant CURE_TIME = 5 hours;
-    // uint256 public constant HOUR_START = 10;
     uint256 public constant CURE_TIME = 5 hours;
     uint256 public constant HOUR_START = 10;
     uint256 public constant MIN_BOND = 100 ether;
@@ -57,11 +55,6 @@ contract Oracle {
     uint256 public feePool;
     mapping(address => AdminisStruct) public adminStruct;
 
-    // tokens these are tokens held in the custody of this contract. Only tokens deposited in this contract can
-    // be used for voting or for claiming oracle ether. Note these tokens are owned by the oracle contract while deposited
-    // as far as the ERC-20 contract is concerned, but they are credited to the token depositors within this contract
-    //voteTrackr keeps track of the proposals in this contract, so that token holders can only vote once for each proposal
-    // with the tokens they have in this contract.
     struct AdminisStruct {
         uint256 tokens;
         uint16 voteTracker;

@@ -45,9 +45,10 @@ class BetPagejs extends Component {
 
   componentDidMount() {
     document.title = "Bet Page";
+    this.getbetHistoryArray();
     setInterval(() => {
       this.findValues();
-      this.getbetHistoryArray();
+    //  this.getbetHistoryArray();
     //  this.checkRedeem();
   }, 1000);
   }
@@ -88,15 +89,13 @@ class BetPagejs extends Component {
     const stackId = this.contracts[
       "BettingMain"
     ].methods.withdrawBettor.cacheSend(
-      web3.toWei(this.state.wdAmount, "finney"),
+      web3.toWei(this.state.wdAmount.toString(), "finney"),
       {
         from: this.props.accounts[0],
         type: "0x2",
       }
     );
   }
-
-
 
   takeBet() {
     const stackId = this.contracts[
@@ -175,28 +174,28 @@ class BetPagejs extends Component {
         }.bind(this)
       );
 
-    contractweb3b.events.BetRecord(
-      function (error, log) {
-      //  console.log({ log });
-        this.betHistory[0].push({
-          Hashoutput: log.returnValues.contractHash,
-          BettorAddress: log.returnValues.bettor,
-          Epoch: log.returnValues.epoch,
-          timestamp: log.blockNumber.timestamp,
-          BetSize: Number(web3.fromWei(log.returnValues.betsize,
-          "finney"
-        )),
-          LongPick: Number(log.returnValues.pick),
-          MatchNum: log.returnValues.matchnum,
-          Payoff: Number(web3.fromWei(log.returnValues.payoff,
-          "finney"
-        )),
-        });
-        this.takekeys[log.returnValues.contractHash] = this.contracts[
-      "BettingMain"
-    ].methods.checkRedeem.cacheCall(log.returnValues.contractHash)
-      }.bind(this)
-    );
+    // contractweb3b.events.BetRecord(
+    //   function (error, log) {
+    //     console.log({ log });
+    //     this.betHistory[0].push({
+    //       Hashoutput: log.returnValues.contractHash,
+    //       BettorAddress: log.returnValues.bettor,
+    //       Epoch: log.returnValues.epoch,
+    //       timestamp: log.blockNumber.timestamp,
+    //       BetSize: Number(web3.fromWei(log.returnValues.betsize,
+    //       "finney"
+    //     )),
+    //       LongPick: Number(log.returnValues.pick),
+    //       MatchNum: log.returnValues.matchnum,
+    //       Payoff: Number(web3.fromWei(log.returnValues.payoff,
+    //       "finney"
+    //     )),
+    //     });
+    //     this.takekeys[log.returnValues.contractHash] = this.contracts[
+    //   "BettingMain"
+    // ].methods.checkRedeem.cacheCall(log.returnValues.contractHash)
+    //   }.bind(this)
+    // );
   }
 
   radioFavePick(teampic) {
@@ -518,6 +517,7 @@ class BetPagejs extends Component {
     let teamList = [];
     const borderCells = 5;
 
+
     for (let i = 0; i < 32; i++) {
       teamList.push(
         <tr
@@ -684,7 +684,16 @@ class BetPagejs extends Component {
                   }}
                 ></Flex>
               </Box>
-
+                <button
+                    style={{
+                      backgroundColor: "#424242",
+                      borderRadius: "2px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => this.getbetHistoryArray()}
+                  >
+                    Refresh Bet History
+                </button>{" "}
               {this.props.transactionStack.length > 0 &&
               this.props.transactionStack[0].length === 66 ? (
                 <Flex alignItems="center">
@@ -696,6 +705,7 @@ class BetPagejs extends Component {
                   >
                     See Transaction Detail on Ethscan
                   </ButtonEthScan>
+
                 </Flex>
               ) : null}
               <Box>
@@ -897,8 +907,8 @@ class BetPagejs extends Component {
               >
                 <Box>
                   <Form
-                    onChange={this.handleBettorFund}
-                    value={this.state.fundAmount}
+                    onChange={this.changeOdds}
+                    value={this.state.mlodds}
                     onSubmit={this.fundBettor}
                     mb="20px"
                     justifyContent="flex-start"
@@ -1042,6 +1052,7 @@ class BetPagejs extends Component {
               justifyContent="space-between"
             ></Flex>
           </Box>
+          
           <div>
             <Box>
               {" "}
@@ -1068,7 +1079,9 @@ class BetPagejs extends Component {
                       </th>
                       <th style={{ textAlign: "left" }}>Start</th>
                     </tr>
+
                     {teamList}
+                  );
                   </tbody>
                 </table>
               </Flex>{" "}
