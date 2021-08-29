@@ -163,7 +163,7 @@ class BetPagejs extends Component {
               MatchNum: element.returnValues.matchnum,
               Payoff: Number(web3.fromWei(element.returnValues.payoff,
               "finney"
-            ))
+            ))*0.95
             });
             takes[element.returnValues.contractHash] = this.contracts[
             "BettingMain"
@@ -544,7 +544,7 @@ class BetPagejs extends Component {
           <td>
             {this.state.showDecimalOdds
               ? (1 + (95 * oddsTot[0][i]) / 100000).toFixed(3)
-              : this.getMoneyLine(oddsTot[0][i])}
+              : this.getMoneyLine((95 * oddsTot[0][i]) / 100)}
           </td>
           <td style={{ textAlign: "left", paddingLeft: "15px" }}>
             {startTimeColumn[i] > moment().unix() ? (

@@ -38,7 +38,6 @@ class BigBetPagejs extends Component {
     this.state = {
       contractID: "",
       betAmount: "",
-      currW: "",
       teamPick: null,
       matchPick: null,
       teamTake: false,
@@ -50,6 +49,7 @@ class BigBetPagejs extends Component {
       bigBets: [],
       bigBetsSet: false,
       decTransform1: "",
+      currW: "",
     };
   }
 
@@ -224,6 +224,7 @@ class BigBetPagejs extends Component {
     );
     var eventdata2 = [];
     var takes2 = {};
+    var cw = this.state.currW;
 
     contractweb3b
       .getPastEvents("BetBigRecord", {
@@ -343,9 +344,9 @@ class BigBetPagejs extends Component {
   getMoneyLine(decOddsi) {
     let moneyline = 0;
     if (decOddsi < 1000) {
-      moneyline = -1e5 / (decOddsi * 0.95);
+      moneyline = -1e5 / (decOddsi);
     } else {
-      moneyline = (0.95 * decOddsi) / 10;
+      moneyline = (decOddsi) / 10;
     }
     moneyline = moneyline.toFixed(0);
     if (moneyline > 0) {
@@ -356,7 +357,7 @@ class BigBetPagejs extends Component {
 
   translateMoneyLine(moneyline0) {
     let decTransform1 = 0;
-    if (moneyline0 < 0) {
+    if (moneyline0 < 100) {
       decTransform1 = -(100 - moneyline0) / moneyline0;
     } else {
       decTransform1 = moneyline0 / 100 + 1;
@@ -369,15 +370,17 @@ class BigBetPagejs extends Component {
     let currW = 0;
     if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
       currW = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
+      currW = Number(currW);
     }
     this.setState({ currW });
   }
 
   render() {
+    /*
     let currW4 = 0;
     if (this.weekKey in this.props.contracts["BettingMain"].betEpoch) {
       currW4 = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
-    }
+    }*/
 
     let minBet = 0;
     if (this.minBetKey in this.props.contracts["BettingMain"].minBet) {
@@ -543,7 +546,7 @@ class BigBetPagejs extends Component {
           <td>
             {this.state.showDecimalOdds
               ? (1 + (95 * oddsTot[0][i]) / 100000).toFixed(3)
-              : this.getMoneyLine(oddsTot[0][i])}
+              : this.getMoneyLine((95 * oddsTot[0][i]) / 100)}
           </td>
           <td style={{ textAlign: "left", paddingLeft: "15px" }}>
             {startTimeColumn[i] > moment().unix() ? (
@@ -715,7 +718,7 @@ class BigBetPagejs extends Component {
                 </Flex>
               ) : null}
               <Flex justifyContent="left">
-                <Text size="15px">Active Week: {currW4}</Text>
+                <Text size="15px">Active Week: {this.state.currW}</Text>
               </Flex>
               <br />
               <Flex>

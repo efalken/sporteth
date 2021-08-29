@@ -70,13 +70,6 @@ class BookiePagejs extends Component {
     });
   }
 
-  wdShares() {
-    const stackId = this.contracts[
-      "BettingMain"
-    ].methods.withdrawBook.cacheSend({
-      from: this.props.accounts[0],
-    });
-  }
 
   wdBook() {
     const stackId = this.contracts[
@@ -85,6 +78,7 @@ class BookiePagejs extends Component {
       web3.toWei(this.state.sharesToSell.toString(), "finney"),
       {
         from: this.props.accounts[0],
+        type: "0x2",
       }
     );
   }
@@ -93,6 +87,7 @@ class BookiePagejs extends Component {
     this.contracts["BettingMain"].methods.fundBook.cacheSend({
       from: this.props.accounts[0],
       value: web3.toWei(this.state.fundAmount, "finney"),
+      type: "0x2",
     });
   }
 
@@ -148,6 +143,8 @@ class BookiePagejs extends Component {
     this.sharesKey = this.contracts["BettingMain"].methods.lpStruct.cacheCall(
       this.props.accounts[0]
     );
+
+    this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall("0x53d62FDa36599B2974C8878735B26cE513F0De3E");
   }
 
   getSpreadText(spreadnumber) {
@@ -207,6 +204,16 @@ class BookiePagejs extends Component {
         bookieStruct = bs;
         bookieShares = web3.fromWei(bs.shares.toString(), "finney");
         bookieEpoch = bs.outEpoch.toString();
+      }
+    }
+
+    let tokenAmount = "0";
+    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
+      let ta = this.props.contracts["TokenMain"].balanceOf[
+        this.tokenKey
+      ].value;
+      if (ta) {
+        tokenAmount = web3.fromWei(ta.toString(), "ether");
       }
     }
 
@@ -459,7 +466,7 @@ class BookiePagejs extends Component {
                 {" "}
                 <Text size="14px">
                   {"Tokens available for match funding: " +
-                    Number(this.state.contractTokens).toFixed(2) +
+                    Number(tokenAmount).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') +
                     " finney"}
                 </Text>
               </Box>
