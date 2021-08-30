@@ -55,9 +55,8 @@ class BigBetPagejs extends Component {
 
   componentDidMount() {
     document.title = "Big Bet Page";
-    this.getAllBetHistoryArrays();
-    setInterval(() => {
-      this.findValues();
+    this.findValues();
+    setTimeout(() => {      
       this.getWeek();
     }, 5000);
   }
@@ -225,13 +224,15 @@ class BigBetPagejs extends Component {
     var eventdata2 = [];
     var takes2 = {};
     var cw = this.state.currW;
-
+    
+    const filter = {
+      fromBlock: 8999000,
+      toBlock: "latest",
+      filter: { epoch: cw },
+    }
+    console.log(filter)
     contractweb3b
-      .getPastEvents("BetBigRecord", {
-        fromBlock: 8999000,
-        toBlock: "latest",
-        filter: { epoch: this.state.currW },
-      })
+      .getPastEvents("BetBigRecord", filter)
       .then(
         function (events) {
 
@@ -372,7 +373,9 @@ class BigBetPagejs extends Component {
       currW = this.props.contracts["BettingMain"].betEpoch[this.weekKey].value;
       currW = Number(currW);
     }
+    console.log("currw", currW);
     this.setState({ currW });
+    this.getAllBetHistoryArrays();
   }
 
   render() {
