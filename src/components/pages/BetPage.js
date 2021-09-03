@@ -277,9 +277,9 @@ class BetPagejs extends Component {
   getMoneyLine(decOddsi) {
     let moneyline = 0;
     if (decOddsi < 1000) {
-      moneyline = -1e5 / (decOddsi * 0.95);
+      moneyline = -1e5 / decOddsi ;
     } else {
-      moneyline = (0.95 * decOddsi) / 10;
+      moneyline = decOddsi / 10;
     }
     moneyline = moneyline.toFixed(0);
     if (moneyline > 0) {
@@ -870,7 +870,7 @@ class BetPagejs extends Component {
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
               </Flex>
-
+/*
               <Box>
                 <Flex
                   mt="20px"
@@ -892,13 +892,8 @@ class BetPagejs extends Component {
                   <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
                 </Box>
               </Box>
+*/
 
-              <Flex>
-              <Text size="14px">
-                {"matching tokens in contract: " +
-                  Number(tokenAmount).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}
-              </Text>
-              </Flex>
               <Flex
                 mt="5px"
                 flexDirection="row"

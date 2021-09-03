@@ -31,10 +31,8 @@ class BigBetPagejs extends Component {
     this.web3 = web3;
     this.web2 = web3;
     this.betHistory = [];
-    this.betHistory2 = [];
     this.scheduleStringkey = [];
     this.takekeys = {};
-    this.takekeys2 = {};
 
     this.state = {
       contractID: "",
@@ -67,7 +65,6 @@ class BigBetPagejs extends Component {
   openEtherscan(txhash) {
     const url = "https://rinkeby.etherscan.io/tx/" + txhash;
     window.open(url, "_blank");
-
   }
 
   handleBetSize(betAmount) {
@@ -171,7 +168,7 @@ class BigBetPagejs extends Component {
         fromBlock: 8999000,
         toBlock: "latest",
       //  filter:  {bettor: this.props.accounts[0] , epoch: this.state.currW }
-        filter:  { bettor: this.props.accounts[0] }
+        filter:  { epoch: this.state.currW }
         })
       .then(
         function (events) {
@@ -220,49 +217,6 @@ class BigBetPagejs extends Component {
       }.bind(this)
     );
   }
-
-  getbetHistoryArray2() {
-    const web3b = this.context.drizzle.web3;
-    const contractweb3b = new web3b.eth.Contract(
-      BettingContract.abi,
-      BettingContract.address
-    );
-    var eventdata2 = [];
-    var takes2 = {};
-    contractweb3b
-      .getPastEvents("BetBigRecord", {
-        fromBlock: 8999000,
-        toBlock: "latest",
-      //  filter:  {bettor: this.props.accounts[0] , epoch: this.state.currW }
-        filter:  {epoch: this.state.currW }
-        })
-      .then(
-        function (events) {
-          events.forEach(function (element) {
-            eventdata2.push({
-              Hashoutput2: element.returnValues.contractHash,
-              BettorAddress2: element.returnValues.bettor,
-              Epoch2: Number(element.returnValues.epoch),
-              timestamp2: element.blockNumber.timestamp,
-              BetSize2: Number(
-                web3.fromWei(element.returnValues.betsize.toString(), "finney")
-              ),
-              Payoff2: Number(
-                web3.fromWei(element.returnValues.payoff.toString(), "finney")
-              ),
-              OfferedTeam2: Number(1 - element.returnValues.pick),
-              MatchNum2: element.returnValues.matchnum,
-
-            });
-            takes2[element.returnValues.contractHash] = this.contracts[
-              "BettingMain"
-            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash);
-          }, this);
-          this.betHistory2[0] = eventdata2;
-          this.takekeys2 = takes2;
-        }.bind(this)
-      );
-    }
 
   radioFavePick(matchpic) {
     this.setState({ matchPick: matchpic, teamTake: false, teamPick: 0 });
@@ -349,7 +303,6 @@ class BigBetPagejs extends Component {
   //  console.log("currw", currW);
     this.setState({ currW });
     this.getbetHistoryArray();
-    this.getbetHistoryArray2();
   }
 
   render() {
@@ -367,17 +320,6 @@ class BigBetPagejs extends Component {
       ) {
         subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
           this.takekeys[id]
-        ].value;
-      }
-    }, this);
-
-    let subcontracts2 = {};
-    Object.keys(this.takekeys2).forEach(function (id) {
-      if (
-        this.takekeys2[id] in this.props.contracts["BettingMain"].checkRedeem
-      ) {
-        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
-          this.takekeys2[id]
         ].value;
       }
     }, this);
@@ -415,8 +357,7 @@ class BigBetPagejs extends Component {
       }
     }
 
-    console.log("betHistoryLine417", this.betHistory[0]);
-    console.log("betHistory2", this.betHistory2[0]);
+    console.log("betHistory", this.betHistory[0]);
 
     let oddsTot = [[], []];
 
@@ -549,19 +490,19 @@ class BigBetPagejs extends Component {
 
 //console.log("offers", this.betHistory);
 
-{Object.keys(this.betHistory2).map((id) => (
-    this.betHistory2[id].map((bet) => {
+{Object.keys(this.betHistory).map((id) => (
+    this.betHistory[id].map((bet) => {
       let bigBet = {
-        teamAbbrevName: teamSplit[bet.MatchNum2][bet.OfferedTeam2 + 1],
-        BigBetSize: Number(bet.Payoff2 / 0.95).toFixed(3),
+        teamAbbrevName: teamSplit[bet.MatchNum][bet.OfferedTeam + 1],
+        BigBetSize: Number(bet.Payoff / 0.95).toFixed(3),
         BigOdds: (
-          (0.95 * bet.Payoff2) / bet.BetSize2 +
+          (0.95 * bet.Payoff) / bet.BetSize +
           1
         ).toFixed(3),
-        OfferHash: bet.Hashoutput2,
-        OfferedEpoch: bet.Epoch2,
-        OfferTeamNum: bet.OfferedTeam2,
-        OfferedMatch: bet.MatchNum2,
+        OfferHash: bet.Hashoutput,
+        OfferedEpoch: bet.Epoch,
+        OfferTeamNum: bet.OfferedTeam,
+        BigMatch: bet.MatchNum,
       };
       bigBets.push(bigBet);
     })
@@ -729,6 +670,7 @@ class BigBetPagejs extends Component {
                         {this.betHistory[id].map(
                           (event, index) =>
                             subcontracts[event.Hashoutput] &&
+                            event.BettorAddress === this.props.accounts[0] &&
                             (
                               <tr key={index} style={{ width: "50%" }}>
                                 <td>{event.Epoch}</td>
@@ -1055,8 +997,9 @@ class BigBetPagejs extends Component {
                       this.state.bigBets.map(
                         (bet, index) =>
                           bet.OfferTeamNum === this.state.teamPick &&
-                          bet.OfferedMatch === this.state.matchPick &&
-                          subcontracts2[bet.OfferHash] && (
+                          bet.BigMatch === this.state.matchPick &&
+                            bet.OfferedEpoch === this.state.currW &&
+                          subcontracts[bet.OfferHash] && (
                             <tr style={{ width: "100%" }}>
                               <td>
                                 <input
