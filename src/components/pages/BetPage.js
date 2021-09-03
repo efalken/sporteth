@@ -39,7 +39,8 @@ class BetPagejs extends Component {
       sharesToSell: "",
       teamPick: null,
       matchPick: null,
-      showDecimalOdds: false
+      showDecimalOdds: false,
+      viewedTxs:0
     };
   }
 
@@ -75,8 +76,7 @@ class BetPagejs extends Component {
       wdAmount: value2,
     });
   }
-
-
+  
   fundBettor(x) {
     const stackId = this.contracts["BettingMain"].methods.fundBettor.cacheSend({
       from: this.props.accounts[0],
@@ -127,6 +127,7 @@ class BetPagejs extends Component {
     const url = "https://rinkeby.etherscan.io/tx/" + txhash;
     const urltest = "https://rinkeby.etherscan.io/tx/" + txhash;
     window.open(urltest, "_blank");
+    this.setState({ viewedTxs: this.state.viewedTxs + 1 });
   }
 
   handletakeBookTeam(teamPick) {
@@ -694,20 +695,20 @@ class BetPagejs extends Component {
                   >
                     Refresh Bet History
                 </button>{" "}
-              {this.props.transactionStack.length > 0 &&
-              this.props.transactionStack[0].length === 66 ? (
-                <Flex alignItems="center">
-                  <ButtonEthScan
-                    onClick={() =>
-                      this.openEtherscan(this.props.transactionStack[0])
-                    }
-                    style={{ height: "30px" }}
-                  >
-                    See Transaction Detail on Ethscan
-                  </ButtonEthScan>
-
-                </Flex>
-              ) : null}
+              { this.props.transactionStack.length > 0 
+                && this.state.viewedTxs < this.props.transactionStack.length 
+                && this.props.transactionStack[this.props.transactionStack.length-1].length === 66 ? (
+                  <Flex alignItems="center">
+                    <ButtonEthScan
+                      onClick={() =>
+                        this.openEtherscan(this.props.transactionStack[this.props.transactionStack.length-1])
+                      }
+                      style={{ height: "30px" }}
+                    >
+                      See Transaction Detail on Ethscan
+                    </ButtonEthScan>
+                  </Flex>
+                ) : null}
               <Box>
                 <Flex>
                   {Object.keys(this.betHistory).map((id) => (
