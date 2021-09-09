@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import Logo from "../basics/Logo";
 import { Flex, Box } from "@rebass/grid";
@@ -119,17 +120,14 @@ class Splash extends Component {
                       </a>
                     </Text>
 
-                    <Text size="15px">
-                      <a
-                        className="nav-header"
+                    <Text size="15px" className="nav-header"
                         style={{
                           textDecoration: "none",
                           cursor: "pointer",
-                        }}
-                        href="/faqs"
-                      >
+                        }}> 
+                      <Link to="/faqs" >
                         FAQ
-                      </a>
+                      </Link>
                     </Text>
 
                     <Text size="15px">
@@ -153,8 +151,7 @@ class Splash extends Component {
                           cursor: "pointer",
                         }}
                         href="http://github.com/efalken/SportEth"
-                        //    href="FAQ.js"
-                      >
+                       >
                         Github Project
                       </a>
                     </Text>
@@ -207,60 +204,48 @@ class Splash extends Component {
 
         <div className="footer-links-wrapper" style={{ width: "115%" }}>
           <Flex width="100%" alignItems="center" justifyContent="center">
-            <Text size="15px">
-              <a
-                className="nav-header"
+            <Text size="15px" className="nav-header"
                 style={{
                   textDecoration: "none",
                   cursor: "pointer",
                   width: "20em",
                   alignItems: "flex-start",
                   display: "flex",
-                }}
-                href="/bethistory"
-                target="_blank"
-              >
+                }}>
+              <Link to="/bethistory" >
                 Bets
-              </a>
+              </Link>
             </Text>
           </Flex>
           <Flex width="100%" alignItems="center" justifyContent="center">
-            <Text size="15px">
-              <a
-                className="nav-header"
+            <Text size="15px" className="nav-header"
                 style={{
                   textDecoration: "none",
                   cursor: "pointer",
                   width: "20em",
                   alignItems: "flex-start",
                   display: "flex",
-                }}
-                href="/bigbethistory"
-                target="_blank"
-              >
+                }}>
+              <Link to="/bigbethistory">
                 Big Bets
-              </a>
+              </Link>
             </Text>
           </Flex>
           <Flex>
             <Text> </Text>
           </Flex>
           <Flex width="100%" alignItems="center" justifyContent="center">
-            <Text size="15px">
-              <a
-                className="nav-header"
+            <Text size="15px" className="nav-header"
                 style={{
                   textDecoration: "none",
                   cursor: "pointer",
                   width: "20em",
                   alignItems: "flex-start",
                   display: "flex",
-                }}
-                href="/oddshistory"
-                target="_blank"
-              >
+                }}>
+              <Link to='/oddshistory'>
                 Oddds Posted
-              </a>
+              </Link>
             </Text>
           </Flex>
 
@@ -268,21 +253,17 @@ class Splash extends Component {
             <Text> </Text>
           </Flex>
           <Flex width="100%" alignItems="center" justifyContent="center">
-            <Text size="15px">
-              <a
-                className="nav-header"
+            <Text size="15px" className="nav-header"
                 style={{
                   textDecoration: "none",
                   cursor: "pointer",
                   width: "20em",
                   alignItems: "flex-start",
                   display: "flex",
-                }}
-                href="/resultshistory"
-                target="_blank"
-              >
+                }}>
+              <Link to="/resultshistory">
                 Game Outcomes
-              </a>
+              </Link>
             </Text>
           </Flex>
 
@@ -294,21 +275,14 @@ class Splash extends Component {
             <Text> </Text>
           </Flex>
           <Flex width="100%" alignItems="center" justifyContent="center">
-            <Text size="15px">
-              <a
-                className="nav-header"
-                style={{
+            <Text size="15px"   className="nav-header" style={{
                   textDecoration: "none",
                   cursor: "pointer",
                   width: "20em",
                   alignItems: "flex-start",
                   display: "flex",
-                }}
-                href="/schedhistory"
-                target="_blank"
-              >
-                Team Schedules
-              </a>
+                }}>
+                <Link to='/schedhistory'>Team Schedules</Link>
             </Text>
           </Flex>
         </div>

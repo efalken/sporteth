@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom';
 import { drizzleConnect } from "@drizzle/react-plugin";
 import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
@@ -83,16 +84,13 @@ class EventSchedule extends Component {
     else {
       return (
         <div>
-          <Text size="20px">
-            <a
-              className="nav-header"
+          <Text size="20px" className="nav-header"
               style={{
                 cursor: "pointer",
-              }}
-              href="/"
-            >
+              }}>
+            <Link to="/" >
               Back
-            </a>
+            </Link>
           </Text>
           <Box mt="15px" mx="30px">
             <Flex width="100%" justifyContent="marginLeft">

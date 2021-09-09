@@ -23,16 +23,13 @@ return (
     </Box>
     <Box>
           <Flex>
-                  <Text size="20px">
-                    <a
-                      className="nav-header"
+                  <Text size="20px" className="nav-header"
                       style={{
                         cursor: "pointer",
-                      }}
-                      href="/NFL/bookiepage"
-                    >
+                      }}>
+                    <Link to="/NFL/bookiepage">
                       Go to Bookie Page
-                    </a>
+                    </Link>
                   </Text>
 
                 </Flex>
@@ -43,16 +40,13 @@ return (
                   alignItems="center"
                   justifyContent="marginLeft"
                 >
-                  <Text size="20px">
-                    <a
-                      className="nav-header"
+                  <Text size="20px" className="nav-header"
                       style={{
                         cursor: "pointer",
-                      }}
-                      href="/"
-                    >
+                      }}>
+                    <Link to="/" >
                       HomePage
-                    </a>
+                    </Link>
                   </Text>
                 </Flex>
                 </Box>

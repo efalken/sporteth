@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom'
 import { drizzleConnect } from "@drizzle/react-plugin";
 import PropTypes from "prop-types";
 import web3 from "web3-utils";
@@ -375,18 +376,14 @@ class BookiePagejs extends Component {
                   alignItems="center"
                   justifyContent="marginLeft"
                 >
-                  <Text size="20px">
-                    <a
-                      className="nav-header"
+                  <Text size="20px" className="nav-header"
                       style={{
                         // textDecoration: "none",
                         cursor: "pointer",
-                      }}
-                      href="/betpage"
-                      target="_blank"
-                    >
+                      }}>
+                    <Link to="/betpage">
                       Betting Page
-                    </a>
+                    </Link>
                   </Text>
                 </Flex>
               </Box>
@@ -398,15 +395,9 @@ class BookiePagejs extends Component {
                   justifyContent="marginLeft"
                 >
                   <Text size="20px">
-                    <a
-                      className="nav-header"
-                      style={{
-                        cursor: "pointer",
-                      }}
-                      href="/"
-                    >
+                    <Link to='/'>
                       Home Page
-                    </a>
+                    </Link>
                   </Text>
                 </Flex>
               </Box>

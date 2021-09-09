@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from 'react-router-dom'
 import { drizzleConnect } from "@drizzle/react-plugin";
 import PropTypes from "prop-types";
 import web3 from "web3-utils";
@@ -616,33 +617,25 @@ class BigBetPagejs extends Component {
               </Box>
               <Box>
                 <Flex>
-                  <Text size="20px">
-                    <a
-                      className="nav-header"
+                  <Text size="20px" className="nav-header"
                       style={{
                         cursor: "pointer",
-                      }}
-                      href="/bookiepage"
-                      target="_blank"
-                    >
+                      }}>
+                    <Link to="/bookiepage">
                       Go to Bookie Page
-                    </a>
+                    </Link>
                   </Text>
                 </Flex>
               </Box>
               <Box>
                 <Flex>
-                  <Text size="20px">
-                    <a
-                      className="nav-header"
+                  <Text size="20px" className="nav-header"
                       style={{
                         cursor: "pointer",
-                      }}
-                      href="/betpage"
-                      target="_blank"
-                    >
+                      }}>
+                    <Link to="/betpage">
                       Go to Bet Page
-                    </a>
+                    </Link>
                   </Text>
                 </Flex>
               </Box>
@@ -652,16 +645,13 @@ class BigBetPagejs extends Component {
                   alignItems="center"
                   justifyContent="marginLeft"
                 >
-                  <Text size="20px">
-                    <a
-                      className="nav-header"
+                  <Text size="20px" className="nav-header"
                       style={{
                         cursor: "pointer",
-                      }}
-                      href="/"
-                    >
+                      }}>
+                    <Link to="/">
                       HomePage
-                    </a>
+                    </Link>
                   </Text>
                 </Flex>
               </Box>
