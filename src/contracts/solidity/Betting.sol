@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 
 /**
 SPDX-License-Identifier: MIT
-Copyright © 2020 Eric G. Falkenstein
+Copyright © 2020 Eric G. Falkenstone
 */
 
 import "./Token.sol";
