@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
-import Oracle from "../../contracts/solidityjson/Oracle.json";
+import Oracle from "../../abis/Oracle.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
@@ -49,9 +49,10 @@ class EventOdds extends Component {
       .then(
         function (events) {
           events.forEach(function (element) {
+
             pricedata.push({
               decOdds: element.returnValues.decOdds,
-              time: element.blockNumber.timestamp,
+              time: element.blockNumber,
               Epoch: element.returnValues.epoch,
               post1: element.returnValues.posted,
             });

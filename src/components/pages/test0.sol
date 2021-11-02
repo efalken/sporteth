@@ -2,12 +2,11 @@
 SPDX-License-Identifier: MIT
 Copyright © 2020 Eric G. Falkenstein
 */
-
-pragma solidity ^0.8.0;
+pragma solidity ^0.7.4;
 import "./Token.sol";
+pragma experimental ABIEncoderV2;
 
-
-contract Betting {
+contract test {
     // after each settlement, a new epoch commences. Bets cannot consummate on games referring to prior epochs
     uint8 public betEpoch;
     // this counter is used to make bet IDs unique
@@ -133,6 +132,7 @@ contract Betting {
 
     receive() external payable {}
 
+
     function takeRegularBet(
         uint8 matchNumber,
         uint8 team0or1,
@@ -227,7 +227,7 @@ contract Betting {
         uint256 decOddsBB
     ) external {
         require(
-            amt >= minBet && amt <= userBalance[msg.sender],
+            amt >= margin[0]/concentrationLimit && amt <= userBalance[msg.sender],
             "too small or NSF"
         );
         require(decOddsBB > 1000 && decOddsBB < 9999, "invalid odds");
@@ -417,15 +417,10 @@ contract Betting {
         require(block.timestamp < earliestStart, "only prior to first event");
         uint256 netinvestment = msg.value;
         uint256 _shares = 0;
-        if ((margin[0] + margin[1]) > 0) {
             // investors receive shares marked at fair value, the current shares/eth ratio for all
             // LP's eth in the book is the sum of pledged, margin[1], and unpledged, margin[0], eth
-            _shares =
-                multiply(netinvestment, totalShares) /
-                (margin[0] + margin[1]);
-        } else {
-            _shares = netinvestment;
-        }
+            _shares =multiply(netinvestment, totalShares) /
+                  (margin[0] + margin[1] + 1);
         margin[0] += netinvestment;
         // adding funds to an account resets the 'start date' relevant for withdrawal and claiming tokens
         lpStruct[msg.sender].outEpoch = betEpoch + 1;

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
-import Betting from "../../contracts/solidityjson/Betting.json";
+import Betting from "../../abis/Betting.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
@@ -43,27 +43,31 @@ class EventBetRecord extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {
-        fromBlock: 9149000,
+        fromBlock: 9300000,
         toBlock: 'latest',
       })
       .then(
         function (events) {
           events.forEach(function (element) {
             pricedata.push({
+              timestamp: element.blockNumber,
               Epoch: element.returnValues.epoch,
-            //  time: element.blockNumber.timestamp,
-              BetSize: Number(element.returnValues.betsize) / 1e15,
+              Offer: Boolean(element.returnValues.Offer).toString(),
+              //Offer: element.returnValues.offer,
+              BetSize: element.returnValues.betAmount,
               LongPick: element.returnValues.pick,
-              MatchNum: element.returnValues.matchnum,
-          //    Payoff: Number(element.returnValues.payoff) / 1e15,
+              MatchNum: element.returnValues.matchNum,
+              Payoff: element.returnValues.payoff,
               Hashoutput: element.returnValues.contractHash,
-              BettorAddress: element.returnValues.bettor,
+              BettorAddress: element.returnValues.bettor
             });
           }, this);
           this.priceHistory = pricedata;
         }.bind(this)
       );
   }
+
+
 
   openEtherscan() {
     const url =
@@ -72,6 +76,7 @@ class EventBetRecord extends Component {
   }
 
   render() {
+    console.log("phist", this.priceHistory);
     if (Object.keys(this.priceHistory).length === 0)
       return (
         <Text size="20px" weight="200">
@@ -95,7 +100,7 @@ class EventBetRecord extends Component {
           />
           <Text size="12px" weight="200">
             {" "}
-            Time, Epoch, MatchNum, LongPick, Betsize, Payoff, BettorAddress,
+            Time, offer, Epoch, MatchNum, LongPick, Betsize, Payoff, BettorAddress,
             betHash
           </Text>{" "}
           <br />
@@ -103,9 +108,9 @@ class EventBetRecord extends Component {
             <div>
               <Text size="12px" weight="200">
                 {" "}
-              //  {event.time},{" "}
-                {event.Epoch}, {event.MatchNum}, {event.LongPick},{" "}
-                {event.BetSize.toFixed(3)}, {" "}
+                {event.timestamp},{event.Offer},
+                {event.Epoch}, {event.MatchNum}, {event.LongPick},
+                {event.BetSize},
                 {event.BettorAddress}, {event.Hashoutput},{" "}
               </Text>
               <br />

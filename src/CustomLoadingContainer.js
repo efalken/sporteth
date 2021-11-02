@@ -1,9 +1,9 @@
 import { drizzleConnect } from "@drizzle/react-plugin";
 import React, { Children, Component } from "react";
 import PropTypes from "prop-types";
-import Betting from "./contracts/solidityjson/Betting.json";
-import Oracle from './contracts/solidityjson/Oracle.json';
-import Token from './contracts/solidityjson/Token.json';
+import Betting from "./abis/Betting.json";
+import Oracle from './abis/Oracle.json';
+import Token from './abis/Token.json';
 
 
 /*
@@ -43,7 +43,7 @@ class CustomLoader extends Component {
     };
 
     this.context.drizzle.addContract(FOOT0Config);
-    //this.context.drizzle.addContract(FOOT1Config);
+    this.context.drizzle.addContract(FOOT1Config);
     this.context.drizzle.addContract(FOOT2Config);
   }
 
@@ -95,7 +95,7 @@ class CustomLoader extends Component {
 
     if (
       this.props.drizzleStatus.initialized &&
-      Object.keys(this.context.drizzle.contracts).length === 3
+      Object.keys(this.context.drizzle.contracts).length === 4
     ) {
       return Children.only(this.props.children);
     }

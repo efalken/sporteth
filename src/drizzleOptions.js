@@ -1,7 +1,7 @@
 
-import Betting from './contracts/solidityjson/Betting.json'
-import Oracle from './contracts/solidityjson/Oracle.json';
-import Token from './contracts/solidityjson/Token.json';
+import Betting from './abis/Betting.json'
+import Oracle from './abis/Oracle.json';
+import Token from './abis/Token.json';
 
 const drizzleOptions = {
   web3: {

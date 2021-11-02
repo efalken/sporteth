@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
-import Oracle from "../../contracts/solidityjson/Oracle.json";
+import Oracle from "../../abis/Oracle.json";
 import { Box, Flex } from "@rebass/grid";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
@@ -59,7 +59,7 @@ class EventStartTime extends Component {
             pricedata.push({
               games: element.returnValues.starttimes,
               Epoch: element.returnValues.epoch,
-              time: element.blockNumber.timestamp,
+              time: element.blockNumber,
               post1: element.returnValues.posted,
             });
           }, this);
@@ -124,8 +124,8 @@ class EventStartTime extends Component {
                 <div>
                   <Text size="12px" weight="200">
                     {" "}
-                    {moment.unix(event.time).format("DD-MM-YYTHH:mm")},{" "}
-                    {event.Epoch},{event.time},{event.games[0]},{event.games[1]}
+                    {event.time},{" "}
+                    {event.Epoch},{event.games[0]},{event.games[1]}
                     ,{event.games[2]},{event.games[3]},{event.games[4]},
                     {event.games[5]},{event.games[6]},{event.games[7]},
                     {event.games[8]},{event.games[9]},{event.games[10]},

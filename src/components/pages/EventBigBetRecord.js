@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
-import BettingContract from "../../contracts/solidityjson/Betting.json";
+import BettingContract from "../../abis/Betting.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
@@ -45,8 +45,8 @@ class EventBigBetRecord extends Component {
     //console.log("add", BettingContract.address);
     var pricedata = [];
     contractweb3
-      .getPastEvents("BetBigRecord", {
-        fromBlock: 9149000,
+      .getPastEvents("BetRecord", {
+        fromBlock: 9300000,
         toBlock: 'latest',
       })
       .then(
@@ -56,10 +56,11 @@ class EventBigBetRecord extends Component {
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
               NFLWeek: element.returnValues.epoch,
-              time: element.blockNumber.timestamp,
-              BetSize: Number(element.returnValues.betsize) / 1e15,
+              Offer: Boolean(element.returnValues.Offer).toString(),
+              time: element.blockNumber,
+              BetSize: Number(element.returnValues.betAmount),
               LongPick: element.returnValues.pick,
-              MatchNum: element.returnValues.matchnum,
+              MatchNum: element.returnValues.matchNum,
             });
           }, this);
           this.bigBetHistory = pricedata;
@@ -101,7 +102,8 @@ class EventBigBetRecord extends Component {
             Week, Match, Pick, BetSize, BettorAddress, Hash
           </Text>{" "}
           <br />
-          {this.bigBetHistory.map((event) => (
+          {this.bigBetHistory.map((event) =>
+            (event.Offer) && (
             <div>
               <Text size="12px" weight="200">
                 {" "}

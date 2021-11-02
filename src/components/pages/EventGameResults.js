@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
-import Oracle from "../../contracts/solidityjson/Oracle.json";
+import Oracle from "../../abis/Oracle.json";
 var moment = require("moment");
 var momentTz = require("moment-timezone");
 
@@ -52,7 +52,7 @@ class EventGameoutcomes extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("ResultsPosted", {
-        fromBlock: 9149000,
+        fromBlock: 9300000,
         toBlock: 'latest',
         filter: { posted: true },
       })
@@ -60,7 +60,7 @@ class EventGameoutcomes extends Component {
         function (events) {
           events.forEach(function (element) {
             pricedata.push({
-              timestamp: element.blockNumber.timestamp,
+              timestamp: element.blockNumber,
               outcome: element.returnValues.winner,
               Epoch: element.returnValues.epoch,
               post1: element.returnValues.posted,
@@ -114,9 +114,7 @@ class EventGameoutcomes extends Component {
                 <div>
                   <Text size="12px" weight="200">
                     {" "}
-                    {moment
-                      .unix(event.timestamp)
-                      .format("DD-MM-YYTHH:mm")}, {event.Epoch}
+                    {event.timestamp}, {event.Epoch}
                     {": "},{event.outcome[0]}, {event.outcome[1]},{" "}
                     {event.outcome[2]}, {event.outcome[3]}, {event.outcome[4]},{" "}
                     {event.outcome[5]}, {event.outcome[6]}, {event.outcome[7]},{" "}
