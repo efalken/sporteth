@@ -11,7 +11,6 @@ const offset = _dateo.getTimezoneOffset() * 60 * 1000 - 7200000;
 var _timestamp;
 var _date;
 var _hour;
-const firstStart = 1635101269;
 
 require("chai").use(require("chai-as-promised")).should();
 

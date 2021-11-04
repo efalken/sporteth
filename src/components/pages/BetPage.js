@@ -20,6 +20,8 @@ import VBackgroundCom from "../basics/VBackgroundCom";
 import BettingContract from "../../abis/Betting.json";
 import OracleContract from "../../abis/Oracle.json";
 import TokenContract from "../../abis/Token.json";
+import { useChainId, switchToAvalanche } from "./switchAvalanche";
+
 
 var moment = require("moment");
 var Web3 = require("web3");
@@ -34,6 +36,7 @@ class BetPagejs extends Component {
     this.betHistory = [];
     this.currentOfferts = [];
     this.takekeys = {};
+    this.chainID = [];
 
     this.state = {
       betAmount: "",
@@ -251,6 +254,8 @@ class BetPagejs extends Component {
 
     this.marginKey2 = this.contracts["BettingMain"].methods.margin.cacheCall(2);
 
+    //this.chainID = useChainId();
+
     this.marginKey3 = this.contracts["BettingMain"].methods.margin.cacheCall(3);
 
     this.marginKey4 = this.contracts["BettingMain"].methods.margin.cacheCall(4);
@@ -310,6 +315,8 @@ class BetPagejs extends Component {
     }
     return moneyline;
   }
+
+
 
   render() {
     let subcontracts = {};
@@ -400,18 +407,20 @@ class BetPagejs extends Component {
       }
     }
 
+    let netLiab = [liab0, liab1];
+
     let xdecode = [0, 1, 2, 3, 4, 5, 6, 7];
     for (let ii = 0; ii < 32; ii++) {
       xdecode = this.unpack256(betData[ii]);
-      odds0[ii] = Number(xdecode[4]);
-      odds1[ii] = Number(xdecode[5]);
-      startTimeColumn[ii] = xdecode[7];
+      odds0[ii] = Number(xdecode[6]);
+      odds1[ii] = Number(xdecode[7]);
+      startTimeColumn[ii] = xdecode[5];
       netLiab[0][ii] = (Number(xdecode[2]) - Number(xdecode[1])) / 10;
       netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
     }
 
     let oddsTot = [odds0, odds1];
-    let netLiab = [liab0, liab1];
+
 
     console.log("bethist", this.betHistory);
 
@@ -512,6 +521,18 @@ class BetPagejs extends Component {
                   justifyContent="space-between"
                 ></Flex>
                 <Flex style={{ borderTop: `thin solid ${G}` }}></Flex>
+              </Box>
+              <Box>
+              <Flex
+                mt="20px"
+                flexDirection="row"
+                justifyContent="space-between"
+              ></Flex>
+              </Box>
+              <Box>
+              {ChainCheck != 43114 ? (
+              <ChainSwitch/>):(
+                <Box>Avalanche Network Active</Box>)}
               </Box>
               <Box>
                 <Flex>
@@ -1034,5 +1055,24 @@ const mapStateToProps = (state) => {
     transactionStack: state.transactionStack,
   };
 };
+
+const ChainCheck=()=>{
+    const chainid = useChainId()
+    return ({chainid})
+}
+
+const ChainSwitch=()=>{
+    const chainid = useChainId()
+    return (<Box>not on Avalanche <button
+        style={{
+          backgroundColor: "#424242",
+          borderRadius: "2px",
+          cursor: "pointer",
+        }}
+        onClick={() => switchToAvalanche()}
+       > switch to Avalanche</button> </Box>)
+}
+
+
 
 export default drizzleConnect(BetPagejs, mapStateToProps);

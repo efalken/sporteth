@@ -195,6 +195,7 @@ contract Betting {
         userBalance[k.bettor] -= k.betAmount;
         k.offer = false;
         subcontracts[_subkid] = k;
+        //margin[2] += (k.payoff + k.betAmount);
         emit BetRecord(
             k.bettor,
             uint8(margin[3]),
@@ -207,14 +208,16 @@ contract Betting {
         );
         // creates new contract for taker of big bet
         bytes32 subkID2 = keccak256(abi.encodePacked(margin[6], block.timestamp));
+        //Subcontract memory k2 = subcontracts[_subkid];
         k.bettor = msg.sender;
         uint32 temppay = k.payoff;
         k.payoff = k.betAmount;
         k.betAmount = temppay;
         k.pick = 1 - k.pick;
+        margin[2] += (k.payoff + k.betAmount);
         // payoff of the offered bet is the taker bet amount
-        userBalance[msg.sender] -= k.payoff;
-        margin[2] += (k.betAmount + temppay);
+        userBalance[msg.sender] -= k.betAmount;
+
         emit BetRecord(
             msg.sender,
             uint8(margin[3]),
