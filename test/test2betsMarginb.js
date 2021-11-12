@@ -52,14 +52,10 @@ contract('Betting', function (accounts) {
        }
             var nextStart = _timestamp + 7*86400;
             console.log(`time is ${nextStart}`);
-            //var nextStart = firstStart;
-            //console.log(`startTime is ${nextStart}`);
-            //console.log(`time is ${_timestamp}`);
             await oracle.initPost(["NFL:ARI:LAC","NFL:ATL:LAR","NFL:BAL:MIA","NFL:BUF:MIN","NFL:CAR:NE","NFL:CHI:NO","NFL:CIN:NYG","NFL:CLE:NYJ","NFL:DAL:OAK","NFL:DEN:PHI","NFL:DET:PIT","NFL:GB:SEA","NFL:HOU:SF","NFL:IND:TB","NFL:JAX:TEN","NFL:KC:WSH","UFC:Holloway:Kattar","UFC:Ponzinibbio:Li","UFC:Kelleher:Simon","UFC:Hernandez:Vieria","UFC:Akhemedov:Breese","UFC:Memphis:Brooklyn","UFC:Boston:Charlotte","UFC:Milwaukee:Dallas","UFC:miami:LALakers","UFC:Atlanta:SanAntonia","NHL:Colorado:Washington","NHL:Vegas:StLouis","NHL:TampaBay:Dallas","NHL:Boston:Carolina","NHL:Philadelphia:Edmonton","NHL:Pittsburgh:NYIslanders"], [nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart, nextStart], [1000, 2000, 500, 1000, 909, 800, 510, 1240, 1470, 960, 650, 1330, 970, 730, 1310, 1040, 520, 1020, 1470, 1200, 1080, 820, 770, 790, 730, 690, 970, 760, 1000, 720, 1360, 800]);
         })
 
         it("approve and send to betting contract", async () => {
-            //await helper.advanceTimeAndBlock(secondsInHour * 6);
             await oracle.initProcess();
             const startNow = await betting.betData(5);
             console.log(`startTime is ${startNow}`);
@@ -68,12 +64,7 @@ contract('Betting', function (accounts) {
         })
 
         it("Fund Contract", async () => {
-        //  console.log(`startTime is ${nextStart}`);
         _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
-        //const checkO = await betting.matches[0](contractHash3);
-          console.log(`currTime is ${_timestamp}`);
-          //const startNow = await betting.betData(5)(0);
-          //console.log(`startTime is ${startNow}`);
             await betting.fundBook({ from: accounts[0], value: '3000000000000000000' });
             await betting.fundBettor({ from: accounts[2], value: '800000000000000000' });
             await betting.fundBettor({ from: accounts[3], value: '700000000000000000' });

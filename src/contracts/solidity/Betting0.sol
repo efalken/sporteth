@@ -64,7 +64,7 @@ contract Betting {
     event Funding(
         address bettor,
         uint256 moveAmount,
-          uint32 epoch,
+        uint32 epoch,
         // add, withdraw, redeem
         uint32 action
     );
@@ -88,7 +88,7 @@ contract Betting {
     receive() external payable {
     }
 
-  function bet(
+    function bet(
         uint8 _matchNumber,
         uint8 _team0or1,
         uint32 _betAmt
@@ -266,7 +266,7 @@ contract Betting {
                     (uint32[7] memory betDatav) = decodeNumber(betData[i]);
                 EpochMatchWinner = i * 10 + margin[3] * 1000;
                 // if 0 or 1, this represents the Favorite or Underdog as winner, respectively
-            if (winningTeam != 2) {
+                if (winningTeam != 2) {
                     redemptionPot += betDatav[winningTeam];
                     payoffPot += betDatav[winningTeam+2];
                   // this unique match&epoch&team hash will map to a win, 2, allowing bettors to claim their winnings
