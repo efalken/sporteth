@@ -1,6 +1,6 @@
 {
   "contractName": "Betting",
-  "address": "0x07C324191561C3E548D8424AcB2E699E009fF523",
+  "address": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
   "arbitrumaddress": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
 	"abi": [
 			{
@@ -434,7 +434,7 @@
 						"type": "uint32"
 					}
 				],
-				"name": "takeRegularBet",
+				"name": "bet",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -529,7 +529,7 @@
 			}
 		],
   "networks": {
-      "4": {
+      "1": {
     "events" : [
       {
 				"anonymous": false,

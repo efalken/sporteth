@@ -193,7 +193,7 @@ contract("Betting", function (accounts) {
     let contractHash0;
 
     it("bet 10 on 0:0 (match 0: team 0)", async () => {
-      const result = await betting.takeRegularBet(0, 0, "1000", {
+      const result = await betting.bet(0, 0, "1000", {
         from: accounts[3],
       });
       contractHash0 = result.logs[0].args.contractHash;
@@ -201,7 +201,7 @@ contract("Betting", function (accounts) {
 
     let contractHash1;
     it("bet 10 on 0:1", async () => {
-      const result2 = await betting.takeRegularBet(0, 1, "1000", {
+      const result2 = await betting.bet(0, 1, "1000", {
         from: accounts[2],
       });
       contractHash1 = result2.logs[0].args.contractHash;
@@ -209,29 +209,42 @@ contract("Betting", function (accounts) {
 
     let contractHash2;
     it("bet 10 on 2:1 (match 2: team 1)", async () => {
-      const result = await betting.takeRegularBet(2, 1, "1000", {
+      const result = await betting.bet(2, 1, "1000", {
         from: accounts[2],
       });
       contractHash2 = result.logs[0].args.contractHash;
     });
 
     let contractHash3;
-    it("Offer Big Bet for 100 on 2:0", async () => {
-      const result3 = await betting.postBigBet(2, 0, 2000, 2111, {
+    let contractHash6;
+    it("Offer Big Bets", async () => {
+      const result3 = await betting.postBigBet(2, 0, 2001, 2111, {
         from: accounts[2],
       });
       contractHash3 = result3.logs[0].args.contractHash;
       const gasUsed = result3.receipt.gasUsed;
       console.log(`gas on big bet ${gasUsed}`);
-      const check0 = await betting.checkRedeem(contractHash3, 1030);
+      const check0 = await betting.checkRedeem(contractHash3, 1020);
       const check1 = (await betting.subcontracts(contractHash3)).betAmount;
       console.log(`checkOfferFn ${check0}`);
       console.log(`checkOfferGetter ${check1}`);
+      const result6 = await betting.postBigBet(3, 0, 2002, 1955, {
+        from: accounts[2],
+      });
+      contractHash6 = result6.logs[0].args.contractHash;
+
+      const check2 = await betting.checkRedeem(contractHash6, 1020);
+      const check3 = (await betting.subcontracts(contractHash6)).betAmount;
+      console.log(`checkOfferFn2 ${check2}`);
+      console.log(`checkOfferGetter3 ${check3}`);
     });
 
     let contractHash4;
-    it("take above Big Bet, putting 4500 on 2:1", async () => {
+    it("take above Big Bets", async () => {
       const result4 = await betting.takeBigBet(contractHash3, {
+        from: accounts[3],
+      });
+      const result6 = await betting.takeBigBet(contractHash6, {
         from: accounts[3],
       });
       const gasUsed = result4.receipt.gasUsed;
@@ -257,20 +270,19 @@ contract("Betting", function (accounts) {
       const bookiePool = await betting.margin(0);
       const bettorLocked = await betting.margin(2);
       const bookieLocked = await betting.margin(1);
-
       const userBalanceAcct2 = await betting.userBalance(accounts[2]);
       const userBalanceAcct3 = await betting.userBalance(accounts[3]);
+      console.log(`bettorLocked ${bettorLocked}`);
+      console.log(`bookiePool ${bookiePool}`);
+      console.log(`bookieLocked ${bookieLocked}`);
       console.log(`acct2 ${userBalanceAcct2}`);
       console.log(`acct3 ${userBalanceAcct3}`);
-      console.log(`bookiePool ${bookiePool}`);
-      console.log(`bettorLocked ${bettorLocked}`);
-      console.log(`bookieLocked ${bookieLocked}`);
-/*
-      assert.equal(userBalanceAcct2, "5000", "Must be equal");
-      assert.equal(userBalanceAcct3, "6000", "Must be equal");
       assert.equal(bookiePool, "10000", "Must be equal");
-      assert.equal(bookieLocked, "1030", "Must be equal");
-      assert.equal(bettorLocked, "9000", "Must be equal");*/
+      assert.equal(bettorLocked, "11137", "Must be equal");
+      assert.equal(bookieLocked, "718", "Must be equal");
+      assert.equal(userBalanceAcct2, "3997", "Must be equal");
+      assert.equal(userBalanceAcct3, "4866", "Must be equal");
+
     });
 
     it("bumpTime", async () => {
@@ -294,7 +306,7 @@ contract("Betting", function (accounts) {
         1,
         1,
         1,
-        1,
+        0,
         1,
         1,
         1,
@@ -333,7 +345,7 @@ contract("Betting", function (accounts) {
     it("send result data to betting contract", async () => {
       await oracle.settleProcess();
     });
-
+/*
     it("State Variables in Betting Contract after settle", async () => {
       const bookiePool = await betting.margin(0);
       const bettorLocked = await betting.margin(2);
@@ -354,34 +366,49 @@ contract("Betting", function (accounts) {
       console.log(`bettorLocked ${bettorLocked}`);
       console.log(`bookieLocked ${bookieLocked}`);
       console.log(`oracleBal ${oracleBal}`);
-      console.log(`ethbal ${ethbal}`);/*
+      console.log(`ethbal ${ethbal}`);
       assert.equal(userBalanceAcct2, "5000", "Must be equal");
       assert.equal(userBalanceAcct3, "6000", "Must be equal");
       assert.equal(bookiePool, "8970", "Must be equal");
       assert.equal(bookieLocked, "0", "Must be equal");
-      assert.equal(bettorLocked, "0", "Must be equal");*/
+      assert.equal(bettorLocked, "0", "Must be equal");
     });
-
-    it("redeem  bet on 0:1 ", async () => {
+*/
+    it("redeem  regular bets  ", async () => {
       const result = await betting.redeem(contractHash1, 1001, {
         from: accounts[2],
       });
-      const gasUsed = result.receipt.gasUsed;
-      console.log(`gas on redeem bet ${gasUsed}`);
-    });
-
-    it("redeem  bet on 2:1 ", async () => {
-      const result = await betting.redeem(contractHash2, 1021, {
+      const result2 = await betting.redeem(contractHash2, 1021, {
         from: accounts[2],
       });
+      /*
+      const userBalanceAcct2 = await betting.userBalance(accounts[2]);
+      const userBalanceAcct3 = await betting.userBalance(accounts[3]);
+      console.log(`acct2 ${userBalanceAcct2}`);
+      console.log(`acct3 ${userBalanceAcct3}`);
       const gasUsed = result.receipt.gasUsed;
-      console.log(`gas on redeem second bet ${gasUsed}`);
+      console.log(`gas on redeem bet ${gasUsed}`);
+      const result2 = await betting.redeem(contractHash2, 1021, {
+        from: accounts[2],
+      });
+      const userBalanceAcct2b = await betting.userBalance(accounts[2]);
+      const userBalanceAcct3b = await betting.userBalance(accounts[3]);
+      console.log(`acct2b ${userBalanceAcct2b}`);
+      console.log(`acct3b ${userBalanceAcct3b}`);
+      */
     });
 
-    it("redeem  Bigbet on 1:1 ", async () => {
+    it("redeem  Bigbets on 1:1 ", async () => {
       const result = await betting.redeem(contractHash4, 1021, {
-        from: accounts[3],
-      });
+        from: accounts[3]});
+        const result2 = await betting.redeem(contractHash6, 1030, {
+          from: accounts[2]});
+          const userBalanceAcct2 = await betting.userBalance(accounts[2]);
+          const userBalanceAcct3 = await betting.userBalance(accounts[3]);
+          /*
+          console.log(`acct2c ${userBalanceAcct2}`);
+          console.log(`acct3c ${userBalanceAcct3}`);
+          */
     });
 
 
@@ -399,17 +426,16 @@ contract("Betting", function (accounts) {
       );
       const userBalanceAcct2 = await betting.userBalance(accounts[2]);
       const userBalanceAcct3 = await betting.userBalance(accounts[3]);
+      console.log(`bookiePool ${bookiePool}`);
+      console.log(`bookieLocked ${bookieLocked}`);
+      console.log(`bettorLocked ${bettorLocked}`);
       console.log(`acct2 ${userBalanceAcct2}`);
       console.log(`acct3 ${userBalanceAcct3}`);
-      console.log(`bookiePool ${bookiePool}`);
-      console.log(`bettorLocked ${bettorLocked}`);
-      console.log(`bookieLocked ${bookieLocked}`);
-/*
-      assert.equal(userBalanceAcct2, "8928", "Must be equal");
-      assert.equal(userBalanceAcct3, "11850", "Must be equal");
-      assert.equal(bookiePool, "8970", "Must be equal");
+      assert.equal(bookiePool, "9282", "Must be equal");
       assert.equal(bookieLocked, "0", "Must be equal");
-      assert.equal(bettorLocked, "0", "Must be equal");*/
+      assert.equal(bettorLocked, "0", "Must be equal");
+      assert.equal(userBalanceAcct2, "11445", "Must be equal");
+      assert.equal(userBalanceAcct3, "8989", "Must be equal");
     });
   });
 });

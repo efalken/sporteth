@@ -656,7 +656,7 @@ contract("Betting", function (accounts) {
     it("Bet 50 finney on match 0: team 0", async () => {
       const bookpool = await betting.margin(0);
       console.log(`bookieCap is ${bookpool}`);
-      await betting.takeRegularBet(0, 0, "5000", { from: accounts[2] });
+      await betting.bet(0, 0, "5000", { from: accounts[2] });
     });
 
     it("bumpTime", async () => {
@@ -719,10 +719,17 @@ contract("Betting", function (accounts) {
       const ethout0 = await betting.withdrawBook("10000", {
         from: accounts[0],
       });
-    });
-
-    it("withdraw 50 finney for acct 1", async () => {
       const ethout1 = await betting.withdrawBook("5000", { from: accounts[1] });
+      const ethin0 = web3.utils.fromWei(ethout0.logs[0].args.moveAmount,"finney");
+      const ethin1  =  web3.utils.fromWei(ethout1.logs[0].args.moveAmount,"finney");
+      const ethbal = web3.utils.fromWei(
+        await web3.eth.getBalance(betting.address),
+        "finney"
+      );
+      console.log(`eth to acct0 ${ethin0}`);
+      console.log(`eth to acct1 ${ethin1}`);
+      assert.equal(ethin0, "1058.8", "Must be equal");
+      assert.equal(ethin1, "529.4", "Must be equal");
     });
 
     it("State 3", async () => {
@@ -734,19 +741,20 @@ contract("Betting", function (accounts) {
       const shares2 = await betting.margin(4);
       const sharesAcct0 = (await betting.lpStruct(accounts[0])).shares;
       const sharesAcct1 = (await betting.lpStruct(accounts[1])).shares;
+      const sharesAcct3 = (await betting.lpStruct(accounts[3])).shares;
 
       console.log(`bookie capital ${excessCapital}`);
       console.log(`eth in betting contract ${ethbal}`);
       console.log(`total LP shares ${shares2}`);
       console.log(`sharesAcct0 ${sharesAcct0}`);
       console.log(`sharesAcct1 ${sharesAcct1}`);
-      /*
+
           assert.equal(Math.floor(sharesAcct0), "40000", "Must be equal");
           assert.equal(Math.floor(sharesAcct1), "30000", "Must be equal");
-          assert.equal(Math.floor(excessCapital), "70350", "Must be equal");
-          assert.equal(Math.floor(ethbal), "16992.5", "Must be equal");
-          assert.equal(Math.floor(shares2), "70000", "Must be equal");
-*/
+
+          assert.equal(Math.floor(excessCapital), "84118", "Must be equal");
+          assert.equal(Math.floor(shares2), "79444", "Must be equal");
+
     });
 
     it("Acct 3 Funds Betting Contract", async () => {
@@ -773,13 +781,10 @@ contract("Betting", function (accounts) {
       console.log(`sharesAcct0 ${sharesAcct0}`);
       console.log(`sharesAcct1 ${sharesAcct1}`);
       console.log(`sharesAcct3 ${sharesAcct3}`);
-      /*
-               assert.equal(Math.floor(sharesAcct0), "49950", "Must be equal");
+               assert.equal(Math.floor(sharesAcct0), "40000", "Must be equal");
                assert.equal(Math.floor(sharesAcct1), "30000", "Must be equal");
-               assert.equal(Math.floor(excessCapital), "80350", "Must be equal");
-               assert.equal(Math.floor(ethbal), "17992", "Must be equal");
-               assert.equal(Math.floor(shares2), "79950", "Must be equal");
-*/
+               assert.equal(Math.floor(sharesAcct3), "9444", "Must be equal");
+               assert.equal(Math.floor(shares2), "79444", "Must be equal");
     });
   });
 });

@@ -83,53 +83,53 @@ contract('Betting', function (accounts) {
 
 
         it("bet 10 on 0:1", async () => {
-          const result = await betting.takeRegularBet(0, 0, "1000", {
+          const result = await betting.bet(0, 0, "1000", {
             from: accounts[2],
           });
         });
 
         it("bet 20 on 0:1", async () => {
-            await betting.takeRegularBet(0, 1, "2000", { from: accounts[3]});
+            await betting.bet(0, 1, "2000", { from: accounts[3]});
         })
 
         it("bet 10 on 0:1", async () => {
-            await betting.takeRegularBet(0, 0, "1000", { from: accounts[2]});
+            await betting.bet(0, 0, "1000", { from: accounts[2]});
         })
 
         it("bet 10 on 1:0", async () => {
-            await betting.takeRegularBet(1, 0, "1000", { from: accounts[2]});
+            await betting.bet(1, 0, "1000", { from: accounts[2]});
         })
 
         it("bet 20 on 1:1", async () => {
-            await betting.takeRegularBet(1, 1, "2000", { from: accounts[3]});
+            await betting.bet(1, 1, "2000", { from: accounts[3]});
         })
 
         it("bet 10 on 1:0", async () => {
-            await betting.takeRegularBet(1, 0, "1000", { from: accounts[2]});
+            await betting.bet(1, 0, "1000", { from: accounts[2]});
         })
 
         it("bet 10 on 2:0", async () => {
-            await betting.takeRegularBet(2, 0, "1000", { from: accounts[2]});
+            await betting.bet(2, 0, "1000", { from: accounts[2]});
         })
 
         it("bet 20 on 2:1", async () => {
-            await betting.takeRegularBet(2, 1, "2000", { from: accounts[3]});
+            await betting.bet(2, 1, "2000", { from: accounts[3]});
         })
 
         it("bet 10 on 2:0", async () => {
-            await betting.takeRegularBet(2, 0, "1000", { from: accounts[2]});
+            await betting.bet(2, 0, "1000", { from: accounts[2]});
         })
 
         it("bet 10 on 3:0", async () => {
-            await betting.takeRegularBet(3, 0,"1000", { from: accounts[2]});
+            await betting.bet(3, 0,"1000", { from: accounts[2]});
         })
 
         it("bet 10 on 3:0", async () => {
-            await betting.takeRegularBet(3, 0, "1000", { from: accounts[2]});
+            await betting.bet(3, 0, "1000", { from: accounts[2]});
         })
 
         it("bet 10 on 3:1", async () => {
-            await betting.takeRegularBet(3, 1, "1000", { from: accounts[3]});
+            await betting.bet(3, 1, "1000", { from: accounts[3]});
         })
 
         it("Test 1", async () => {

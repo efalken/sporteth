@@ -48,7 +48,7 @@ contract("Betting", function (accounts) {
       if (_hour < 10) {
         await helper.advanceTimeAndBlock(secondsInHour * (10 - _hour));
       }
-      var nextStart = _timestamp + 7 * 86400;
+      var nextStart = 1672488000;
       await oracle.initPost(
         [
           "NFL:ARI:LAC",
@@ -175,8 +175,8 @@ contract("Betting", function (accounts) {
         from: accounts[1],
         value: "2000000000000000000",
       });
-      await betting.takeRegularBet(7, 0, "1000", { from: accounts[1] });
-      await betting.takeRegularBet(7, 1, "500", { from: accounts[1] });
+      await betting.bet(7, 0, "1000", { from: accounts[1] });
+      await betting.bet(7, 1, "500", { from: accounts[1] });
       const betData7 = await betting.betData(7);
       const bn = new web3.BN(betData7);
       //const str = bn.toString(16);
@@ -198,6 +198,7 @@ contract("Betting", function (accounts) {
       assert.equal(ints[1], "500", "Must be equal");
       assert.equal(ints[2], "807", "Must be equal");
       assert.equal(ints[3], "569", "Must be equal");
+      assert.equal(ints[5], "1672488000", "Must be equal");
       assert.equal(ints[6], "807", "Must be equal");
       assert.equal(ints[7], "1138", "Must be equal");
     });
@@ -282,6 +283,7 @@ contract("Betting", function (accounts) {
       assert.equal(intsb[1], "500", "Must be equal");
       assert.equal(intsb[2], "807", "Must be equal");
       assert.equal(intsb[3], "569", "Must be equal");
+      assert.equal(intsb[5], "1672488000", "Must be equal");
       assert.equal(intsb[6], "907", "Must be equal");
       assert.equal(intsb[7], "1013", "Must be equal");
     });

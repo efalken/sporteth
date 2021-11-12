@@ -23,7 +23,6 @@ var betEpoc;
 var ethout8;
 var ethout;
 var tokensout;
-const firstStart = 1639798014;
 
 require("chai").use(require("chai-as-promised")).should();
 
@@ -185,7 +184,7 @@ contract("Betting", function (accounts) {
         from: accounts[5],
         value: "5000000000000000000",
       });
-      const result = await betting.takeRegularBet(0, 0, "2000", {
+      const result = await betting.bet(0, 0, "2000", {
         from: accounts[5],
       });
       contractHash1 = result.logs[0].args.contractHash;
@@ -383,7 +382,7 @@ contract("Betting", function (accounts) {
     });
 
     it("Send  Bet #2", async () => {
-      const result = await betting.takeRegularBet(0, 0, "2000", {
+      const result = await betting.bet(0, 0, "2000", {
         from: accounts[5],
       });
       const odds = web3.utils.fromWei(result.logs[0].args.payoff, "finney");
@@ -584,7 +583,7 @@ contract("Betting", function (accounts) {
       }
       await helper.advanceTimeAndBlock(secondsInHour * 6);
       await oracle.initProcess();
-      const result = await betting.takeRegularBet(0, 0, "2000", {
+      const result = await betting.bet(0, 0, "2000", {
         from: accounts[5],
       });
       _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber()))
@@ -790,7 +789,7 @@ contract("Betting", function (accounts) {
       }
       await helper.advanceTimeAndBlock(secondsInHour * 6);
       await oracle.initProcess({ from: accounts[1] });
-      const result = await betting.takeRegularBet(0, 0, "2000", {
+      const result = await betting.bet(0, 0, "2000", {
         from: accounts[5],
       });
       _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber()))
@@ -861,7 +860,7 @@ contract("Betting", function (accounts) {
       it("withdraw", async () => {
       const result = await oracle.withdrawTokens("150", { from: accounts[1] });
       ethout = web3.utils.fromWei(result.logs[0].args.etherChange, "finney");
-      console.log(`finney Out1 ${ethout}`);
+      console.log(`ether Out1 ${ethout}`);
       assert.equal(ethout, "10.05", "Must be equal");
       tokensout = result.logs[0].args.tokensChange;
       console.log(`tokens Out1 ${tokensout}`);
@@ -992,7 +991,7 @@ contract("Betting", function (accounts) {
       }
       await helper.advanceTimeAndBlock(secondsInHour * 6);
       await oracle.initProcess({ from: accounts[0] });
-      const result = await betting.takeRegularBet(0, 0, "2000", {
+      const result = await betting.bet(0, 0, "2000", {
         from: accounts[5],
       });
       _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber()))

@@ -10,6 +10,7 @@ import wppdf from "../whitepaper/SportEth.pdf";
 import excelSheet from "../whitepaper/sportEthData.xlsx";
 import EthCrypto from 'eth-crypto';
 
+
 class Splash extends Component {
   constructor(props, context) {
     super(props);
@@ -25,6 +26,7 @@ class Splash extends Component {
       chartSymbols: ["SP:FOOT1", "BTCUSD"],
     };
   }
+
 
   openWhitepaper() {
     console.log("Opened whitepaper");
@@ -48,6 +50,7 @@ class Splash extends Component {
 
 
   render() {
+    //console.log("ChainCheck", ChainCheck);
     return (
       <div>
         <VBackground />
@@ -65,7 +68,6 @@ class Splash extends Component {
               <Box>
                 <Logo />
               </Box>
-
               <Flex
                 width="100%"
                 justifyContent="space-around"
@@ -309,6 +311,7 @@ class Splash extends Component {
               >
                 Team Schedules
               </a>
+              you are on
             </Text>
           </Flex>
         </div>
@@ -320,5 +323,7 @@ class Splash extends Component {
 Splash.contextTypes = {
   drizzle: PropTypes.object,
 };
+
+
 
 export default Splash;

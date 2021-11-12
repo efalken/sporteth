@@ -12,7 +12,6 @@ const offset = _dateo.getTimezoneOffset() * 60 * 1000 - 7200000;
 var _timestamp;
 var _date;
 var _hour;
-const firstStart = 1633695609;
 
 require("chai").use(require("chai-as-promised")).should();
 
@@ -238,7 +237,10 @@ contract("Betting", function (accounts) {
     });
 
     it("fail: try post odds to oracle", async () => {
-      var nextStart = firstStart + 14 * 86400;
+      const _timestamp = (
+        await web3.eth.getBlock(await web3.eth.getBlockNumber())
+      ).timestamp;
+      var nextStart = _timestamp + 86400;
       await oracle.updatePost(
         [
           800,
@@ -291,7 +293,7 @@ contract("Betting", function (accounts) {
       await oracle.initProcess();
     });
 
-    it("checkHour", async () => {
+it("send updated odds data: 2000 for match 1, team 0", async () => {
       _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber()))
         .timestamp;
       _date = new Date(1000 * _timestamp + offset);
@@ -299,10 +301,7 @@ contract("Betting", function (accounts) {
       if (_hour < 10) {
         await helper.advanceTimeAndBlock(secondsInHour * (10 - _hour));
       }
-    });
-
-    it("send updated odds data: 2000 for match 1, team 0", async () => {
-      var nextStart = firstStart + 14 * 86400;
+      var nextStart = _timestamp + 14 * 86400;
       await oracle.updatePost(
         [
           800,
@@ -395,7 +394,7 @@ contract("Betting", function (accounts) {
       assert.equal(tokBal1, "400", "Must be equal");
     });
 
-    it("checkHour", async () => {
+    it("update odds", async () => {
       _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber()))
         .timestamp;
       _date = new Date(1000 * _timestamp + offset);
@@ -403,10 +402,7 @@ contract("Betting", function (accounts) {
       if (_hour < 10) {
         await helper.advanceTimeAndBlock(secondsInHour * (10 - _hour));
       }
-    });
-
-    it("send updated odds data again: 3000 for match 0, team 0", async () => {
-      var nextStart = firstStart + 14 * 86400;
+      var nextStart = _timestamp + 14 * 86400;
       await oracle.updatePost(
         [
           3000,

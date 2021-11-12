@@ -190,7 +190,7 @@ contract("Betting", function (accounts) {
   describe("Send Bets, update Odds, send more bets", async () => {
     let contractHash1;
     it("bet 10 on 0:0 (match 0: team 0)", async () => {
-      const result = await betting.takeRegularBet(0, 0, "1000", {
+      const result = await betting.bet(0, 0, "1000", {
         from: accounts[1],
       });
       contractHash1 = result.logs[0].args.contractHash;
@@ -273,7 +273,7 @@ contract("Betting", function (accounts) {
       _timestamp = (await web3.eth.getBlock(await web3.eth.getBlockNumber()))
         .timestamp;
       console.log(`time is ${_timestamp}`);
-      const result12 = await betting.takeRegularBet(0, 0, "1000", {
+      const result12 = await betting.bet(0, 0, "1000", {
         from: accounts[2],
       });
       contractHash2 = result12.logs[0].args.contractHash;

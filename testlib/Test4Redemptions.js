@@ -188,23 +188,23 @@ contract("Betting", function (accounts) {
   describe("Send  Bets", async () => {
     let contractHash0;
     it("bet 10 on 0:0 (match 0: team 0)", async () => {
-      const result = await betting.takeRegularBet(0, 0, "1000", {
+      const result = await betting.bet(0, 0, "1000", {
         from: accounts[3],
       });
       contractHash0 = result.logs[0].args.contractHash;
       const gasUsed = result.receipt.gasUsed;
       console.log(`gas on initial bet ${gasUsed}`);
-      const result2 = await betting.takeRegularBet(3, 0, "1000", {
+      const result2 = await betting.bet(3, 0, "1000", {
         from: accounts[3],
       });
-      const result3 = await betting.takeRegularBet(3, 1, "1000", {
+      const result3 = await betting.bet(3, 1, "1000", {
         from: accounts[3],
       });
     });
 
     let contractHash1;
     it("bet 10 on 0:1", async () => {
-      const result2 = await betting.takeRegularBet(0, 1, "1000", {
+      const result2 = await betting.bet(0, 1, "1000", {
         from: accounts[2],
       });
       contractHash1 = result2.logs[0].args.contractHash;
@@ -214,7 +214,7 @@ contract("Betting", function (accounts) {
 
     let contractHash21;
     it("bet 10 on 2:0 (match 2: team 1)", async () => {
-      const result = await betting.takeRegularBet(2, 1, "1000", {
+      const result = await betting.bet(2, 1, "1000", {
         from: accounts[2],
       });
       contractHash21 = result.logs[0].args.contractHash;

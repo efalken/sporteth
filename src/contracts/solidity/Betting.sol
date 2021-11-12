@@ -88,7 +88,7 @@ contract Betting {
     receive() external payable {
     }
 
-    function takeRegularBet(
+    function bet(
         uint8 _matchNumber,
         uint8 _team0or1,
         uint32 _betAmt
@@ -343,7 +343,8 @@ contract Betting {
         // adds to the bettor funds account
         delete subcontracts[_subkId];
         userBalance[msg.sender] += payoff;
-        if (token.balanceOf(address(this)) > 0) token.transfer(msg.sender, 1);
+        if (token.balanceOf(address(this)) > 0) { token.transfer(payable(msg.sender), 1);
+          }
         emit Funding(msg.sender, payoff, margin[3], 2);
     }
 

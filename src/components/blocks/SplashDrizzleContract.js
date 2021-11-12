@@ -8,6 +8,7 @@ import Text from '../basics/Text.js'
 import Triangle from '../basics/Triangle.js'
 import { If, autoBind } from 'react-extras'
 import Button from '../basics/Button'
+import { useChainId, switchToAvalanche } from "../pages/switchAvalanche";
 
 
 class SplashDrizzleContract extends Component {
@@ -43,27 +44,12 @@ class SplashDrizzleContract extends Component {
                 display="flex"
                 flexDirection="row"
               >
-                <Button
-                  px="12px"
-                  display="flex"
-                  flexDirection="row"
-                  style={{
-                    display: "flex",
-                
-                    alignItems: "center",
-                    width: "300px",
-                    justifyContent: "center"
-                  }}
-                >
+                <ChainSwitch/>
                   <a
                     href={"/betpage"}
                     style={{ textDecoration: "none" }}
                   >
-                    <Text color="white" size="20px">
-                      Enable MetaMask and Enter
-                        </Text>
                   </a>
-                </Button>
               </Box>
             )}
           />
@@ -85,5 +71,29 @@ const mapStateToProps = state => {
     drizzleStatus: state.drizzleStatus
   }
 }
+
+const ChainSwitch=()=>{
+    const chainid = useChainId()
+    if (chainid === 43114) {
+      return (<Box><button
+          style={{
+            backgroundColor: "#424242",
+            borderRadius: "2px",
+            cursor: "pointer",
+          }}
+          onClick={() => switchToAvalanche()}
+         > Enter </button> </Box>)
+    } else {
+      return (<Box><button
+          style={{
+            backgroundColor: "#424242",
+            borderRadius: "2px",
+            cursor: "pointer",
+          }}
+          onClick={() => switchToAvalanche()}
+         > switch to AVAX Network and Enter</button> </Box>)
+    }
+
+     }
 
 export default drizzleConnect(SplashDrizzleContract, mapStateToProps);

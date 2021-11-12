@@ -529,22 +529,22 @@ contract("Betting", function (accounts) {
         });
 
     it("bets", async () => {
-      var result = await betting.takeRegularBet(1, 0, "1000", {
+      var result = await betting.bet(1, 0, "1000", {
         from: accounts[1],
       });
-      var result = await betting.takeRegularBet(2, 0, "1000", {
+      var result = await betting.bet(2, 0, "1000", {
         from: accounts[1],
       });
-      var result = await betting.takeRegularBet(3, 0, "1000", {
+      var result = await betting.bet(3, 0, "1000", {
         from: accounts[1],
       });
-      var result = await betting.takeRegularBet(4, 0, "1000", {
+      var result = await betting.bet(4, 0, "1000", {
         from: accounts[1],
       });
     });
 
     it("Fail: Excess Amount Should Fail because max size is 2000 (10000/5), and the bet size is ", async () => {
-      const result = await betting.takeRegularBet(5, 0, "2001", {
+      const result = await betting.bet(5, 0, "2001", {
         from: accounts[1],
       });
     });
@@ -608,11 +608,11 @@ contract("Betting", function (accounts) {
     });
 
     it("Fail:betting after match 0 that has started", async () => {
-      await betting.takeRegularBet(0, 1, "1000", { from: accounts[1] });
+      await betting.bet(0, 1, "1000", { from: accounts[1] });
     });
 
     it("succeed: funding on match 5 which has not started", async () => {
-      await betting.takeRegularBet(5, 0, "1000", {
+      await betting.bet(5, 0, "1000", {
         from: accounts[1],
       });
     });

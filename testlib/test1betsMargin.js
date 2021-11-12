@@ -203,31 +203,31 @@ contract("Betting", function (accounts) {
     });
 
     it("bets", async () => {
-      var result = await betting.takeRegularBet(0, 0, "1000", {
+      var result = await betting.bet(0, 0, "1000", {
         from: accounts[2],
       });
       hash1 = result.logs[0].args.contractHash;
-      var result = await betting.takeRegularBet(0, 1, "2000", { from: accounts[3] });
+      var result = await betting.bet(0, 1, "2000", { from: accounts[3] });
       hash2 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(0, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(0, 0, "1000", { from: accounts[2] });
       hash3 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(1, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(1, 0, "1000", { from: accounts[2] });
       hash4 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(1, 1, "2000", { from: accounts[3] });
+      result = await betting.bet(1, 1, "2000", { from: accounts[3] });
       hash5 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(1, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(1, 0, "1000", { from: accounts[2] });
       hash6 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(2, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(2, 0, "1000", { from: accounts[2] });
       hash7 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(2, 1, "2000", { from: accounts[3] });
+      result = await betting.bet(2, 1, "2000", { from: accounts[3] });
       hash8 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(2, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(2, 0, "1000", { from: accounts[2] });
       hash9 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(3, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(3, 0, "1000", { from: accounts[2] });
       hash10 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(3, 0, "1000", { from: accounts[2] });
+      result = await betting.bet(3, 0, "1000", { from: accounts[2] });
       hash11 = result.logs[0].args.contractHash;
-      result = await betting.takeRegularBet(3, 1, "1000", { from: accounts[3] });
+      result = await betting.bet(3, 1, "1000", { from: accounts[3] });
       hash12 = result.logs[0].args.contractHash;
     });
 
