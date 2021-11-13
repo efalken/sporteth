@@ -54,7 +54,6 @@ describe('Betting', function () {
     it("approve and send to betting contract", async () => {
       await oracle.initProcess();
       const startNow = await betting.betData(5);
-      console.log(startNow)
       console.log(`startTime is ${startNow}`);
       const bookpool = await betting.margin(0);
       console.log(`startTime is ${bookpool}`);
