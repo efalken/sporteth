@@ -1,5 +1,4 @@
-pragma solidity ^0.7.4;
-pragma experimental ABIEncoderV2;
+pragma solidity 0.8.0;
 
 /*import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/24a0bc23cfe3fbc76f8f2510b78af1e948ae6651/contracts/token/ERC20/extensions/ERC20Burnable.sol";*/
 // SPDX-License-Identifier: MIT

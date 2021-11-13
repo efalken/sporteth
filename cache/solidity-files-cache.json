@@ -1,0 +1,115 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\Eric\\source\\repos\\sporteth\\src\\contracts\\solidity\\Betting.sol": {
+      "lastModificationDate": 1636828773923,
+      "contentHash": "3dcebaad6141bcdadce9e49603641d3a",
+      "sourceName": "src/contracts/solidity/Betting.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Token.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "Betting"
+      ]
+    },
+    "C:\\Users\\Eric\\source\\repos\\sporteth\\src\\contracts\\solidity\\Token.sol": {
+      "lastModificationDate": 1636826354880,
+      "contentHash": "fdf41982c0bd255837cb73ef66b8f707",
+      "sourceName": "src/contracts/solidity/Token.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "Token"
+      ]
+    },
+    "C:\\Users\\Eric\\source\\repos\\sporteth\\src\\contracts\\solidity\\Oracle.sol": {
+      "lastModificationDate": 1636829063064,
+      "contentHash": "5f9470d9ed6f83909dac9cc1b96ecba0",
+      "sourceName": "src/contracts/solidity/Oracle.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./Token.sol",
+        "./Betting.sol"
+      ],
+      "versionPragmas": [
+        "0.8.0"
+      ],
+      "artifacts": [
+        "Oracle"
+      ]
+    }
+  }
+}

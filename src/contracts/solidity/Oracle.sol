@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.7.4;
-pragma experimental ABIEncoderV2;
+pragma solidity 0.8.0;
 
 import "./Token.sol";
 import "./Betting.sol";
@@ -58,14 +57,14 @@ contract Oracle {
         address proposer
         );
 
-        event DecOddsPosted(
+    event DecOddsPosted(
             uint32 epoch,
             uint32 propnum,
             uint32[32] decOdds,
             address proposer
             );
 
-    event voteOutcome(
+    event VoteOutcome(
             bool voteResult,
             uint32 propnum,
             uint32 epoch,
@@ -175,15 +174,15 @@ contract Oracle {
         // this prevents an odds or results proposal from  being sent
         require(params[1] == 1, "wrong data");
         // needs at least 5 hours
-        require (block.timestamp > params[3], "too soon");
+        require(block.timestamp > params[3], "too soon");
         // only sent if 'null' vote does not win
         if (params[5] > params[6]) {
             // sends to the betting contrac
             bettingContract.transmitInit(propOddsStarts
             );
-            emit voteOutcome(true, params[0], params[2], msg.sender);
+            emit VoteOutcome(true, params[0], params[2], msg.sender);
         } else {
-            emit voteOutcome(false, params[0], params[2], msg.sender);
+            emit VoteOutcome(false, params[0], params[2], msg.sender);
         }
         // resets various data (eg, params[3])
         reset();
@@ -194,12 +193,12 @@ contract Oracle {
         // this prevents an 'initProcess' set being sent as an odds transmit
         require(params[1] == 2, "wrong data");
         // needs at least 5 hours
-        require (block.timestamp > params[3], "too soon");
+        require(block.timestamp > params[3], "too soon");
         if (params[5] > params[6]) {
             bettingContract.transmitUpdate(propOddsUpdate);
-            emit voteOutcome(true, params[0], params[2], msg.sender);
+            emit VoteOutcome(true, params[0], params[2], msg.sender);
         } else {
-            emit voteOutcome(false, params[0], params[2], msg.sender);
+            emit VoteOutcome(false, params[0], params[2], msg.sender);
         }
         reset();
     }
@@ -207,16 +206,16 @@ contract Oracle {
     function settleProcess() external {
         require(params[1] == 3, "wrong data");
         // needs at least 5 hours
-        require (block.timestamp > params[3], "too soon");
+        require(block.timestamp > params[3], "too soon");
         uint32 ethDividend;
         uint32 _epoch;
         if (params[5] > params[6]) {
             (_epoch, ethDividend) = bettingContract.settle(propResults);
             params[0] = _epoch;
             params[7] += ethDividend * 10 / params[4];
-            emit voteOutcome(true, params[0], params[2], msg.sender);
+            emit VoteOutcome(true, params[0], params[2], msg.sender);
         } else {
-            emit voteOutcome(false, params[0], params[2], msg.sender);
+            emit VoteOutcome(false, params[0], params[2], msg.sender);
         }
         reset();
     }
@@ -240,7 +239,8 @@ contract Oracle {
         );
         // this prevents voting more than once or oracle proposals with token balance.
         require(params[1] == 0, "no wd during vote");
-          uint256 ethClaim = uint(adminStruct[msg.sender].tokens * (params[7] - adminStruct[msg.sender].initFeePool)) * 1e12;
+        uint256 ethClaim = uint(adminStruct[msg.sender].tokens * (params[7] -
+            adminStruct[msg.sender].initFeePool)) * 1e12;
         adminStruct[msg.sender].initFeePool = params[7];
         params[4] -= _amtTokens;
         adminStruct[msg.sender].tokens -= _amtTokens;
@@ -250,22 +250,30 @@ contract Oracle {
     }
 
     function depositTokens(uint32 _amt) external {
-      uint256 ethClaim;
+        uint256 ethClaim;
         if (adminStruct[msg.sender].tokens > 0) {
             //uint userTokens = adminStruct[msg.sender].tokens;
-            ethClaim = uint256(adminStruct[msg.sender].tokens * (params[7] - adminStruct[msg.sender].initFeePool))*1e12;
+            ethClaim = uint256(adminStruct[msg.sender].tokens * (params[7] -
+                adminStruct[msg.sender].initFeePool))*1e12;
             payable(msg.sender).transfer(ethClaim);
-          }
+        }
         token.transferFrom(msg.sender, address(this), _amt);
         adminStruct[msg.sender].tokens += _amt;
         params[4] += _amt;
 
         adminStruct[msg.sender].initFeePool = params[7];
         emit Funding(_amt, ethClaim, msg.sender);
-      }
+    }
 
-      function showSchedString() external view returns (string[32] memory) {
+    function showSchedString() external view returns (string[32] memory) {
         return matchSchedule;
+    }
+
+        // this is used so users do not have to delegate someone else to monitor the contract 24/7
+        // 86400 is seconds in a day, and 3600 is seconds in an hour
+        // restricts contract submission to between 5am-8pm in summer, 6am-9pm in winter
+    function hourOfDay() public view returns (uint hour1) {
+        hour1 = (block.timestamp - 7600) % 86400 / 3600;
     }
 
     function post() internal {
@@ -292,37 +300,33 @@ contract Oracle {
         params[6] = 0;
     }
 
-     function create96(uint32[32] memory _time, uint32[32] memory _odds) internal pure returns (uint96[32] memory outv) {
-         uint32 g;
-         uint96 out;
-         for (uint i = 0; i < 32; i++) {
-             require (_odds[i] > 100 && _odds[i] < 9999);
-             g = 1e6 / (41 + _odds[i]) - 41;
+    function create96(uint32[32] memory _time, uint32[32] memory _odds)
+    internal pure returns (uint96[32] memory outv) {
+        uint32 g;
+        uint96 out;
+        for (uint i = 0; i < 32; i++) {
+            require(_odds[i] > 100 && _odds[i] < 9999);
+            g = 1e6 / (41 + _odds[i]) - 41;
             out |= uint96(_time[i]) << 64;
             out |= uint96(_odds[i]) << 32;
             out |= uint96(g);
-           outv[i] = out;
-           delete out;
-         }
-         }
-
-         function create64(uint32[32] memory _odds) internal pure returns (uint64[32] memory outv) {
-             uint32 f;
-             uint64 out;
-             for (uint i = 0; i < 32; i++) {
-                 require (_odds[i] > 100 && _odds[i] < 9999);
-                 f = 1e6 / (41 + _odds[i]) - 41;
-                out |= uint64(_odds[i]) << 32;
-                out |= uint64(f);
-               outv[i] = out;
-               delete out;
-             }
-             }
-
-    // this is used so users do not have to delegate someone else to monitor the contract 24/7
-    // 86400 is seconds in a day, and 3600 is seconds in an hour
-    // restricts contract submission to between 5am-8pm in summer, 6am-9pm in winter
-    function hourOfDay() public view returns (uint hour1) {
-        hour1 = (block.timestamp - 7600) % 86400 / 3600;
+            outv[i] = out;
+            delete out;
+        }
     }
+
+    function create64(uint32[32] memory _odds) internal pure returns (uint64[32] memory outv) {
+        uint32 f;
+        uint64 out;
+        for (uint i = 0; i < 32; i++) {
+            require(_odds[i] > 100 && _odds[i] < 9999);
+            f = 1e6 / (41 + _odds[i]) - 41;
+            out |= uint64(_odds[i]) << 32;
+            out |= uint64(f);
+            outv[i] = out;
+            delete out;
+        }
+    }
+
+
 }
