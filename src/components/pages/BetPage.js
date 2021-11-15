@@ -143,8 +143,8 @@ class BetPagejs extends Component {
   }
 
   openEtherscan(txhash) {
-    const url = "https://rinkeby.etherscan.io/tx/" + txhash;
-    const urltest = "https://rinkeby.etherscan.io/tx/" + txhash;
+    const url = "https://testnet.snowtrace.io/" + txhash;
+    const urltest = "https://testnet.snowtrace.io/" + txhash;
     window.open(urltest, "_blank");
     this.setState({ viewedTxs: this.state.viewedTxs + 1 });
   }
@@ -164,7 +164,7 @@ class BetPagejs extends Component {
 
     contractweb3b
       .getPastEvents("BetRecord", {
-        fromBlock: 9300000,
+        fromBlock: 2500000,
         toBlock: "latest",
         filter: { bettor: this.props.accounts[0] },
       })
@@ -177,22 +177,16 @@ class BetPagejs extends Component {
               Epoch: Number(element.returnValues.epoch),
               timestamp: Number(element.blockNumber.timestamp),
               BetSize: element.returnValues.betAmount,
-              Offer: Boolean(element.returnValues.Offer).toString(),
           //    Offer: element.returnValues.Offer,
               LongPick: Number(element.returnValues.pick),
               MatchNum: Number(element.returnValues.matchNum),
               Payoff: element.returnValues.payoff * 0.95,
+
             });
             takes[element.returnValues.contractHash] = this.contracts[
               "BettingMain"
-            ].methods.checkRedeem.cacheCall(
-              element.returnValues.contractHash,
-              Number(
-                element.returnValues.epoch * 1000 +
-                  element.returnValues.matchNum * 100 +
-                  element.returnValues.pick
-              )
-            );
+            ].methods.checkRedeem.cacheCall(element.returnValues.
+                contractHash).toString();
           }, this);
           this.betHistory[0] = eventdata;
           this.takekeys = takes;
@@ -237,7 +231,7 @@ class BetPagejs extends Component {
     ].methods.showBetData.cacheCall();
 
     this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall(
-      "0xB1F59e0A168311e1Cfb7A420f4cfE8009dbF1411"
+      "0xEBdB16c3dD2b23d83A752089AF6B85De21B84F61"
     );
 
     this.userBalKey = this.contracts[
@@ -419,7 +413,9 @@ class BetPagejs extends Component {
       netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
     }
 
+
     let oddsTot = [odds0, odds1];
+    console.log("subcon", subcontracts);
 
 
     console.log("bethist", this.betHistory);
@@ -479,7 +475,7 @@ class BetPagejs extends Component {
           </td>
           <td>
             {this.state.showDecimalOdds
-              ? (1 + 95 * oddsTot[0][i]).toFixed(3)
+              ? (1 + 95 * oddsTot[0][i] /100000).toFixed(3)
               : this.getMoneyLine((95 * oddsTot[0][i]) / 100)}
           </td>
           <td style={{ textAlign: "left", paddingLeft: "15px" }}>
@@ -498,7 +494,7 @@ class BetPagejs extends Component {
           </td>
           <td>
             {this.state.showDecimalOdds
-              ? (1 + 95 * oddsTot[1][i]).toFixed(3)
+              ? (1 + 95 * oddsTot[1][i]/100000).toFixed(3)
               : this.getMoneyLine((95 * oddsTot[1][i]) / 100)}
           </td>
           <td>{moment.unix(startTimeColumn[i]).format("MMMDD-ha")}</td>
@@ -675,8 +671,7 @@ class BetPagejs extends Component {
                           {this.betHistory[id].map(
                             (event, index) =>
                               //  event.Epoch === this.currW4 &&
-                              event.Epoch == currW4 &&
-                              (event.Offer) && (
+                              event.Epoch == currW4 && (
                                 <tr key={index} style={{ width: "33%" }}>
                                   <td>{event.Epoch}</td>
                                   <td>{teamSplit[event.MatchNum][0]}</td>
@@ -742,7 +737,6 @@ class BetPagejs extends Component {
                           {this.betHistory[id].map(
                             (event, index) =>
                               //  (event.Epoch = currW4) &&
-                              event.offer === false &&
                               subcontracts[event.Hashoutput] && (
                                 <tr key={index} style={{ width: "33%" }}>
                                   <td>{event.Epoch}</td>
@@ -954,7 +948,7 @@ class BetPagejs extends Component {
                 {"  "}
                 Odds:{" "}
                 {(
-                  0.95 * oddsTot[this.state.teamPick][this.state.matchPick] +
+                  0.95 * oddsTot[this.state.teamPick][this.state.matchPick]/1000 +
                   1
                 ).toFixed(3)}
                 {" (MoneyLine "}
@@ -978,7 +972,7 @@ class BetPagejs extends Component {
                 Odds:{" "}
                 {(
                   0.95 *
-                    oddsTot[1 - this.state.teamPick][this.state.matchPick] +
+                    oddsTot[1 - this.state.teamPick][this.state.matchPick]/1000 +
                   1
                 ).toFixed(3)}
                 {"  "}

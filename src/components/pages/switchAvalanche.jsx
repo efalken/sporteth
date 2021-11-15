@@ -23,8 +23,8 @@ export async function switchToAvalanche() {
   const { ethereum } = window;
   if (!ethereum.request)
     throw new Error("This wallet provider does not support request method");
-  const parsedChainId = 43114;
-  const rpcUrl = "https://api.avax.network/ext/bc/C/rpc";
+  const parsedChainId = 43113;
+  const rpcUrl = "https://api.avax-test.network/ext/bc/C/rpc";
   const chainId = "0x" + parsedChainId.toString(16);
   try {
     await ethereum.request({
@@ -44,7 +44,7 @@ export async function switchToAvalanche() {
             name: "Avalanche",
             decimals: 18,
           },
-          blockExplorerUrls: ["https://snowtrace.io/"],
+          blockExplorerUrls: ["https://testnet.snowtrace.io/"],
         },
       ];
       try {
@@ -67,10 +67,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <p>You are using Chain ID {chainId}.</p>
-        {/* <p>{chainId}</p> */}
-        {chainId === 43114 && <p>You're all set on AVAX!</p>}
-        {chainId !== 43114 && (
-          <button disabled={chainId === 43114} onClick={switchToAvalanche}>
+        {<p>{chainId}</p>}
+        {chainId === 43113 && <p>You're all set on AVAX!</p>}
+        {chainId !== 43113 && (
+          <button disabled={chainId === 43113} onClick={switchToAvalanche}>
             Switch to AVAX
           </button>
         )}

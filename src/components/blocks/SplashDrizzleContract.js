@@ -74,7 +74,7 @@ const mapStateToProps = state => {
 
 const ChainSwitch=()=>{
     const chainid = useChainId()
-    if (chainid === 43114) {
+    if (chainid === 1) {
       return (<Box><button
           style={{
             backgroundColor: "#424242",

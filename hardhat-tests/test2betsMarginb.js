@@ -9,7 +9,7 @@ var _hour;
 
 
 require('chai').use(require('chai-as-promised')).should();
-describe('Betting', function () {
+describe('Test2b', function () {
   let betting, oracle, token, owner, account1, account2, account3;
 
   before(async () => {

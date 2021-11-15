@@ -1,6 +1,6 @@
 {
   "contractName": "Oracle",
-  "address": "0x9a5AdE92bbce2B5a12Bf4D83DDaf25E3C3d57ef8",
+  "address": "0x3a1aE81cbd4Bd02B73d4F12FcDEe859B19892C5d",
   "arbitrumaddress": "0xc10A1469F4AaC75daC9d1B91cdF00cEd0bA0FD10",
 	"abi": [
 			{
@@ -252,12 +252,25 @@
 						"type": "address"
 					}
 				],
-				"name": "voteOutcome",
+				"name": "VoteOutcome",
 				"type": "event"
 			},
 			{
 				"inputs": [],
 				"name": "CURE_TIME",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "FUTURE_START",
 				"outputs": [
 					{
 						"internalType": "uint32",
@@ -289,6 +302,32 @@
 						"internalType": "uint32",
 						"name": "",
 						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "MIN_SUBMIT2",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "UNITS_TRANS12",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",

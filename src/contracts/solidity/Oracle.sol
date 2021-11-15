@@ -212,7 +212,7 @@ contract Oracle {
         if (params[5] > params[6]) {
             (_epoch, ethDividend) = bettingContract.settle(propResults);
             params[0] = _epoch;
-            params[7] += ethDividend * 10 / params[4];
+            params[7] += ethDividend / params[4];
             emit VoteOutcome(true, params[0], params[2], msg.sender);
         } else {
             emit VoteOutcome(false, params[0], params[2], msg.sender);

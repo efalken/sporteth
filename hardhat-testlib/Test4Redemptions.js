@@ -1,4 +1,4 @@
- 
+
 const helper = require("../hardhat-helpers");
 const secondsInHour = 3600;
 _dateo = new Date();
@@ -296,26 +296,26 @@ describe("Betting", function () {
     });
 
     it("fail: redeem attempt for bet on 0:1 from wrong account", async () => {
-      const result = await betting.connect(account3).redeem(contractHash1, 1001);
+      const result = await betting.connect(account3).redeem(contractHash1);
     });
 
     it("redeem  bet on 0:1 ", async () => {
-      const result = await betting.connect(account2).redeem(contractHash1, 1001);
+      const result = await betting.connect(account2).redeem(contractHash1);
       const receipt = await result.wait();
       const gasUsed = receipt.gasUsed;
       console.log(`gas on redeem ${gasUsed}`);
     });
 
     it("fail: redeem attempt for losing bet on 0:0", async () => {
-      const result = await betting.connect(account3).redeem(contractHash0, 1000);
+      const result = await betting.connect(account3).redeem(contractHash0);
     });
 
     it("fail: redeem bet on 0:1 second time", async () => {
-      const result = await betting.connect(account2).redeem(contractHash1, 1001);
+      const result = await betting.connect(account2).redeem(contractHash1);
     });
 
     it("redeem  bet on 2:1 ", async () => {
-      const result = await betting.connect(account2).redeem(contractHash21, 1021);
+      const result = await betting.connect(account2).redeem(contractHash21);
     });
 
     it("State Variables in Betting Contract after redemption from bettors", async () => {

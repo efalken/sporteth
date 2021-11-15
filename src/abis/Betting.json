@@ -1,8 +1,8 @@
 {
   "contractName": "Betting",
-  "address": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
+  "address": "0x5E51B7f5ca7E3B7c969710BE37f192E3D030f2B2",
   "arbitrumaddress": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
-	"abi": [
+	"abi":  [
 			{
 				"inputs": [
 					{
@@ -40,12 +40,6 @@
 						"internalType": "uint8",
 						"name": "pick",
 						"type": "uint8"
-					},
-					{
-						"indexed": false,
-						"internalType": "bool",
-						"name": "offer",
-						"type": "bool"
 					},
 					{
 						"indexed": false,
@@ -101,6 +95,94 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "bettor",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint8",
+						"name": "epoch",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8",
+						"name": "matchNum",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8",
+						"name": "pick",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "betAmount",
+						"type": "uint32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "payoff",
+						"type": "uint32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "contractHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "OfferRecord",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "FUTURE_START",
+				"outputs": [
+					{
+						"internalType": "uint32",
+						"name": "",
+						"type": "uint32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "ORACLE_5PERC",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "UNITS_TRANS14",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint32",
@@ -111,6 +193,73 @@
 				"name": "adjustParams",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_matchNumber",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_team0or1",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "_betAmt",
+						"type": "uint32"
+					}
+				],
+				"name": "bet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "betContracts",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "epoch",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "matchNum",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "pick",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "betAmount",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "payoff",
+						"type": "uint32"
+					},
+					{
+						"internalType": "address",
+						"name": "bettor",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -151,11 +300,6 @@
 						"internalType": "bytes32",
 						"name": "_subkID",
 						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_epocmatpick",
-						"type": "uint32"
 					}
 				],
 				"name": "checkRedeem",
@@ -227,6 +371,50 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "offerContracts",
+				"outputs": [
+					{
+						"internalType": "uint8",
+						"name": "epoch",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "matchNum",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint8",
+						"name": "pick",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint32",
+						"name": "betAmount",
+						"type": "uint32"
+					},
+					{
+						"internalType": "uint32",
+						"name": "payoff",
+						"type": "uint32"
+					},
+					{
+						"internalType": "address",
+						"name": "bettor",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "oracleAdmin",
 				"outputs": [
@@ -292,11 +480,6 @@
 						"internalType": "bytes32",
 						"name": "_subkId",
 						"type": "bytes32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_epocmatpick",
-						"type": "uint32"
 					}
 				],
 				"name": "redeem",
@@ -358,83 +541,11 @@
 				"inputs": [
 					{
 						"internalType": "bytes32",
-						"name": "",
-						"type": "bytes32"
-					}
-				],
-				"name": "subcontracts",
-				"outputs": [
-					{
-						"internalType": "uint8",
-						"name": "epoch",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint8",
-						"name": "matchNum",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint8",
-						"name": "pick",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint32",
-						"name": "betAmount",
-						"type": "uint32"
-					},
-					{
-						"internalType": "uint32",
-						"name": "payoff",
-						"type": "uint32"
-					},
-					{
-						"internalType": "bool",
-						"name": "offer",
-						"type": "bool"
-					},
-					{
-						"internalType": "address",
-						"name": "bettor",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "bytes32",
 						"name": "_subkid",
 						"type": "bytes32"
 					}
 				],
 				"name": "takeBigBet",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint8",
-						"name": "_matchNumber",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint8",
-						"name": "_team0or1",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint32",
-						"name": "_betAmt",
-						"type": "uint32"
-					}
-				],
-				"name": "bet",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -560,9 +671,83 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "bool",
-						"name": "offer",
-						"type": "bool"
+						"internalType": "uint32",
+						"name": "betAmount",
+						"type": "uint32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "payoff",
+						"type": "uint32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "contractHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "BetRecord",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "bettor",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "moveAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "epoch",
+						"type": "uint32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint32",
+						"name": "action",
+						"type": "uint32"
+					}
+				],
+				"name": "Funding",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "bettor",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint8",
+						"name": "epoch",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8",
+						"name": "matchNum",
+						"type": "uint8"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint8",
+						"name": "pick",
+						"type": "uint8"
 					},
 					{
 						"indexed": false,
@@ -583,7 +768,7 @@
 						"type": "bytes32"
 					}
 				],
-				"name": "BetRecord",
+				"name": "OfferRecord",
 				"type": "event"
 			}
      ]
