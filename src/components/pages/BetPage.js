@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { drizzleConnect } from "@drizzle/react-plugin";
 import PropTypes from "prop-types";
 import Split from "../layout/Split";
-//import web3 from "web3-utils";
 import web3 from "web3-utils";
 import { Box, Flex } from "@rebass/grid";
 import Logo from "../basics/Logo";
@@ -60,8 +59,8 @@ class BetPagejs extends Component {
     }, 1000);
   }
 
-  handleBetSize(betAmount) {
-    this.setState({ betAmount });
+  handleBetSize(value) {
+    this.setState({ betAmount: value });
   }
 
   handleBettorFund(value) {
@@ -73,24 +72,25 @@ class BetPagejs extends Component {
   handleBettorWD(value2) {
     this.setState({
       wdAmount: value2,
-      type: "0x2",
+
     });
   }
 
-  fundBettor(x) {
-    const stackId = this.contracts["BettingMain"].methods.fundBettor.cacheSend({
+  async fundBettor(x) {
+    try {
+    const stackId = await  this.contracts["BettingMain"].methods.fundBettor.cacheSend({
       from: this.props.accounts[0],
-      value: this.state.fundAmount * 1e14,
-      type: "0x2",
+      value: this.state.fundAmount * 1e18,
     });
+    console.log("stackid", stackId);
+  } catch (error) {console.log("igotanerror",error)}
   }
 
   withdrawBettor(x) {
     const stackId = this.contracts[
       "BettingMain"
-    ].methods.withdrawBettor.cacheSend(this.state.wdAmount, {
+    ].methods.withdrawBettor.cacheSend(this.state.wdAmount*10000, {
       from: this.props.accounts[0],
-      type: "0x2",
     });
   }
 
@@ -100,39 +100,18 @@ class BetPagejs extends Component {
     ].methods.bet.cacheSend(
       this.state.matchPick,
       this.state.teamPick,
-      this.state.betAmount,
+      this.state.betAmount*10000,
       {
         from: this.props.accounts[0],
-        type: "0x2",
       }
     );
   }
-  /*
-  function unpack256(src)
-  const bn = new web3.utils.BN(src);
-  const str = bn.toString(16);
-  const pieces = str
-    .match(/.{1,2}/g)
-    .reverse()
-    .join("")
-    .match(/.{1,8}/g)
-    .map((s) =>
-      s
-        .match(/.{1,2}/g)
-        .reverse()
-        .join("")
-    );
-  const ints = pieces.map((s) => parseInt("0x" + s)).reverse();
-  return ints;
-  }
-*/
-  redeemBet(x, y) {
+
+  redeemBet(x) {
     const stackId = this.contracts["BettingMain"].methods.redeem.cacheSend(
-      x,
-      y,
-      {
+      x, {
         from: this.props.accounts[0],
-        type: "0x2",
+
       }
     );
     setTimeout(this.getbetHistoryArray(), 5000);
@@ -143,8 +122,9 @@ class BetPagejs extends Component {
   }
 
   openEtherscan(txhash) {
-    const url = "https://testnet.snowtrace.io/" + txhash;
-    const urltest = "https://testnet.snowtrace.io/" + txhash;
+    const url = "https://testnet.snowtrace.io/tx/" + txhash;
+    const urltest = "https://testnet.snowtrace.io/tx/" + txhash;
+    console.log("urleric", urltest);
     window.open(urltest, "_blank");
     this.setState({ viewedTxs: this.state.viewedTxs + 1 });
   }
@@ -176,11 +156,11 @@ class BetPagejs extends Component {
               BettorAddress: element.returnValues.bettor,
               Epoch: Number(element.returnValues.epoch),
               timestamp: Number(element.blockNumber.timestamp),
-              BetSize: element.returnValues.betAmount,
+              BetSize: Number(element.returnValues.betAmount/10000),
           //    Offer: element.returnValues.Offer,
               LongPick: Number(element.returnValues.pick),
               MatchNum: Number(element.returnValues.matchNum),
-              Payoff: element.returnValues.payoff * 0.95,
+              Payoff: Number(0.95 * element.returnValues.payoff /10000),
 
             });
             takes[element.returnValues.contractHash] = this.contracts[
@@ -192,29 +172,6 @@ class BetPagejs extends Component {
           this.takekeys = takes;
         }.bind(this)
       );
-
-    // contractweb3b.events.BetRecord(
-    //   function (error, log) {
-    //     console.log({ log });
-    //     this.betHistory[0].push({
-    //       Hashoutput: log.returnValues.contractHash,
-    //       BettorAddress: log.returnValues.bettor,
-    //       Epoch: log.returnValues.epoch,
-    //       timestamp: log.blockNumber.timestamp,
-    //       BetSize: Number(web3.fromWei(log.returnValues.betsize,
-    //       "finney"
-    //     )),
-    //       LongPick: Number(log.returnValues.pick),
-    //       MatchNum: log.returnValues.matchnum,
-    //       Payoff: Number(web3.fromWei(log.returnValues.payoff,
-    //       "finney"
-    //     )),
-    //     });
-    //     this.takekeys[log.returnValues.contractHash] = this.contracts[
-    //   "BettingMain"
-    // ].methods.checkRedeem.cacheCall(log.returnValues.contractHash)
-    //   }.bind(this)
-    // );
   }
 
   radioFavePick(teampic) {
@@ -231,7 +188,7 @@ class BetPagejs extends Component {
     ].methods.showBetData.cacheCall();
 
     this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall(
-      "0xEBdB16c3dD2b23d83A752089AF6B85De21B84F61"
+      "0x23cEd89B1F6baFa4F89063D7Af51a81a38d879d6"
     );
 
     this.userBalKey = this.contracts[
@@ -248,8 +205,6 @@ class BetPagejs extends Component {
 
     this.marginKey2 = this.contracts["BettingMain"].methods.margin.cacheCall(2);
 
-    //this.chainID = useChainId();
-
     this.marginKey3 = this.contracts["BettingMain"].methods.margin.cacheCall(3);
 
     this.marginKey4 = this.contracts["BettingMain"].methods.margin.cacheCall(4);
@@ -257,6 +212,8 @@ class BetPagejs extends Component {
     this.marginKey5 = this.contracts["BettingMain"].methods.margin.cacheCall(5);
 
     this.marginKey6 = this.contracts["BettingMain"].methods.margin.cacheCall(6);
+
+    this.marginKey7 = this.contracts["BettingMain"].methods.margin.cacheCall(7);
 
     this.scheduleStringKey = this.contracts[
       "OracleMain"
@@ -310,8 +267,6 @@ class BetPagejs extends Component {
     return moneyline;
   }
 
-
-
   render() {
     let subcontracts = {};
     Object.keys(this.takekeys).forEach(function (id) {
@@ -338,7 +293,7 @@ class BetPagejs extends Component {
     }
 
     let usedCapital = "0";
-    if (this.unusedKey in this.props.contracts["BettingMain"].margin) {
+    if (this.marginKey1 in this.props.contracts["BettingMain"].margin) {
       let usedCapital0 = this.props.contracts["BettingMain"].margin[
         this.marginKey1
       ].value;
@@ -348,7 +303,7 @@ class BetPagejs extends Component {
     }
 
     let unusedCapital = "0";
-    if (this.unusedKey in this.props.contracts["BettingMain"].margin) {
+    if (this.marginKey0 in this.props.contracts["BettingMain"].margin) {
       let unusedCapital0 = this.props.contracts["BettingMain"].margin[
         this.marginKey0
       ].value;
@@ -357,11 +312,22 @@ class BetPagejs extends Component {
       }
     }
 
+    let newBets = false;
+    if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
+      let newBets0 = this.props.contracts["BettingMain"].margin[
+        this.marginKey7
+      ].value;
+      if (newBets0 != 2000000000) {
+        newBets = true;
+      }
+    }
+console.log("newBets", newBets);
+
     let tokenAmount = "0";
     if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
       let ta = this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value;
       if (ta) {
-        tokenAmount = web3.fromWei(ta.toString(), "ether");
+        tokenAmount = ta;
       }
     }
 
@@ -374,13 +340,13 @@ class BetPagejs extends Component {
       }
     }
 
-    let scheduleString = ["loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:.."];
+    let scheduleString = ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
 
     let startTimeColumn = [1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932];
 
-    let odds0 = [957, 201, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950, 950];
+    let odds0 = [957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957];
 
-    let odds1 = [957, 4063, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010, 1010];
+    let odds1 = [957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957, 957];
 
     let liab0 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
@@ -396,7 +362,7 @@ class BetPagejs extends Component {
       let sctring = this.props.contracts["OracleMain"].showSchedString[
         this.scheduleStringKey
       ].value;
-      if (sctring) {
+      if (sctring && newBets) {
         scheduleString = sctring;
       }
     }
@@ -404,6 +370,9 @@ class BetPagejs extends Component {
     let netLiab = [liab0, liab1];
 
     let xdecode = [0, 1, 2, 3, 4, 5, 6, 7];
+    xdecode = this.unpack256(betData[0]);
+
+    if (xdecode[6] > 0) {
     for (let ii = 0; ii < 32; ii++) {
       xdecode = this.unpack256(betData[ii]);
       odds0[ii] = Number(xdecode[6]);
@@ -412,20 +381,19 @@ class BetPagejs extends Component {
       netLiab[0][ii] = (Number(xdecode[2]) - Number(xdecode[1])) / 10;
       netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
     }
+  }
 
 
     let oddsTot = [odds0, odds1];
-    console.log("subcon", subcontracts);
-
-
-    console.log("bethist", this.betHistory);
+    //console.log("subcon", subcontracts);
+    //console.log("bethist", this.betHistory);
 
     let userBalance = "0";
     if (this.userBalKey in this.props.contracts["BettingMain"].userBalance) {
       let ub = this.props.contracts["BettingMain"].userBalance[this.userBalKey]
         .value;
       if (ub) {
-        userBalance = ub;
+        userBalance = ub / 10000;
       }
     }
 
@@ -501,6 +469,8 @@ class BetPagejs extends Component {
         </tr>
       );
     }
+
+    console.log("offers", oddsTot[1][1]);
 
     return (
       <div>
@@ -585,8 +555,7 @@ class BetPagejs extends Component {
                   transform="uppercase"
                   spacing="1px"
                 />
-                <Text>Your available margin: </Text>
-                <Text>{Number(userBalance).toFixed(3)}</Text>
+            <Text>Your available margin: {Number(userBalance).toFixed(3)} ETH</Text>
               </Box>
               <Box>
                 <Flex
@@ -623,16 +592,7 @@ class BetPagejs extends Component {
                   }}
                 ></Flex>
               </Box>
-              <button
-                style={{
-                  backgroundColor: "#424242",
-                  borderRadius: "2px",
-                  cursor: "pointer",
-                }}
-                onClick={() => this.getbetHistoryArray()}
-              >
-                Refresh Bet History
-              </button>{" "}
+
               {this.props.transactionStack.length > 0 &&
               this.state.viewedTxs < this.props.transactionStack.length &&
               this.props.transactionStack[
@@ -683,12 +643,12 @@ class BetPagejs extends Component {
                                     }
                                   </td>
                                   <td>
-                                    {parseFloat(event.BetSize).toFixed(2)}
+                                    {parseFloat(event.BetSize).toFixed(4)}
                                   </td>
                                   <td>
                                     {Number(
                                       event.Payoff / event.BetSize + 1
-                                    ).toFixed(3)}
+                                    ).toFixed(4)}
                                   </td>
                                 </tr>
                               )
@@ -750,8 +710,8 @@ class BetPagejs extends Component {
                                   </td>
                                   <td>
                                     {(
-                                      (950 * Number(event.Payoff)) / 1e3 +
-                                      Number(event.BetSize)
+                                      (event.Payoff +
+                                      event.BetSize)
                                     ).toFixed(3)}
                                   </td>
                                   <td>
@@ -764,12 +724,7 @@ class BetPagejs extends Component {
                                       value={event.Hashoutput}
                                       onClick={(e) => {
                                         e.preventDefault();
-                                        this.redeemBet(
-                                          event.Hashoutput,
-                                          event.Epoch * 1000 +
-                                            event.MatchNum * 100 +
-                                            event.LongPick
-                                        );
+                                        this.redeemBet(event.Hashoutput);
                                       }}
                                     >
                                       Redeem
@@ -785,17 +740,17 @@ class BetPagejs extends Component {
                 </Flex>
               </Box>
               <Box>
-                <Flex
-                  mt="20px"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                ></Flex>
-              </Box>
-              <Flex>
-                <Text size="14px">
-                  {"Your unused margin: " + userBalance + " finney"}
-                </Text>
-              </Flex>
+              <Flex
+                mt="20px"
+                flexDirection="row"
+                justifyContent="space-between"
+              ></Flex>
+              <Flex
+                               style={{
+                                 borderTop: `thin solid ${G}`,
+                               }}
+                             ></Flex>
+                            </Box>
               <Flex
                 mt="5px"
                 flexDirection="row"
@@ -810,7 +765,7 @@ class BetPagejs extends Component {
                     mb="20px"
                     justifyContent="flex-start"
                     buttonWidth="95px"
-                    inputWidth="210px"
+                    inputWidth="100px"
                     borderRadius="2px"
                     placeholder="eth"
                     buttonLabel="WithDraw"
@@ -819,27 +774,7 @@ class BetPagejs extends Component {
 
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
               </Flex>
-              <Box>
-                <Flex
-                  mt="20px"
-                  flexDirection="row"
-                  justifyContent="space-between"
-                ></Flex>
-                <Flex
-                  style={{
-                    borderTop: `thin solid ${G}`,
-                  }}
-                ></Flex>
-                <Box>
-                  <Flex
-                    mt="20px"
-                    flexDirection="row"
-                    justifyContent="space-between"
-                  ></Flex>
 
-                  <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
-                </Box>
-              </Box>
               <Flex
                 mt="5px"
                 flexDirection="row"
@@ -854,7 +789,7 @@ class BetPagejs extends Component {
                     mb="20px"
                     justifyContent="flex-start"
                     buttonWidth="95px"
-                    inputWidth="210px"
+                    inputWidth="100px"
                     borderRadius="2px"
                     placeholder="eth"
                     buttonLabel="Fund"
@@ -1018,7 +953,7 @@ class BetPagejs extends Component {
                       <th style={{ textAlign: "left" }}>Start</th>
                     </tr>
                     {teamList}
-                    );
+
                   </tbody>
                 </table>
               </Flex>{" "}

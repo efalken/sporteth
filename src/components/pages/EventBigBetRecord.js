@@ -45,8 +45,8 @@ class EventBigBetRecord extends Component {
     //console.log("add", BettingContract.address);
     var pricedata = [];
     contractweb3
-      .getPastEvents("BetRecord", {
-        fromBlock: 9300000,
+      .getPastEvents("OfferRecord", {
+        fromBlock: 2500000,
         toBlock: 'latest',
       })
       .then(
@@ -55,12 +55,11 @@ class EventBigBetRecord extends Component {
             pricedata.push({
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor,
-              NFLWeek: element.returnValues.epoch,
-              Offer: Boolean(element.returnValues.Offer).toString(),
-              time: element.blockNumber,
+              Epoch: Number(element.returnValues.epoch),
+              time: Number(element.blockNumber),
               BetSize: Number(element.returnValues.betAmount),
-              LongPick: element.returnValues.pick,
-              MatchNum: element.returnValues.matchNum,
+              LongPick: Number(element.returnValues.pick),
+              MatchNum: Number(element.returnValues.matchNum),
             });
           }, this);
           this.bigBetHistory = pricedata;
@@ -75,7 +74,7 @@ class EventBigBetRecord extends Component {
   }
 
   render() {
-    console.log("bestHistory", this.bigBetHistory);
+    console.log("bigbetHistory", this.bigBetHistory);
     if (Object.keys(this.bigBetHistory).length === 0)
       return (
         <Text size="20px" weight="200">
@@ -103,17 +102,16 @@ class EventBigBetRecord extends Component {
           </Text>{" "}
           <br />
           {this.bigBetHistory.map((event) =>
-            (event.Offer) && (
             <div>
               <Text size="12px" weight="200">
                 {" "}
-                {event.NFLWeek}, {event.MatchNum}, {event.LongPick},{" "}
+                {event.Epoch}, {event.MatchNum}, {event.LongPick},{" "}
                 {event.BetSize.toFixed(3)}, {event.BettorAddress},{" "}
                 {event.Hashoutput}, {" "}
               </Text>
               <br />
             </div>
-          ))}
+          )}
         </div>
       );
     }

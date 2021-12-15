@@ -74,15 +74,17 @@ const mapStateToProps = state => {
 
 const ChainSwitch=()=>{
     const chainid = useChainId()
-    if (chainid === 1) {
-      return (<Box><button
+    console.log("chainid", chainid);
+    if (chainid === 43113) {
+      return (<a href="/betpage"><Box><button
           style={{
             backgroundColor: "#424242",
             borderRadius: "2px",
             cursor: "pointer",
           }}
-          onClick={() => switchToAvalanche()}
-         > Enter </button> </Box>)
+      //    onClick={() => switchToAvalanche()}
+    //    href={"/betpage"}
+         > Click Here to Enter Main Betting Page </button></Box></a>)
     } else {
       return (<Box><button
           style={{

@@ -195,6 +195,7 @@ describe("Betting", function () {
       });
       const excessCapital = await betting.margin(0);
       console.log(`margin0 is ${excessCapital} szabo`);
+      console.log(`acct1 is ${account1.address}`);
     });
 
     it("bets", async () => {

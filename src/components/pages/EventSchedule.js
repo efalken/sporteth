@@ -49,7 +49,7 @@ class EventSchedule extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("SchedulePosted", {
-        fromBlock: 9149000,
+        fromBlock: 2500000,
         toBlock: 'latest',
       })
       .then(
@@ -58,8 +58,8 @@ class EventSchedule extends Component {
             pricedata.push({
               games: element.returnValues.sched,
               Epoch: element.returnValues.epoch,
-              time: element.blockNumber,
-              post1: element.returnValues.posted,
+              time: Number(element.blockNumber),
+          //    post1: element.returnValues.posted,
             });
           }, this);
           this.matchHistory = pricedata;
@@ -119,11 +119,11 @@ class EventSchedule extends Component {
           <br />
           {this.matchHistory.map(
             (event) =>
-              event.post1 && (
+    //          event.post1 && (
                 <div>
                   <Text size="12px" weight="200">
                     {" "}
-                    {event.timestamp},{" "}
+                    {event.time},{" "},
                     {event.Epoch},{event.games[0]},{event.games[1]}
                     ,{event.games[2]},{event.games[3]},{event.games[4]},
                     {event.games[5]},{event.games[6]},{event.games[7]},
@@ -138,7 +138,7 @@ class EventSchedule extends Component {
                   </Text>
                   <br />
                 </div>
-              )
+      //        )
           )}
         </div>
       );

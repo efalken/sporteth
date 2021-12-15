@@ -55,12 +55,12 @@ class BookiePagejs extends Component {
 
   handlefundBook(value) {
     this.setState({
-      fundAmount: value,
+      fundAmount: value * 10000,
     });
   }
 
   openEtherscan(txhash) {
-    const url = "https://rinkeby.etherscan.io/tx/" + txhash;
+    const url = "https://testnet.snowtrace.io/tx/" + txhash;
     window.open(url, "_blank");
   }
 
@@ -71,11 +71,11 @@ class BookiePagejs extends Component {
   }
 
   wdBook() {
+    console.log("sharesToSell", this.state.sharesToSell);
     const stackId = this.contracts[
       "BettingMain"
     ].methods.withdrawBook.cacheSend(this.state.sharesToSell, {
       from: this.props.accounts[0],
-      type: "0x2",
     });
   }
 
@@ -83,7 +83,6 @@ class BookiePagejs extends Component {
     this.contracts["BettingMain"].methods.fundBook.cacheSend({
       from: this.props.accounts[0],
       value: this.state.fundAmount * 1e14,
-      type: "0x2",
     });
   }
 
@@ -107,6 +106,8 @@ class BookiePagejs extends Component {
 
     this.marginKey5 = this.contracts["BettingMain"].methods.margin.cacheCall(5);
 
+    this.marginKey7 = this.contracts["BettingMain"].methods.margin.cacheCall(7);
+
 
     this.betDataKey = this.contracts[
       "BettingMain"
@@ -121,7 +122,7 @@ class BookiePagejs extends Component {
     );
 
     this.tokenKey = this.contracts["TokenMain"].methods.balanceOf.cacheCall(
-      "0xB1F59e0A168311e1Cfb7A420f4cfE8009dbF1411"
+      "0x23cEd89B1F6baFa4F89063D7Af51a81a38d879d6"
     );
   }
 
@@ -167,7 +168,7 @@ class BookiePagejs extends Component {
     if (this.unusedKey in this.props.contracts["BettingMain"].margin) {
       let uc = this.props.contracts["BettingMain"].margin[this.unusedKey].value;
       if (uc) {
-        unusedCapital = uc;
+        unusedCapital = uc/10000;
       }
     }
 
@@ -177,7 +178,7 @@ class BookiePagejs extends Component {
     if (this.usedKey in this.props.contracts["BettingMain"].margin) {
       let uc = this.props.contracts["BettingMain"].margin[this.usedKey].value;
       if (uc) {
-        usedCapital = uc;
+        usedCapital = uc/10000;
       }
     }
 
@@ -186,7 +187,7 @@ class BookiePagejs extends Component {
       let bc = this.props.contracts["BettingMain"].margin[this.betCapitalKey]
         .value;
       if (bc) {
-        betCapital = bc;
+        betCapital = bc/10000;
       }
     }
 
@@ -235,7 +236,7 @@ class BookiePagejs extends Component {
       (Number(bookieShares) * (Number(unusedCapital) + Number(usedCapital))) /
       Number(totalShares);
 
-      let scheduleString = ["loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:.."];
+      let scheduleString =  ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
 
       let startTimeColumn = [1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932];
 
@@ -248,7 +249,15 @@ class BookiePagejs extends Component {
 
       let payoff1 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
-
+      let newBets = false;
+      if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
+        let newBets0 = this.props.contracts["BettingMain"].margin[
+          this.marginKey7
+        ].value;
+        if (newBets0 != 2000000000) {
+          newBets = true;
+        }
+      }
 
 
     if (
@@ -258,7 +267,7 @@ class BookiePagejs extends Component {
       let sctring = this.props.contracts["OracleMain"].showSchedString[
         this.scheduleStringKey
       ].value;
-      if (sctring) {
+      if (sctring && newBets) {
         scheduleString = sctring;
       }
     }
@@ -431,14 +440,14 @@ class BookiePagejs extends Component {
                         weight="400"
                         style={{ marginLeft: "1%" }}
                       >
-                        Margin
+                        Bookie Capital
                       </Text>
                     </Flex>
                     <Flex pt="10px" justifyContent="space-around">
                       <Box>
                         <LabeledText
                           big
-                          label="Unpledged Capital"
+                          label="Available Capital"
                           size="14px"
                           text={Number(unusedCapital).toFixed(3)}
                           spacing="4px"
@@ -448,7 +457,7 @@ class BookiePagejs extends Component {
                       <Box>
                         <LabeledText
                           big
-                          label="Pledged Capital"
+                          label="Locked Capital"
                           text={Number(usedCapital).toFixed(3)}
                           spacing="1px"
                         />
@@ -478,18 +487,18 @@ class BookiePagejs extends Component {
                 {" "}
                 <Text size="14px">
                   {"You own: " +
-                    Number(bookieShares).toFixed(2) +
+                    Number(bookieShares).toFixed(0) +
                     "  out of " +
-                    Number(totalShares).toFixed(2) +
+                    Number(totalShares).toFixed(0) +
                     " total shares"}
                 </Text>
               </Box>
               <Box>
                 {" "}
                 <Text size="14px">
-                  {"value of your shares is " +
-                    Number(ethBookie).toFixed(2) +
-                    " in Eth "}
+                  {"Your share value: " +
+                    Number(ethBookie).toFixed(3) +
+                    " Eth "}
                 </Text>
                 <Box>
                   {" "}
@@ -509,8 +518,8 @@ class BookiePagejs extends Component {
                     mb="20px"
                     justifyContent="flex-start"
                     buttonWidth="95px"
-                    inputWidth="210px"
-                    placeholder="Shares to Sell (Ether, ie 1e18)"
+                    inputWidth="100px"
+                    placeholder="Shares"
                     buttonLabel="withdraw"
                   />
                 ) : null}

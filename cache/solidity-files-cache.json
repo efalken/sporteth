@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\Eric\\source\\repos\\sporteth\\src\\contracts\\solidity\\Betting.sol": {
-      "lastModificationDate": 1636931330489,
-      "contentHash": "e8b60757cf6d6d84f8cd4d9a4ec542bf",
+      "lastModificationDate": 1639103960684,
+      "contentHash": "c371a6c96c5be4e29c555f8f73d5e524",
       "sourceName": "src/contracts/solidity/Betting.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -39,8 +39,8 @@
       ]
     },
     "C:\\Users\\Eric\\source\\repos\\sporteth\\src\\contracts\\solidity\\Token.sol": {
-      "lastModificationDate": 1636829370041,
-      "contentHash": "44508914ec529a00385b8047f1c99a45",
+      "lastModificationDate": 1637095788070,
+      "contentHash": "da2231a0e58441012822c2e3a4f495c5",
       "sourceName": "src/contracts/solidity/Token.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -67,15 +67,15 @@
       },
       "imports": [],
       "versionPragmas": [
-        "0.8.0"
+        "^0.8.0"
       ],
       "artifacts": [
         "Token"
       ]
     },
     "C:\\Users\\Eric\\source\\repos\\sporteth\\src\\contracts\\solidity\\Oracle.sol": {
-      "lastModificationDate": 1636931624795,
-      "contentHash": "044b73568fed0d8c90bc5a0e5295c76c",
+      "lastModificationDate": 1639428461643,
+      "contentHash": "7887134c0349becd8e6f2191d4107c71",
       "sourceName": "src/contracts/solidity/Oracle.sol",
       "solcConfig": {
         "version": "0.8.0",

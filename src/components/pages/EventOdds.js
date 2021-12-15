@@ -42,9 +42,9 @@ class EventOdds extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("DecOddsPosted", {
-        fromBlock: 9149000,
+        fromBlock: 2500000,
         toBlock: 'latest',
-        filter: { posted: true },
+      //  filter: { posted: true },
       })
       .then(
         function (events) {
@@ -52,9 +52,9 @@ class EventOdds extends Component {
 
             pricedata.push({
               decOdds: element.returnValues.decOdds,
-              time: element.blockNumber,
+              time: Number(element.blockNumber),
               Epoch: element.returnValues.epoch,
-              post1: element.returnValues.posted,
+        //      post1: element.returnValues.posted,
             });
           }, this);
           this.priceHistory = pricedata;

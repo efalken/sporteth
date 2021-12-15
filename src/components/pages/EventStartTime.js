@@ -50,7 +50,7 @@ class EventStartTime extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("StartTimesPosted", {
-        fromBlock: 9149000,
+        fromBlock: 2500000,
         toBlock: 'latest',
       })
       .then(
@@ -60,7 +60,7 @@ class EventStartTime extends Component {
               games: element.returnValues.starttimes,
               Epoch: element.returnValues.epoch,
               time: element.blockNumber,
-              post1: element.returnValues.posted,
+            //  post1: element.returnValues.posted,
             });
           }, this);
           this.matchHistory = pricedata;
@@ -120,7 +120,7 @@ class EventStartTime extends Component {
           <br />
           {this.matchHistory.map(
             (event) =>
-              event.post1 && (
+  //            event.post1 && (
                 <div>
                   <Text size="12px" weight="200">
                     {" "}
@@ -139,7 +139,7 @@ class EventStartTime extends Component {
                   </Text>
                   <br />
                 </div>
-              )
+      //        )
           )}
         </div>
       );

@@ -52,18 +52,18 @@ class EventGameoutcomes extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("ResultsPosted", {
-        fromBlock: 9300000,
+        fromBlock: 2500000,
         toBlock: 'latest',
-        filter: { posted: true },
+      //  filter: { posted: true },
       })
       .then(
         function (events) {
           events.forEach(function (element) {
             pricedata.push({
-              timestamp: element.blockNumber,
+              timestamp: Number(element.blockNumber),
               outcome: element.returnValues.winner,
-              Epoch: element.returnValues.epoch,
-              post1: element.returnValues.posted,
+              Epoch: Number(element.returnValues.epoch),
+          //    post1: element.returnValues.posted,
             });
           }, this);
           this.priceHistory = pricedata;
@@ -79,6 +79,7 @@ class EventGameoutcomes extends Component {
 
   render() {
     console.log("phist", this.priceHistory);
+
 
     if (Object.keys(this.priceHistory).length === 0)
       return (
@@ -103,19 +104,19 @@ class EventGameoutcomes extends Component {
           />
           <Text size="12px" weight="200">
             {" "}
-            Time, Week, m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12,
+            Time, epoch, m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12,
             m13, m14, m15, m16, m17, m18, m19, m20, m21, m22, m23, m24, m25,
             m26, m27, m28, m29, m30, m31
           </Text>{" "}
           <br />
           {this.priceHistory.map(
             (event) =>
-              event.post1 && (
+        //      event.post1 && (
                 <div>
                   <Text size="12px" weight="200">
                     {" "}
                     {event.timestamp}, {event.Epoch}
-                    {": "},{event.outcome[0]}, {event.outcome[1]},{" "}
+                    {": "}{event.outcome[0]}, {event.outcome[1]},{" "}
                     {event.outcome[2]}, {event.outcome[3]}, {event.outcome[4]},{" "}
                     {event.outcome[5]}, {event.outcome[6]}, {event.outcome[7]},{" "}
                     {event.outcome[8]}, {event.outcome[9]}, {event.outcome[10]},{" "}
@@ -133,7 +134,7 @@ class EventGameoutcomes extends Component {
                   </Text>
                   <br />
                 </div>
-              )
+          //    )
           )}
         </div>
       );

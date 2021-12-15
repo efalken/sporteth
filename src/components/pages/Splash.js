@@ -311,8 +311,9 @@ class Splash extends Component {
               >
                 Team Schedules
               </a>
-              you are on
+
             </Text>
+
           </Flex>
         </div>
       </div>

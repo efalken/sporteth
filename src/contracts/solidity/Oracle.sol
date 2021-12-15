@@ -7,6 +7,7 @@ import "./Betting.sol";
 
 
 contract Oracle {
+    /**
     // after each settlement, a new epoch commences. Bets cannot consummate on games referring to prior epochs
     // This is true if there is a proposal under consideration, other proposals are not allowed while a current proposal
     // is under review: 0 null, 1 init, 2 odds, 3 settle
@@ -15,16 +16,20 @@ contract Oracle {
     // timer is used so that each proposal has at least a 5 hours for voters to respond
     // tracks the current local token balance of active oracle contract administrators, as
     // documented by the deposit of their tokens within this contract
-    // A proposal goes through via a simple rule of more yes than no votes. Thus, a trivial vote does not need more yes votes
+    // A proposal goes through via a simple rule of more yes than no votes.
+      Thus, a trivial vote does not need more yes votes
     // if a troll rejects a vote that has few Yes votes, a vote later than evening takes a large bond amount, so
     // and submitters should anticipate such an event
     // 0 betEpoch, 1 reviewStatus, 2 propNumber, 3 timer, 4 totKontract Tokens, 5 yesVotes, 6 noVotes, 7 feePool
+    */
     uint32[8] public params;
     // propStartTime in UTC is used to stop active betting. No bets are taken after this time.
     uint96[32] public propOddsStarts;
     uint64[32] public propOddsUpdate;
     uint8[32] public propResults;
-    /** the schedule is a record of "sport:home:away", such as "NFL:NYG:SF" for us football, New York Giants vs San Francisco */
+    /** the schedule is a record of "sport:home:away", such as "NFL:NYG:SF" for us football,
+    New York Giants vs San Francisco
+    */
     string[32] public matchSchedule;
     // keeps track of those who supplied data proposals. Proposers have to deposit tokens as a bond, and if their
     // proposal is rejected, they lose that bond.
@@ -38,12 +43,13 @@ contract Oracle {
     uint32 public constant HOUR_START = 0;
     uint32 public constant MIN_SUBMIT = 50;
 
-    // tokens are held in the custody of this contract. Only tokens deposited in this contract can
+    /** tokens are held in the custody of this contract. Only tokens deposited in this contract can
     // be used for voting or for claiming oracle ether. Note these tokens are owned by the oracle contract while deposited
     // as far as the ERC-20 contract is concerned, but they are credited to the token depositors within this contract
     // voteTrackr keeps track of the proposals in this contract, so that token holders can only vote once for each proposal
     // with the tokens they have in this contract. initFeePool references the start date to allocate correct oracleDiv
     // token revenue
+    */
     struct AdminStruct {
         uint32 tokens;
         uint32 voteTracker;
@@ -258,10 +264,9 @@ contract Oracle {
             payable(msg.sender).transfer(ethClaim);
         }
         token.transferFrom(msg.sender, address(this), _amt);
+        adminStruct[msg.sender].initFeePool = params[7];
         adminStruct[msg.sender].tokens += _amt;
         params[4] += _amt;
-
-        adminStruct[msg.sender].initFeePool = params[7];
         emit Funding(_amt, ethClaim, msg.sender);
     }
 

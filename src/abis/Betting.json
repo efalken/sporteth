@@ -1,7 +1,6 @@
 {
   "contractName": "Betting",
-  "address": "0x5E51B7f5ca7E3B7c969710BE37f192E3D030f2B2",
-  "arbitrumaddress": "0xefbd1F149De85957c3e6E0dcd0A3923A205FC3a1",
+  "address": "0x729E81B0B6bb41C7d48AEff5e7bbaFcecbFfb11a",
 	"abi":  [
 			{
 				"inputs": [
@@ -292,6 +291,25 @@
 				"name": "cancelBigBet",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+      {
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_subkID",
+						"type": "bytes32"
+					}
+				],
+				"name": "checkOffer",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{

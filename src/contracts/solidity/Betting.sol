@@ -10,6 +10,7 @@ import "./Token.sol";
 
 contract Betting {
     /** totalShares is used to monitor an LP's share of LP eth in the contract.
+     * 0 bookie, 1 bookieLocked, 2 bettorLocked,
         3 betEpoch, 4 totalShares, 5 concentrationLimit, 6 nonce, 7 firstStart
         */
     uint32[8] public margin;
@@ -108,7 +109,8 @@ contract Betting {
         int32 netPosTeamBet = int32(betDatav[2 + _team0or1]) - int32(betDatav[1 - _team0or1]);
         require(int32(betPayoff + netPosTeamBet) < int32(margin[0]/margin[5]), "betsize over limit");
         int32 netPosTeamOpp = int32(betDatav[3 - _team0or1]) - int32(betDatav[_team0or1]);
-        int32 marginChange = maxZero(int32(betPayoff) + netPosTeamBet, -int32(_betAmt) + netPosTeamOpp) - maxZero(netPosTeamBet, netPosTeamOpp);
+        int32 marginChange = maxZero(int32(betPayoff) + netPosTeamBet,
+            -int32(_betAmt) + netPosTeamOpp) - maxZero(netPosTeamBet, netPosTeamOpp);
         require(marginChange < int32(margin[0] - margin[1]),
             "betsize over unpledged capital"
         );
@@ -206,9 +208,7 @@ contract Betting {
         );
         bytes32 subkID2 = keccak256(abi.encodePacked(margin[6], block.timestamp));
         k.bettor = msg.sender;
-        uint32 temppay = k.payoff;
-        k.payoff = k.betAmount;
-        k.betAmount = temppay;
+        (k.payoff, k.betAmount) =  (k.betAmount, k.payoff);
         k.pick = 1 - k.pick;
         margin[2] += (k.payoff + k.betAmount);
         userBalance[msg.sender] -= k.betAmount;
@@ -298,7 +298,8 @@ contract Betting {
 
     function redeem(bytes32 _subkId) external {
         require(betContracts[_subkId].bettor == msg.sender, "wrong account");
-        uint32 epochMatchWinner = betContracts[_subkId].epoch * 1000 + betContracts[_subkId].matchNum * 10 + betContracts[_subkId].pick;
+        uint32 epochMatchWinner = betContracts[_subkId].epoch * 1000 +
+            betContracts[_subkId].matchNum * 10 + betContracts[_subkId].pick;
         require(outcomeMap[epochMatchWinner] != 0, "need win or tie");
         uint32 payoff = betContracts[_subkId].betAmount;
         if (outcomeMap[epochMatchWinner] == 2) {
@@ -365,6 +366,11 @@ contract Betting {
             betContracts[_subkID].matchNum * 10 + betContracts[_subkID].pick;
         bool redeemable = (outcomeMap[epochMatchWinner] > 0);
         return redeemable;
+    }
+
+    function checkOffer(bytes32 _subkID) external view returns (bool) {
+        bool takeable = (offerContracts[_subkID].betAmount > 0);
+        return takeable;
     }
 
     function showBetData() external view returns (uint256[32] memory) {

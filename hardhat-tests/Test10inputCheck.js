@@ -7,7 +7,6 @@ const offset = _dateo.getTimezoneOffset() * 60 * 1000 - 7200000;
 var _timestamp;
 var _date;
 var _hour;
-const firstStart = 1635101269;
 const {assert} = require('chai');
 
 require("chai").use(require("chai-as-promised")).should();
@@ -48,7 +47,7 @@ describe("Betting", function () {
       if (_hour < 10) {
         await helper.advanceTimeAndBlock(secondsInHour * (10 - _hour));
       }
-      var nextStart = 1672488000;
+      var nextStart = 1671948000;
       await oracle.initPost(
         [
           "NFL:ARI:LAC",
@@ -194,7 +193,7 @@ describe("Betting", function () {
       assert.equal(ints[1], "500", "Must be equal");
       assert.equal(ints[2], "807", "Must be equal");
       assert.equal(ints[3], "569", "Must be equal");
-      assert.equal(ints[5], "1672488000", "Must be equal");
+      assert.equal(ints[5], "1671948000", "Must be equal");
       assert.equal(ints[6], "807", "Must be equal");
       assert.equal(ints[7], "1138", "Must be equal");
     });
@@ -274,7 +273,7 @@ describe("Betting", function () {
       assert.equal(intsb[1], "500", "Must be equal");
       assert.equal(intsb[2], "807", "Must be equal");
       assert.equal(intsb[3], "569", "Must be equal");
-      assert.equal(intsb[5], "1672488000", "Must be equal");
+      assert.equal(intsb[5], "1671948000", "Must be equal");
       assert.equal(intsb[6], "907", "Must be equal");
       assert.equal(intsb[7], "1013", "Must be equal");
     });

@@ -43,21 +43,21 @@ class EventBetRecord extends Component {
     var pricedata = [];
     contractweb3
       .getPastEvents("BetRecord", {
-        fromBlock: 9300000,
+        fromBlock: 2500000,
         toBlock: 'latest',
       })
       .then(
         function (events) {
           events.forEach(function (element) {
             pricedata.push({
-              timestamp: element.blockNumber,
-              Epoch: element.returnValues.epoch,
-              Offer: Boolean(element.returnValues.Offer).toString(),
+              blockNumber: Number(element.blockNumber),
+              Epoch: Number(element.returnValues.epoch),
+              //Offer: Boolean(element.returnValues.Offer).toString(),
               //Offer: element.returnValues.offer,
-              BetSize: element.returnValues.betAmount,
-              LongPick: element.returnValues.pick,
-              MatchNum: element.returnValues.matchNum,
-              Payoff: element.returnValues.payoff,
+              BetSize: Number(element.returnValues.betAmount/10000),
+              LongPick: Number(element.returnValues.pick),
+              MatchNum: Number(element.returnValues.matchNum),
+              Payoff: Number(element.returnValues.payoff/10000),
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor
             });
@@ -100,7 +100,7 @@ class EventBetRecord extends Component {
           />
           <Text size="12px" weight="200">
             {" "}
-            Time, offer, Epoch, MatchNum, LongPick, Betsize, Payoff, BettorAddress,
+            Time, Epoch, MatchNum, LongPick, Betsize, Payoff, BettorAddress,
             betHash
           </Text>{" "}
           <br />
@@ -108,7 +108,7 @@ class EventBetRecord extends Component {
             <div>
               <Text size="12px" weight="200">
                 {" "}
-                {event.timestamp},{event.Offer},
+                {event.timestamp},
                 {event.Epoch}, {event.MatchNum}, {event.LongPick},
                 {event.BetSize},
                 {event.BettorAddress}, {event.Hashoutput},{" "}

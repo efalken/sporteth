@@ -13,7 +13,7 @@ import Triangle from "../basics/Triangle";
 import ButtonEthScan from "../basics/ButtonEthScan.js";
 import Input from "../basics/Input.js";
 import Button from "../basics/Button.js";
-// import ButtonI from '../basics/ButtonI.js';
+ import ButtonI from '../basics/ButtonI.js';
 import TruncatedAddress from "../basics/TruncatedAddress.js";
 //import TruncatedAddress0 from '../basics/TruncatedAddress0.js';
 import VBackgroundCom from "../basics/VBackgroundCom";
@@ -21,6 +21,7 @@ import BettingContract from "../../abis/Betting.json";
 // import Form from '../basics/Form.js'
 var moment = require("moment");
 var momentTz = require("moment-timezone");
+var Web3 = require("web3");
 
 class BigBetPagejs extends Component {
   constructor(props, context) {
@@ -30,8 +31,8 @@ class BigBetPagejs extends Component {
     this.contracts = context.drizzle.contracts;
     this.web3 = web3;
     this.web2 = web3;
-    this.betHistory = [];
-    this.betHistory2 = [];
+    this.userOffers = [];
+    this.currentOffers = [];
     this.scheduleStringkey = [];
     this.takekeys = {};
     this.takekeys2 = {};
@@ -57,29 +58,31 @@ class BigBetPagejs extends Component {
   componentDidMount() {
     document.title = "Big Bet Page";
     this.findValues();
-    this.getbetHistoryArray();
+    this.getUserActiveOffers();
+    this.getCurrentOffers();
+    setInterval(() => {
+      this.findValues();
+      this.getWeek();
+    }, 1000);
+    /*
     setTimeout(() => {
       this.getWeek();
-    }, 4000);
+    }, 4000);*/
   }
 
   openEtherscan(txhash) {
-    const url = "https://rinkeby.etherscan.io/tx/" + txhash;
+    const url = "https://testnet.snowtrace.io/tx/" + txhash;
     window.open(url, "_blank");
   }
 
-  handleBetSize(betAmount) {
-    this.setState({ betAmount });
+  handleBetSize(value0) {
+    this.setState({ betAmount: value0 });
   }
 
   handleBettorFund(value) {
     this.setState({
       fundAmount: value,
     });
-  }
-
-  handlefundBook(fundAmount) {
-    this.setState({ fundAmount });
   }
 
   handleOddsOffered(decOddsOffered) {
@@ -95,64 +98,79 @@ class BigBetPagejs extends Component {
     this.setState({ showDecimalOdds: !this.state.showDecimalOdds });
   }
 
+  takeBet() {
+    const stackId = this.contracts[
+      "BettingMain"
+    ].methods.bet.cacheSend(
+      6,
+      0,
+      200,
+      {
+        from: this.props.accounts[0],
+      }
+    );
+  }
+
   killBet(x) {
     const stackId = this.contracts[
       "BettingMain"
     ].methods.cancelBigBet.cacheSend(x, {
       from: this.props.accounts[0],
-      type: "0x2",
     });
-    setTimeout(this.getbetHistoryArray(), 5000);
   }
 
   handleBettorWD(value2) {
     this.setState({
       wdAmount: value2,
-      type: "0x2",
     });
   }
 
   fundBettor(x) {
     const stackId = this.contracts["BettingMain"].methods.fundBettor.cacheSend({
       from: this.props.accounts[0],
-      value: this.state.fundAmount,
-      type: "0x2",
+      value: this.state.fundAmount * 1e18,
+
     });
   }
 
   withdrawBettor(x) {
     const stackId = this.contracts[
       "BettingMain"
-    ].methods.withdrawBettor.cacheSend(this.state.wdAmount, {
+    ].methods.withdrawBettor.cacheSend(this.state.wdAmount*10000, {
       from: this.props.accounts[0],
-      type: "0x2",
     });
   }
 
+  checkOffer(x) {
+    const stackId = this.contracts[
+      "BettingMain"
+    ].methods.offerContracts.cacheCall(x);
+  }
+
   makeBigBet() {
+
     const stackId = this.contracts["BettingMain"].methods.postBigBet.cacheSend(
       this.state.matchPick,
       this.state.teamPick,
-      this.state.betAmount,
-      this.state.decOddsOffered,
+      this.state.betAmount * 10000,
+      this.state.decOddsOffered*1000,
       {
         from: this.props.accounts[0],
-        type: "0x2",
       }
     );
-  }
+    }
 
   takeBigBet() {
     const stackId = this.contracts["BettingMain"].methods.takeBigBet.cacheSend(
       this.state.contractID,
       {
         from: this.props.accounts[0],
-        type: "0x2",
+
       }
     );
   }
 
-  getbetHistoryArray() {
+  getUserActiveOffers() {
     const web3b = this.context.drizzle.web3;
     const contractweb3b = new web3b.eth.Contract(
       BettingContract.abi,
@@ -161,8 +179,8 @@ class BigBetPagejs extends Component {
     var eventdata = [];
     var takes = {};
     contractweb3b
-      .getPastEvents("BetRecord", {
-        fromBlock: 9300000,
+      .getPastEvents("OfferRecord", {
+        fromBlock: 2500000,
         toBlock: "latest",
         filter: { bettor: this.props.accounts[0] },
       })
@@ -174,32 +192,25 @@ class BigBetPagejs extends Component {
               BettorAddress: element.returnValues.bettor,
               Epoch: Number(element.returnValues.epoch),
               MatchNum: Number(element.returnValues.matchNum),
-              OfferedTeam: Number(1 - element.returnValues.pick),
-              timestamp: element.blockNumber.timestamp,
-              Offer: Boolean(element.returnValues.Offer).toString(),
-          //    Offer: element.returnValues.offer,
-              BetSize: Number(element.returnValues.betAmount),
+              MyTeamPick: Number(element.returnValues.pick),
+              timestamp: Number(element.blockNumber),
+            //  timestamp: element.blockNumber.timestamp,
+              BetSize: Number(element.returnValues.betAmount/10000),
               Payoff: Number(element.returnValues.payoff),
             });
             takes[element.returnValues.contractHash] = this.contracts[
               "BettingMain"
-            ].methods.checkRedeem.cacheCall(
-              element.returnValues.contractHash,
-              Number(
-                element.returnValues.epoch * 1000 +
-                  element.returnValues.matchnum * 100 +
-                  element.returnValues.pick
-              )
-            );
+            ].methods.checkOffer.cacheCall(
+              element.returnValues.contractHash).toString();
           }, this);
-          this.betHistory[0] = eventdata;
+          this.userOffers[0] = eventdata;
           this.takekeys = takes;
         }.bind(this)
       );
 
   }
 
-  getbetHistoryArray2() {
+  getCurrentOffers() {
     const web3b = this.context.drizzle.web3;
     const contractweb3b = new web3b.eth.Contract(
       BettingContract.abi,
@@ -208,8 +219,8 @@ class BigBetPagejs extends Component {
     var eventdata2 = [];
     var takes2 = {};
     contractweb3b
-      .getPastEvents("BetRecord", {
-        fromBlock: 9300000,
+      .getPastEvents("OfferRecord", {
+        fromBlock: 2500000,
         toBlock: "latest",
         filter: { epoch: this.state.currW },
       })
@@ -222,24 +233,16 @@ class BigBetPagejs extends Component {
               Epoch2: Number(element.returnValues.epoch),
               MatchNum2: Number(element.returnValues.matchNum),
               OfferedTeam2: Number(1 - element.returnValues.pick),
-              timestamp2: element.blockNumber.timestamp,
-              Offer: Boolean(element.returnValues.Offer).toString(),
-            //  Offer: element.returnValues.offer,
+              timestamp2: Number(element.blockNumber),
               BetSize2: Number(element.returnValues.betAmount),
               Payoff2: Number(element.returnValues.payoff),
             });
             takes2[element.returnValues.contractHash] = this.contracts[
               "BettingMain"
-            ].methods.checkRedeem.cacheCall(
-              element.returnValues.contractHash,
-              Number(
-                element.returnValues.epoch * 1000 +
-                  element.returnValues.matchnum * 100 +
-                  element.returnValues.pick
-              )
-            );
+            ].methods.checkOffer.cacheCall(
+              element.returnValues.contractHash);
           }, this);
-          this.betHistory2 = eventdata2;
+          this.currentOffers = eventdata2;
           this.takekeys2 = takes2;
         }.bind(this)
       );
@@ -290,6 +293,13 @@ class BigBetPagejs extends Component {
     this.scheduleStringKey = this.contracts[
       "OracleMain"
     ].methods.showSchedString.cacheCall();
+
+    this.offkey = this.contracts[
+      "BettingMain"
+    ].methods.betContracts.cacheCall("0xd742678f8344bbb7accc6296c8abc740f2c0508ada4c2249fa898c2877a8943c").epoch;
+
+    this.marginKey7 = this.contracts["BettingMain"].methods.margin.cacheCall(7);
+
   }
 
   getMoneyLine(decOddsi) {
@@ -335,6 +345,8 @@ class BigBetPagejs extends Component {
     const ints = pieces.map((s) => parseInt("0x" + s)).reverse();
     return ints;
   }
+  /*
+  <td>{bet.BigMatch, this.state.matchPick, bet.OfferTeamNum, this.state.teamPick}</td>*/
 
   getWeek() {
     let currW = 0;
@@ -345,33 +357,44 @@ class BigBetPagejs extends Component {
 
     this.setState({ currW });
 
-    this.getbetHistoryArray2();
+    this.getCurrentOffers();
   }
+
+
 
   render() {
     let subcontracts = {};
     Object.keys(this.takekeys).forEach(function (id) {
       if (
-        this.takekeys[id] in this.props.contracts["BettingMain"].checkRedeem
+        this.takekeys[id] in this.props.contracts["BettingMain"].checkOffer
       ) {
-        subcontracts[id] = this.props.contracts["BettingMain"].checkRedeem[
+        subcontracts[id] = this.props.contracts["BettingMain"].checkOffer[
           this.takekeys[id]
         ].value;
       }
     }, this);
 
+
+    console.log("bigBets", this.state.bigBets);
+    console.log("currW", this.state.currW)
+      console.log("decOdds", this.decOddsOffered)
+
     let subcontracts2 = {};
     Object.keys(this.takekeys2).forEach(function (id) {
       if (
-        this.takekeys2[id] in this.props.contracts["BettingMain"].checkRedeem
+        this.takekeys2[id] in this.props.contracts["BettingMain"].checkOffer
       ) {
-        subcontracts2[id] = this.props.contracts["BettingMain"].checkRedeem[
+        subcontracts2[id] = this.props.contracts["BettingMain"].checkOffer[
           this.takekeys2[id]
         ].value;
       }
     }, this);
 
-    let scheduleString = ["loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:..", "loading:.."];
+
+    console.log("subcontracts2", subcontracts2);
+
+
+    let scheduleString =  ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
 
     let startTimeColumn = [1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932,];
 
@@ -384,8 +407,8 @@ class BigBetPagejs extends Component {
     let liab1 = [-123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123,];
 
 
-        let oddsTot = [odds0, odds1];
-        let netLiab = [liab0, liab1];
+
+
 
 let betData = [];
     if (this.betDataKey in this.props.contracts["BettingMain"].showBetData) {
@@ -396,31 +419,45 @@ let betData = [];
       }
     }
 
+    let offstring = "";
+        if (this.offkey in this.props.contracts["BettingMain"].betContracts) {
+          let offstring = this.props.contracts["BettingMain"].betContracts[this.offkey].epoch;
+        }
+console.log("offstring", offstring);
 
     let userBalance = "0";
     if (this.userBalKey in this.props.contracts["BettingMain"].userBalance) {
       let ub = this.props.contracts["BettingMain"].userBalance[this.userBalKey]
         .value;
       if (ub) {
-        userBalance = ub;
+        userBalance = ub / 10000;
       }
     }
 
+    let netLiab = [liab0, liab1];
+
     let xdecode = [0, 1, 2, 3, 4, 5, 6, 7];
-
-
     for (let ii = 0; ii < 32; ii++) {
       xdecode = this.unpack256(betData[ii]);
-      odds0[ii] = Number(xdecode[4]);
-      odds1[ii] = Number(xdecode[5]);
-      startTimeColumn[ii] = xdecode[7];
+      odds0[ii] = Number(xdecode[6]);
+      odds1[ii] = Number(xdecode[7]);
+      startTimeColumn[ii] = xdecode[5];
       netLiab[0][ii] = (Number(xdecode[2]) - Number(xdecode[1])) / 10;
       netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
     }
 
-    console.log("betHistory", this.betHistory[0]);
-    console.log("currw4", this.currW4);
+      let oddsTot = [odds0, odds1];
 
+
+      let newBets = false;
+      if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
+        let newBets0 = this.props.contracts["BettingMain"].margin[
+          this.marginKey7
+        ].value;
+        if (newBets0 != 2000000000) {
+          newBets = true;
+        }
+      }
 
     if (
       this.scheduleStringKey in
@@ -429,7 +466,7 @@ let betData = [];
       let sctring = this.props.contracts["OracleMain"].showSchedString[
         this.scheduleStringKey
       ].value;
-      if (sctring) {
+      if (sctring && newBets) {
         scheduleString = sctring;
       }
     }
@@ -500,7 +537,7 @@ let betData = [];
           <td>
             {this.state.showDecimalOdds
               ? (1 + (95 * oddsTot[1][i]) / 100000).toFixed(3)
-              : this.getMoneyLine(oddsTot[1][i])}
+              : this.getMoneyLine(95*oddsTot[1][i]/100)}
           </td>
           <td>{moment.unix(startTimeColumn[i]).format("MMMDD-ha")}</td>
         </tr>
@@ -509,22 +546,20 @@ let betData = [];
 
     let bigBets = [];
 
-    //console.log("offers", this.betHistory);
-
-    this.betHistory2.map((bet) => {
+    this.currentOffers.map((bet) => {
       let bigBet = {
         teamAbbrevName: teamSplit[bet.MatchNum2][bet.OfferedTeam2 + 1],
-        BigBetSize: Number(bet.Payoff2 / 0.95).toFixed(3),
+        BigBetSize: Number(bet.Payoff2/10000).toFixed(3),
         BigOdds: ((0.95 * bet.Payoff2) / bet.BetSize2 + 1).toFixed(3),
         OfferHash: bet.Hashoutput2,
         OfferedEpoch: bet.Epoch2,
         OfferTeamNum: bet.OfferedTeam2,
-        BigMatch: bet.MatchNum2,
+        BigMatch: bet.MatchNum2
       };
       bigBets.push(bigBet);
     });
 
-    console.log("bb", this.state.bigBets);
+    // console.log("bb", this.state.bigBets);
 
     if (!this.state.bigBetsSet && bigBets.length > 0) {
       this.setState({ bigBets });
@@ -607,8 +642,7 @@ let betData = [];
                   transform="uppercase"
                   spacing="1px"
                 />
-                <Text>Your available margin: </Text>
-                <Text>{Number(userBalance).toFixed(2)}</Text>
+                <Text>Your available margin: {Number(userBalance).toFixed(4)} ETH</Text>
               </Box>
               <Box>
                 <Flex
@@ -658,20 +692,9 @@ let betData = [];
               </Flex>
               <br />
               <Flex>
-                {Object.keys(this.betHistory).map((id) => (
+                {Object.keys(this.userOffers).map((id) => (
                   <div style={{ width: "100%", float: "left" }}>
-                    <div>
-                      <button
-                        style={{
-                          backgroundColor: "#424242",
-                          borderRadius: "2px",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => this.getAllbetHistoryArrays()}
-                      >
-                        Refresh Bet History
-                      </button>
-                    </div>
+                    
                     <Text> Your Unclaimed Offers</Text>
                     <br />
                     <table style={{ width: "100%", fontSize: "12px" }}>
@@ -680,12 +703,13 @@ let betData = [];
                           <td>Week</td>
                           <td>Bet Size</td>
                           <td>contractID</td>
-                          <td>Click to Cancel</td>
+                          <td>Click to Retract</td>
                         </tr>
-                        {this.betHistory[id].map(
+                        {this.userOffers[id].map(
                           (event, index) =>
-                            subcontracts[event.Hashoutput] &&
-                            event.Offer && (
+                            event.Epoch == this.state.currW &&
+                           subcontracts[event.Hashoutput] &&
+                            (
                               <tr key={index} style={{ width: "50%" }}>
                                 <td>{event.Epoch}</td>
                                 <td>{Number(event.BetSize).toFixed(2)}</td>
@@ -712,7 +736,7 @@ let betData = [];
                                       this.killBet(event.Hashoutput);
                                     }}
                                   >
-                                    Refund
+                                    Cancel
                                   </button>
                                 </td>
                               </tr>
@@ -758,6 +782,29 @@ let betData = [];
                     buttonLabel="WithDraw"
                   />
                 </Box>
+              </Flex>
+
+              <Flex
+                mt="2px"
+                flexDirection="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <Box>
+                  <Form
+                    onChange={this.handleBettorFund}
+                    value={this.state.fundAmount}
+                    onSubmit={this.fundBettor}
+                    mb="10px"
+                    justifyContent="flex-start"
+                    buttonWidth="95px"
+                    inputWidth="100px"
+                    borderRadius="2px"
+                    placeholder="eth"
+                    buttonLabel="Fund"
+                  />
+                </Box>
+
                 <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
               </Flex>
               <Box>
@@ -774,22 +821,13 @@ let betData = [];
                 alignItems="center"
               >
                 <Box>
-                  <Form
-                    onChange={this.handleBettorFund}
-                    value={this.state.fundAmount}
-                    onSubmit={this.fundBettor}
-                    mb="20px"
-                    justifyContent="flex-start"
-                    buttonWidth="95px"
-                    inputWidth="100px"
-                    borderRadius="2px"
-                    placeholder="eth"
-                    buttonLabel="Fund"
-                  />
+                  <Flex
+                    mt="20px"
+                    flexDirection="row"
+                    justifyContent="space-between"
+                  ></Flex>
                 </Box>
-
-                <Box mt="10px" mb="10px" ml="80px" mr="80px"></Box>
-              </Flex>
+                </Flex>
               <Box>
                 <Box>
                   <Text> MoneyLine to Decimal odds converter</Text>
@@ -869,12 +907,11 @@ let betData = [];
                   <br></br>
                   Standard Book Odds:{" "}
                   {(
-                    oddsTot[this.state.teamPick][this.state.matchPick] / 1000 +
-                    1
+                    95*oddsTot[this.state.teamPick][this.state.matchPick]/100000  +  1
                   ).toFixed(3)}
                   {"  (MoneyLine "}
                   {this.getMoneyLine(
-                    oddsTot[this.state.teamPick][this.state.matchPick]
+                    0.95*oddsTot[this.state.teamPick][this.state.matchPick]
                   )}
                   {")   "}
                   <br></br>
@@ -913,7 +950,6 @@ let betData = [];
                   marginRignt="5px"
                   value={this.state.decOddsOffered}
                 />
-
                 <Box mt="10px" mb="10px">
                   <Button
                     style={{
@@ -1008,11 +1044,14 @@ let betData = [];
                   </thead>
                   <tbody>
                     {this.state.bigBets.length > 0 &&
+                  /*  bet.OfferTeamNum === this.state.teamPick &&
+                     bet.BigMatch === this.state.matchPick &&*/
                       this.state.bigBets.map(
                         (bet, index) =>
-                          bet.OfferTeamNum === this.state.teamPick &&
-                          bet.BigMatch === Number(this.state.matchPick) &&
-                          subcontracts2[bet.OfferHash] && (
+                      //    bet.OfferTeamNum === this.state.teamPick &&
+                      bet.BigMatch == this.state.matchPick &&
+                      bet.OfferTeamNum === this.state.teamPick &&
+                      subcontracts2[bet.OfferHash] && (
                             <tr style={{ width: "100%" }}>
                               <td>
                                 <input
@@ -1030,6 +1069,7 @@ let betData = [];
                               </td>
                               <td>{Number(bet.BigBetSize).toFixed(3)}</td>
                               <td>{Number(bet.BigOdds).toFixed(3)}</td>
+
                               <td>
                                 <TruncatedAddress
                                   addr={bet.OfferHash}
