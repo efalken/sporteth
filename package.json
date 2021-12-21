@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^1.7.3",
     "@drizzle/react-components": "^1.5.3",
     "@drizzle/react-plugin": "^1.5.3",
     "@drizzle/store": "^1.5.3",
+    "@emotion/react": "11",
+    "@emotion/styled": "11",
     "@openzeppelin/contracts": "^3.3.0",
     "@rebass/grid": "^6.1.0",
     "@testing-library/jest-dom": "^5.11.6",
@@ -16,8 +19,9 @@
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "eslint": "^7.32.0",
-    "ethers": "^5.4.6",
     "eth-crypto": "^2.0.0",
+    "ethers": "^5.4.6",
+    "framer-motion": "4",
     "ganache-core": "^2.13.2",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
@@ -42,11 +46,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "hardhat test",
     "deploy:localhost": "hardhat --network localhost deploy",
     "eject": "react-scripts eject",
-    "size": "hardhat size-contracts",
-    "test": "hardhat test"
+    "size": "hardhat size-contracts"
   },
   "eslintConfig": {
     "extends": [
@@ -73,8 +76,8 @@
     "ethers": "^5.5.1",
     "hardhat": "^2.6.8",
     "hardhat-contract-sizer": "^2.1.1",
-  "hardhat-deploy": "^0.9.3",
-  "hardhat-gas-reporter": "^1.0.4",
-  "hardhat-tracer": "^1.0.0-alpha.6"
+    "hardhat-deploy": "^0.9.3",
+    "hardhat-gas-reporter": "^1.0.4",
+    "hardhat-tracer": "^1.0.0-alpha.6"
   }
 }

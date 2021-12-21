@@ -32,7 +32,7 @@ border-radius: 50%;
 
 /* appearance for checked radiobutton */
 input[type="radio"]:checked {
-background-color: #C81432;
+background-color: rgb(112, 180, 63);
 }
 
 /* input.prechecked */
@@ -55,11 +55,7 @@ padding-left: 6px;
 
 
 .nav-header:hover {
-color:  #7393B3;
-}
-
-.nav-header {
-color: #D3D3D3;
+color: rgb(112, 180, 63);
 }
 
 .header-logo {
@@ -80,27 +76,24 @@ cursor: pointer;
 }
 
 a.faqs-link:hover {
-  background: #7393B3;
+  background: #424242;
   border-radius: 5px;
   padding: 5px;
 }
 
 ::placeholder {
-color:  #D3D3D3;
+color: rgba(0, 0, 0, 0.6);
 font-weight: 800;
 }
 
- a.docu-header:hover {
-color: #7393B3 !important;
+/* a.docu-header:hover {
+color: rgb(112, 180, 63) !important;
 }
-a.docu-header {
-color: #ECECEC !important;
-}
-/*
+
 a.docu-header:hover, a.docu-header:hover p, a.docu-header:hover span {
-  color: #249F87;
-}
-*/
+  color: #9A1A4A;
+} */
+
 p.docu-header, li.docu-header, div.docu-header  {
 /* margin-top: 0in !important;
 margin-right: 0in !important;
@@ -110,10 +103,10 @@ line-height:  105% !important;  */
 font-size:  12px !important;
 font-family:  "Times New Roman",serif !important;
 }
-/*
+
 a.docu-header:hover, p.docu-header:hover > span:hover {
-  color: rgb(30, 131, 110) !important;
-}*/
+  color: rgb(112, 180, 63) !important;
+}
 
 /* h1.tech-head {
 margin-top:12.0pt !important;
@@ -194,4 +187,4 @@ font-family:"Calibri",sans-serif !important;
 
 
 /*  green
- rgb(213, 87, 87)  red */
+ rgb(213, 87, 87)  red */ 

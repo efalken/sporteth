@@ -59,50 +59,42 @@ contract Oracle {
     event ResultsPosted(
         uint32 epoch,
         uint32 propnum,
-        uint8[32] winner,
-        address proposer
+        uint8[32] winner
         );
 
     event DecOddsPosted(
             uint32 epoch,
             uint32 propnum,
-            uint32[32] decOdds,
-            address proposer
+            uint32[32] decOdds
             );
 
     event VoteOutcome(
             bool voteResult,
             uint32 propnum,
-            uint32 epoch,
-            address proposer
+            uint32 epoch
             );
 
     event BetDataPosted(
         uint32 epoch,
         uint32 propnum,
-        uint32[32] oddsStart,
-        address proposer
+        uint32[32] oddsStart
         );
 
     event ParamsPosted(
         uint32 concLimit,
-        uint32 epoch,
-        address proposer
+        uint32 epoch
     );
 
     event StartTimesPosted(
         uint32 propnum,
-                uint32 epoch,
-        uint32[32] starttimes,
-
-        address proposer
+        uint32 epoch,
+        uint32[32] starttimes
     );
 
     event SchedulePosted(
         uint32 epoch,
         uint32 propnum,
-        string[32] sched,
-        address proposer
+        string[32] sched
         );
 
     event Funding(
@@ -152,9 +144,9 @@ contract Oracle {
         matchSchedule = _teamsched;
         // this tells users that an inimtial proposal has been sent, which is useful
         // for oracle administrators who are monitoring this contract
-        emit SchedulePosted(params[0], params[2], _teamsched, msg.sender);
-        emit StartTimesPosted(params[0], params[2], _starts, msg.sender);
-        emit DecOddsPosted(params[0], params[2], _decimalOdds, msg.sender);
+        emit SchedulePosted(params[0], params[2], _teamsched);
+        emit StartTimesPosted(params[0], params[2], _starts);
+        emit DecOddsPosted(params[0], params[2], _decimalOdds);
     }
 
     function updatePost(
@@ -164,7 +156,7 @@ contract Oracle {
         params[1] = 2;
         post();
         propOddsUpdate = create64(_decimalOdds);
-        emit DecOddsPosted(params[0], params[2], _decimalOdds, msg.sender);
+        emit DecOddsPosted(params[0], params[2], _decimalOdds);
     }
 
     function settlePost(uint8[32] memory _resultVector) external {
@@ -173,7 +165,7 @@ contract Oracle {
         params[1] = 3;
         post();
         propResults = _resultVector;
-        emit ResultsPosted(params[0], params[2], _resultVector, msg.sender);
+        emit ResultsPosted(params[0], params[2], _resultVector);
     }
 
     function initProcess() external {
@@ -186,9 +178,9 @@ contract Oracle {
             // sends to the betting contrac
             bettingContract.transmitInit(propOddsStarts
             );
-            emit VoteOutcome(true, params[0], params[2], msg.sender);
+            emit VoteOutcome(true, params[0], params[2]);
         } else {
-            emit VoteOutcome(false, params[0], params[2], msg.sender);
+            emit VoteOutcome(false, params[0], params[2]);
         }
         // resets various data (eg, params[3])
         reset();
@@ -202,9 +194,9 @@ contract Oracle {
         require(block.timestamp > params[3], "too soon");
         if (params[5] > params[6]) {
             bettingContract.transmitUpdate(propOddsUpdate);
-            emit VoteOutcome(true, params[0], params[2], msg.sender);
+            emit VoteOutcome(true, params[0], params[2]);
         } else {
-            emit VoteOutcome(false, params[0], params[2], msg.sender);
+            emit VoteOutcome(false, params[0], params[2]);
         }
         reset();
     }
@@ -219,9 +211,9 @@ contract Oracle {
             (_epoch, ethDividend) = bettingContract.settle(propResults);
             params[0] = _epoch;
             params[7] += ethDividend / params[4];
-            emit VoteOutcome(true, params[0], params[2], msg.sender);
+            emit VoteOutcome(true, params[0], params[2]);
         } else {
-            emit VoteOutcome(false, params[0], params[2], msg.sender);
+            emit VoteOutcome(false, params[0], params[2]);
         }
         reset();
     }
@@ -234,8 +226,7 @@ contract Oracle {
         bettingContract.adjustParams(_concentrationLim);
         emit ParamsPosted(
             _concentrationLim,
-            params[0],
-            msg.sender
+            params[0]
         );
     }
 
@@ -293,11 +284,9 @@ contract Oracle {
         if (adminStruct[msg.sender].tokens > 500) params[3] = 0;
         // this prevents proposer from voting again with his tokens on this submission
         adminStruct[msg.sender].voteTracker = params[2];
-        proposer = msg.sender;
     }
 
     function reset() internal {
-        delete proposer;
         params[1] = 0;
         params[2]++;
         params[3] = 0;

@@ -2,7 +2,7 @@ pragma solidity ^0.8.0;
 
 /**
 SPDX-License-Identifier: MIT
-Copyright © 2021 Eric G. Falkenstone
+@author Eric Falkenstein
 */
 
 import "./Token.sol";
@@ -82,11 +82,13 @@ contract Betting {
         token = Token(_tokenAddress);
     }
 
+    /// @dev restricts data submissions to the Oracle contract
     modifier onlyAdmin() {
         require(oracleAdmin == msg.sender);
         _;
     }
 
+    /// @dev initial deployment sets administrator as the Oracle contract
     function setOracleAddress(address payable _oracleAddress) external {
         require(oracleAdmin == address(0x0), "Only once");
         oracleAdmin = _oracleAddress;
@@ -94,9 +96,11 @@ contract Betting {
 
     receive() external payable {}
 
-/// @param _matchNumber is 0 to 31, representing the matche
-/// @param _team0or1 is the initial favorite (0) and underdog (1)
-/// @param _betAmt is the amount bet in 10s of finney, 0.0001 ether
+    /** @dev processes simple bet
+    * @param _matchNumber is 0 to 31, representing the match
+    * @param _team0or1 is the initial favorite (0) and underdog (1)
+    * @param _betAmt is the amount bet in 10s of finney, 0.0001 ether
+    */
     function bet(
         uint8 _matchNumber,
         uint8 _team0or1,
@@ -149,6 +153,12 @@ contract Betting {
         );
     }
 
+/** @dev processes large bet where the size and odds are of the poster's choosing
+    * @param _matchNum is 0 to 31, representing the match
+    * @param _team0or1 is the initial favorite (0) and underdog (1) poster wants to win
+    * @param _betAmount is the amount bet in 10s of finney, 0.0001 ether
+    * @param _decOddsBB is the proposed odds on tthte poster's desired team, decimal odds for 1.909 are input as 1909
+    */
     function postBigBet(
         uint8 _matchNum,
         uint8 _team0or1,
@@ -181,7 +191,9 @@ contract Betting {
             subkID
         );
     }
-
+/* @dev takes outstanding offered bet
+    * @param _subkid is the picked contract's HashID
+    */
     function takeBigBet(bytes32 _subkid) external {
         Subcontract memory k = offerContracts[_subkid];
         (uint32[7] memory betDatav) = decodeNumber(betData[k.matchNum]);
@@ -235,11 +247,17 @@ contract Betting {
         delete offerContracts[_subkid];
     }
 
+/* @dev cancels outstanding offered bet
+    * @param _subkid is the contract's HashID
+    */
     function cancelBigBet(bytes32 _subkid) external {
         require(offerContracts[_subkid].bettor == msg.sender, "wrong account");
         delete betContracts[_subkid];
     }
 
+/* @dev assigns results to matches, enabling withdrawal, removes capital for this purpose
+* @param _winner is the epoch's entry of results: 1 for team 1 win, 0 for team 0 win, 2 for tie or no contest
+*/
     function settle(uint8[32] memory _winner)
         external
         onlyAdmin
@@ -274,12 +292,14 @@ contract Betting {
         return (margin[3], uint32(5 * payoffPot));
     }
 
+/// @dev bettor funds account for bets
     function fundBettor() external payable {
         uint32 amt = uint32(msg.value / UNITS_TRANS14);
         userBalance[msg.sender] += amt;
         emit Funding(msg.sender, msg.value, margin[3], 0);
     }
 
+/// @dev funds LP for supplying capital to take bets
     function fundBook() external payable {
         require(block.timestamp < uint32(margin[7]), "only prior to first event");
         uint32 netinvestment = uint32(msg.value / UNITS_TRANS14);
@@ -296,6 +316,9 @@ contract Betting {
         emit Funding(msg.sender, msg.value, margin[3], 1);
     }
 
+/** @dev redeems winning bet and allocates winnings to user's balance for later withdrawal or future betting
+    * @param _subkId is the contract's HashID
+    */
     function redeem(bytes32 _subkId) external {
         require(betContracts[_subkId].bettor == msg.sender, "wrong account");
         uint32 epochMatchWinner = betContracts[_subkId].epoch * 1000 +
@@ -313,6 +336,9 @@ contract Betting {
         emit Funding(msg.sender, payoff, margin[3], 2);
     }
 
+/** @dev withdrawal in 0.1 finney by bettors
+* @param _amt is the bettor amount withdrawn. 1 represents 0.1 finney, or 0.0001 eth
+*/
     function withdrawBettor(uint32 _amt) external {
         require(_amt <= userBalance[msg.sender]);
         userBalance[msg.sender] -= _amt;
@@ -321,6 +347,9 @@ contract Betting {
         emit Funding(msg.sender, amt256, margin[3], 3);
     }
 
+/** @dev processes withdrawal in 0.1 finney by LPs
+* @param _sharesToSell is the LP's ownership stake withdrawn.
+*/
     function withdrawBook(uint32 _sharesToSell) external {
         require(block.timestamp < uint32(margin[7]), "only prior to first event");
         require(lpStruct[msg.sender].shares >= _sharesToSell, "NSF");
@@ -339,13 +368,18 @@ contract Betting {
         emit Funding(msg.sender, ethWithdraw256, margin[3], 4);
     }
 
-    function transmitInit(
-    uint96[32] memory _oddsAndStart) external onlyAdmin {
+/** @dev processes initial odds and start times
+* @param _oddsAndStart is the epoch's set of odds and start times for matches. Data are packed into uint96.
+*/
+    function transmitInit(uint96[32] memory _oddsAndStart) external onlyAdmin {
         require(margin[2] == 0);
         betData = _oddsAndStart;
         margin[7] = uint32(_oddsAndStart[0] >> 64);
     }
 
+/** @dev processes updates to epoch's odds
+* @param _updateBetData updates the epoch's odds. Data are packed into uint64.
+*/
     function transmitUpdate(uint64[32] memory _updateBetData) external onlyAdmin {
         uint256 encoded;
         for (uint i = 0; i < 32; i++) {
@@ -357,10 +391,16 @@ contract Betting {
         }
     }
 
+/** @dev It limits the amount of LP capital that can be applied to a single match.
+* @param _maxPos sets the parameter that defines how much diversification is enforced.
+*/
     function adjustParams(uint32 _maxPos) external onlyAdmin {
         margin[5] = _maxPos;
     }
 
+/** @dev allows users to check if prior bet can be redeemed
+* @param _subkID is used to lookup the contract Hash ID for a specific bet.
+*/
     function checkRedeem(bytes32 _subkID) external view returns (bool) {
         uint32 epochMatchWinner = betContracts[_subkID].epoch * 1000 +
             betContracts[_subkID].matchNum * 10 + betContracts[_subkID].pick;
@@ -368,15 +408,20 @@ contract Betting {
         return redeemable;
     }
 
+/** @dev allows users to check if prior big bet offer is still open
+* @param _subkID is used to lookup the contract Hash ID for a specific offer.
+*/
     function checkOffer(bytes32 _subkID) external view returns (bool) {
         bool takeable = (offerContracts[_subkID].betAmount > 0);
         return takeable;
     }
 
+/// @dev allows users to see epoch's match odds, start times, and bet amounts
     function showBetData() external view returns (uint256[32] memory) {
         return betData;
     }
 
+// @dev unpacks uint256 to reveal match's odds and bet amounts
     function decodeNumber(uint256 _encoded) internal pure returns (uint32[7] memory vec1 ) {
         vec1[0] = uint32(_encoded >> 224);
         vec1[1] = uint32(_encoded >> 192);
@@ -387,6 +432,7 @@ contract Betting {
         vec1[6] = uint32(_encoded);
     }
 
+// @dev takes the maximum of two data points or zero
     function maxZero(int32 a, int32 b) internal pure returns (int32) {
         int32 c = a >= b ? a : b;
         if (c <= 0) c = 0;

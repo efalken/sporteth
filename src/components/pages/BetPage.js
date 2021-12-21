@@ -8,7 +8,7 @@ import { Box, Flex } from "@rebass/grid";
 import Logo from "../basics/Logo";
 import Text from "../basics/Text";
 import Form from "../basics/Form.js";
-import { G } from "../basics/Colors";
+import { G, Ggg } from "../basics/Colors";
 import { autoBind } from "react-extras";
 import ButtonEthScan from "../basics/ButtonEthScan.js";
 import Input from "../basics/Input.js";
@@ -497,7 +497,7 @@ console.log("newBets", newBets);
               </Box>
               <Box>
                 <Flex>
-                  <Text size="20px">
+                  <Text size="20px" color="#707070">
                     <a
                       className="nav-header"
                       style={{
@@ -568,7 +568,7 @@ console.log("newBets", newBets);
                 <Box mt="1px" mb="1px">
                   <button
                     style={{
-                      backgroundColor: "#424242",
+                      backgroundColor: "#707070",
                       borderRadius: "2px",
                       cursor: "pointer",
                     }}
@@ -717,7 +717,7 @@ console.log("newBets", newBets);
                                   <td>
                                     <button
                                       style={{
-                                        backgroundColor: "#424242",
+                                        backgroundColor: "#707070",
                                         borderRadius: "2px",
                                         cursor: "pointer",
                                       }}
@@ -764,6 +764,7 @@ console.log("newBets", newBets);
                     onSubmit={this.withdrawBettor}
                     mb="20px"
                     justifyContent="flex-start"
+
                     buttonWidth="95px"
                     inputWidth="100px"
                     borderRadius="2px"
@@ -873,8 +874,8 @@ console.log("newBets", newBets);
 
           <Flex
             style={{
-              color: "#0099ff",
-              fontSize: "13px",
+              color: "#B0B0B0",
+              fontSize: "12px",
             }}
           >
             {this.state.teamPick != null ? (
@@ -989,7 +990,7 @@ const ChainSwitch=()=>{
     const chainid = useChainId()
     return (<Box>not on Avalanche <button
         style={{
-          backgroundColor: "#424242",
+          backgroundColor: "#707070",
           borderRadius: "2px",
           cursor: "pointer",
         }}

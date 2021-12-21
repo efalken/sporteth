@@ -78,7 +78,7 @@ const ChainSwitch=()=>{
     if (chainid === 43113) {
       return (<a href="/betpage"><Box><button
           style={{
-            backgroundColor: "#424242",
+            backgroundColor: "#707070",
             borderRadius: "2px",
             cursor: "pointer",
           }}

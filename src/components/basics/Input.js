@@ -1,4 +1,4 @@
-import {B, G} from './Colors'
+import {B, Gg} from './Colors'
 import {Radius} from './Style'
 import {Box, Flex} from '@rebass/grid'
 import React from 'react'
@@ -11,11 +11,11 @@ export
                 <Flex
                 {...props}
                 style={{
-                    border: `thin solid ${G}`,
+                    border: `thin solid ${Gg}`,
                     borderRadius: Radius,
                     height: 30
                 }}>
-                
+
                     {/* This is the label */}
                     <Flex
                     alignItems="center"
@@ -25,18 +25,18 @@ export
                     }}>
                         {label}
                     </Flex>
-                    
+
                     {/* This is the value */}
                     <Box
                     style={{
-                        borderLeft: `thin solid ${G}`
+                        borderLeft: `thin solid ${Gg}`,
                     }}>
                         <input style={{
                             border: "none",
                             paddingLeft: 7,
                             paddingRight: 7,
                             outline: "none",
-                            backgroundColor: "#6587bc",
+                            backgroundColor: "#404040",
                             color: B,
                             width: width ? width : 50,
                             height: "100%",
@@ -44,7 +44,7 @@ export
                             fontWeight: weight ? weight : "normal"
                         }}/>
                     </Box>
-                    
+
                 </Flex>
             </Choose.When>
             <Choose.Otherwise>
@@ -53,10 +53,10 @@ export
                     <input
                     placeholder={placeholder}
                     style={{
-                        border: `thin solid ${G}`,
+                        border: `thin solid ${Gg}`,
                         width: width ? width : 120,
                         outline: "none",
-                        backgroundColor: "#6587bc",
+                        backgroundColor: "#404040",
                         padding: "5px 7px 5px 7px",
                         fontSize: size ? size : 14,
                         fontWeight: weight ? weight : "normal",

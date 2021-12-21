@@ -14,7 +14,6 @@ const Placeholder = Styled.div`
      {
         font-family: 'InterVariable', sans-serif;;
         transition: all 0.2s;
-        letter-spacing: 0.075em;
         color: ${B};
     }
 

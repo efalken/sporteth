@@ -1,10 +1,10 @@
 /* Used as background color */
 export const
-    A = "#000000"
+    A = "#FAFAFA"
 
 /* Used as primary text color */
 export const
-    B = "#ffffff"
+    B = "#FAFAFA"
 
 export const
     C = "#9C9C9C"
@@ -19,7 +19,13 @@ export const
     F = "rgb(238, 237, 237)"
 
 export const
-    G = "#424242"
+    G = "#707070"
+
+    export const
+      Gg = "#CC0000"
+
+      export const
+        Ggg = "#910000"
 
 export const
     H = "#711313"

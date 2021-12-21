@@ -391,24 +391,6 @@ class BigBetPagejs extends Component {
 
     console.log("subcontracts2", subcontracts2);
 
-    let newBets = false;
-    if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
-      let newBets0 = this.props.contracts["BettingMain"].margin[
-        this.marginKey7
-      ].value;
-      if (newBets0 != 2000000000) {
-        newBets = true;
-      }
-    }
-
-    let betData = [];
-    if (this.betDataKey in this.props.contracts["BettingMain"].showBetData) {
-      let st = this.props.contracts["BettingMain"].showBetData[this.betDataKey]
-        .value;
-      if (st) {
-        betData = st;
-      }
-    }
 
     let scheduleString =  ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
 
@@ -422,15 +404,16 @@ class BigBetPagejs extends Component {
 
     let liab1 = [-123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123, -123,];
 
-    if (
-      this.scheduleStringKey in
-      this.props.contracts["OracleMain"].showSchedString
-    ) {
-      let sctring = this.props.contracts["OracleMain"].showSchedString[
-        this.scheduleStringKey
-      ].value;
-      if (sctring && newBets) {
-        scheduleString = sctring;
+
+
+
+
+let betData = [];
+    if (this.betDataKey in this.props.contracts["BettingMain"].showBetData) {
+      let d0 = this.props.contracts["BettingMain"].showBetData[this.betDataKey]
+        .value;
+      if (d0) {
+        betData = d0;
       }
     }
 
@@ -438,7 +421,6 @@ class BigBetPagejs extends Component {
         if (this.offkey in this.props.contracts["BettingMain"].betContracts) {
           let offstring = this.props.contracts["BettingMain"].betContracts[this.offkey].epoch;
         }
-
 console.log("offstring", offstring);
 
     let userBalance = "0";
@@ -453,9 +435,6 @@ console.log("offstring", offstring);
     let netLiab = [liab0, liab1];
 
     let xdecode = [0, 1, 2, 3, 4, 5, 6, 7];
-    xdecode = this.unpack256(betData[0]);
-
-    if (xdecode[6] > 0) {
     for (let ii = 0; ii < 32; ii++) {
       xdecode = this.unpack256(betData[ii]);
       odds0[ii] = Number(xdecode[6]);
@@ -464,14 +443,31 @@ console.log("offstring", offstring);
       netLiab[0][ii] = (Number(xdecode[2]) - Number(xdecode[1])) / 10;
       netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
     }
-  }
 
       let oddsTot = [odds0, odds1];
 
 
+      let newBets = false;
+      if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
+        let newBets0 = this.props.contracts["BettingMain"].margin[
+          this.marginKey7
+        ].value;
+        if (newBets0 != 2000000000) {
+          newBets = true;
+        }
+      }
 
-
-
+    if (
+      this.scheduleStringKey in
+      this.props.contracts["OracleMain"].showSchedString
+    ) {
+      let sctring = this.props.contracts["OracleMain"].showSchedString[
+        this.scheduleStringKey
+      ].value;
+      if (sctring && newBets) {
+        scheduleString = sctring;
+      }
+    }
 
     let faveSplit = [];
     let underSplit = [];
@@ -657,7 +653,7 @@ console.log("offstring", offstring);
                 <Box mt="1px" mb="1px">
                   <button
                     style={{
-                      backgroundColor: "#707070",
+                      backgroundColor: "#424242",
                       borderRadius: "2px",
                       cursor: "pointer",
                     }}
@@ -728,7 +724,7 @@ console.log("offstring", offstring);
                                 <td>
                                   <button
                                     style={{
-                                      backgroundColor: "#910000",
+                                      backgroundColor: "#424242",
                                       borderRadius: "5px",
                                       cursor: "pointer",
                                     }}
@@ -842,7 +838,7 @@ console.log("offstring", offstring);
                       this.translateMoneyLine(value)
                     }
                     width="151px"
-                    placeholder={"eg, -110 or 220"}
+                    placeholder={"enterML"}
                     marginLeft="10px"
                     marginRight="5px"
                   />
@@ -886,7 +882,7 @@ console.log("offstring", offstring);
             >
               <Flex
                 style={{
-                  color: "#B0B0B0",
+                  color: "#0099ff",
                   fontSize: "13px",
                 }}
               >

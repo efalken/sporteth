@@ -16,7 +16,7 @@ export default function Form({ label, inputWidth, placeholder, buttonWidth, butt
             </Box>
             <Box>
                 <Button style={{
-                    backgroundColor: "#424242",
+                    backgroundColor: "#910000",
                     borderRadius: "5px",
                     cursor: "pointer",
                   }} width={buttonWidth} onClick={onSubmit}>{buttonLabel}</Button>

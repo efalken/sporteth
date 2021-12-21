@@ -202,7 +202,7 @@ class Splash extends Component {
           </Flex>
         </Flex>
         <Box>
-          <Flex width="100%" alignItems="center" justifyContent="center">
+          <Flex width="100%" alignItems="center" justifyContent="center" color="859DA9">
             <Text size="20px">Event Logs</Text>
           </Flex>
         </Box>
