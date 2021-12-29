@@ -249,7 +249,7 @@ class BookiePagejs extends Component {
       let newBets0 = this.props.contracts["BettingMain"].margin[
         this.marginKey7
       ].value;
-      if (newBets0 !== 2000000000) {
+      if (newBets0 != 2000000000) {
         newBets = true;
       }
     }

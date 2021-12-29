@@ -393,7 +393,7 @@ class BigBetPagejs extends Component {
       let newBets0 = this.props.contracts["BettingMain"].margin[
         this.marginKey7
       ].value;
-      if (newBets0 !== 2000000000) {
+      if (newBets0 != 2000000000) {
         newBets = true;
       }
     }
@@ -706,7 +706,7 @@ class BigBetPagejs extends Component {
                         </tr>
                         {this.userOffers[id].map(
                           (event, index) =>
-                            event.Epoch === this.state.currW &&
+                            event.Epoch == this.state.currW &&
                             subcontracts[event.Hashoutput] &&
                             (
                               <tr key={index} style={{ width: "50%" }}>
@@ -1048,7 +1048,7 @@ class BigBetPagejs extends Component {
                       this.state.bigBets.map(
                         (bet, index) =>
                           //    bet.OfferTeamNum === this.state.teamPick &&
-                          bet.BigMatch === this.state.matchPick &&
+                          bet.BigMatch == this.state.matchPick &&
                           bet.OfferTeamNum === this.state.teamPick &&
                           subcontracts2[bet.OfferHash] && (
                             <tr style={{ width: "100%" }}>
