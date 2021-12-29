@@ -46,12 +46,13 @@ class BetPagejs extends Component {
 
   componentDidMount() {
     document.title = "Bet Page";
+    this.getbetHistoryArray();
     setInterval(() => {
       this.findValues();
       //  this.getbetHistoryArray();
       //  this.checkRedeem();
     }, 1000);
-    setImmediate(() => {
+    setInterval(() => {
       this.getbetHistoryArray();
     }, 5000)
   }
@@ -164,9 +165,8 @@ class BetPagejs extends Component {
           }, this);
           const betHistory = this.state.betHistory;
           betHistory[0] = eventdata;
-          console.log(betHistory)
-          this.setState({ betHistory });
           this.takekeys = takes;
+          this.setState({ betHistory });
         }.bind(this)
       );
   }
@@ -288,7 +288,6 @@ class BetPagejs extends Component {
       currW4 = this.props.contracts["BettingMain"].margin[this.marginKey3]
         .value;
     }
-
     let usedCapital = "0";
     if (this.marginKey1 in this.props.contracts["BettingMain"].margin) {
       let usedCapital0 = this.props.contracts["BettingMain"].margin[
@@ -627,29 +626,27 @@ class BetPagejs extends Component {
                             <td>DecOdds</td>
                           </tr>
                           {this.state.betHistory[id].map(
-                            (event, index) =>
-                              //  event.Epoch === this.currW4 &&
-                              event.Epoch === currW4 && (
-                                <tr key={index} style={{ width: "33%" }}>
-                                  <td>{event.Epoch}</td>
-                                  <td>{teamSplit[event.MatchNum][0]}</td>
-                                  <td>
-                                    {
-                                      teamSplit[event.MatchNum][
-                                      event.LongPick + 1
-                                      ]
-                                    }
-                                  </td>
-                                  <td>
-                                    {parseFloat(event.BetSize).toFixed(4)}
-                                  </td>
-                                  <td>
-                                    {Number(
-                                      event.Payoff / event.BetSize + 1
-                                    ).toFixed(4)}
-                                  </td>
-                                </tr>
-                              )
+                            (event, index) => event.Epoch == currW4 && (
+                              <tr key={index} style={{ width: "33%" }}>
+                                <td>{event.Epoch}</td>
+                                <td>{teamSplit[event.MatchNum][0]}</td>
+                                <td>
+                                  {
+                                    teamSplit[event.MatchNum][
+                                    event.LongPick + 1
+                                    ]
+                                  }
+                                </td>
+                                <td>
+                                  {parseFloat(event.BetSize).toFixed(4)}
+                                </td>
+                                <td>
+                                  {Number(
+                                    event.Payoff / event.BetSize + 1
+                                  ).toFixed(4)}
+                                </td>
+                              </tr>
+                            )
                           )}
                         </tbody>
                       </table>
