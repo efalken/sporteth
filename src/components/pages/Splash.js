@@ -8,14 +8,12 @@ import SplashDrizzleContract from "../blocks/SplashDrizzleContract";
 import { autoBind } from "react-extras";
 import wppdf from "../whitepaper/SportEth.pdf";
 import excelSheet from "../whitepaper/sportEthData.xlsx";
-import EthCrypto from 'eth-crypto';
 
 
 class Splash extends Component {
   constructor(props, context) {
     super(props);
     autoBind(this);
-
     this.state = {
       contracts: [
         {
@@ -75,7 +73,7 @@ class Splash extends Component {
                 // height="100%"
                 className="nav-header-wrap"
               >
-                {}
+                { }
                 <Flex
                   flexWrap="wrap"
                   width="100%"
@@ -84,7 +82,7 @@ class Splash extends Component {
                   style={{ cursor: "pointer" }}
                   variant="nav"
                 >
-                  {}
+                  { }
                   <Flex
                     alignItems="center"
                     height="100%"
@@ -116,6 +114,7 @@ class Splash extends Component {
                         }}
                         href="https://testnet.snowtrace.io/address/0x5e51b7f5ca7e3b7c969710be37f192e3d030f2b2"
                         target="_blank"
+                        rel="noreferrer"
                       >
                         EtherScan
                       </a>
@@ -155,7 +154,7 @@ class Splash extends Component {
                           cursor: "pointer",
                         }}
                         href="http://github.com/efalken/SportEth"
-                        //    href="FAQ.js"
+                      //    href="FAQ.js"
                       >
                         Github Project
                       </a>
@@ -170,9 +169,9 @@ class Splash extends Component {
               width={1}
               justifyContent="center"
               alignItems="center"
-              // style={{
-              //     height: "calc(100vh - 90px)"
-              // }}
+            // style={{
+            //     height: "calc(100vh - 90px)"
+            // }}
             >
               <Box mt="50px">
                 <Flex
@@ -184,8 +183,8 @@ class Splash extends Component {
                   alignItems="center"
                 >
                   {this.state.contracts.map((contract) =>
-                    contract.asset == "NFL" ? (
-                      <Box mr="20px" mb="20px" key={contract.id}>
+                    contract.asset === "NFL" ? (
+                      <Box mb="20px" key={contract.id}>
                         <SplashDrizzleContract
                           showActions={true}
                           key={contract.asset}

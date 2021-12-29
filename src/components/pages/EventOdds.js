@@ -6,7 +6,6 @@ import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
 import Oracle from "../../abis/Oracle.json";
 var moment = require("moment");
-var momentTz = require("moment-timezone");
 
 class EventOdds extends Component {
   constructor(props, context) {
@@ -22,7 +21,7 @@ class EventOdds extends Component {
 
   componentDidMount() {
     document.title = "Posted Odds Event Logs";
-      this.getOddsHistoryArray();
+    this.getOddsHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -44,7 +43,7 @@ class EventOdds extends Component {
       .getPastEvents("DecOddsPosted", {
         fromBlock: 2500000,
         toBlock: 'latest',
-      //  filter: { posted: true },
+        //  filter: { posted: true },
       })
       .then(
         function (events) {
@@ -54,7 +53,7 @@ class EventOdds extends Component {
               decOdds: element.returnValues.decOdds,
               time: Number(element.blockNumber),
               Epoch: element.returnValues.epoch,
-        //      post1: element.returnValues.posted,
+              //      post1: element.returnValues.posted,
             });
           }, this);
           this.priceHistory = pricedata;

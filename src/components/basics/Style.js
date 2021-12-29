@@ -1,2 +1,1 @@
-export
-    const Radius = "5px"
+export const Radius = "5px"

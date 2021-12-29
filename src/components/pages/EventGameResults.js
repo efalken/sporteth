@@ -5,15 +5,11 @@ import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
 import Oracle from "../../abis/Oracle.json";
-var moment = require("moment");
-var momentTz = require("moment-timezone");
 
 class EventGameoutcomes extends Component {
   constructor(props, context) {
     super(props);
     autoBind(this);
-
-
     this.currentContract = this.props.routeParams.contract;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
@@ -22,7 +18,7 @@ class EventGameoutcomes extends Component {
 
   componentDidMount() {
     document.title = "Match Result Event Logs";
-      this.getgameHistoryArray();
+    this.getgameHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -54,7 +50,7 @@ class EventGameoutcomes extends Component {
       .getPastEvents("ResultsPosted", {
         fromBlock: 2500000,
         toBlock: 'latest',
-      //  filter: { posted: true },
+        //  filter: { posted: true },
       })
       .then(
         function (events) {
@@ -63,7 +59,7 @@ class EventGameoutcomes extends Component {
               timestamp: Number(element.blockNumber),
               outcome: element.returnValues.winner,
               Epoch: Number(element.returnValues.epoch),
-          //    post1: element.returnValues.posted,
+              //    post1: element.returnValues.posted,
             });
           }, this);
           this.priceHistory = pricedata;
@@ -111,30 +107,30 @@ class EventGameoutcomes extends Component {
           <br />
           {this.priceHistory.map(
             (event) =>
-        //      event.post1 && (
-                <div>
-                  <Text size="12px" weight="200">
-                    {" "}
-                    {event.timestamp}, {event.Epoch}
-                    {": "}{event.outcome[0]}, {event.outcome[1]},{" "}
-                    {event.outcome[2]}, {event.outcome[3]}, {event.outcome[4]},{" "}
-                    {event.outcome[5]}, {event.outcome[6]}, {event.outcome[7]},{" "}
-                    {event.outcome[8]}, {event.outcome[9]}, {event.outcome[10]},{" "}
-                    {event.outcome[11]}, {event.outcome[12]},{" "}
-                    {event.outcome[13]}, {event.outcome[14]},{" "}
-                    {event.outcome[15]}, {event.outcome[16]},{" "}
-                    {event.outcome[17]}, {event.outcome[18]},{" "}
-                    {event.outcome[19]}, {event.outcome[20]},{" "}
-                    {event.outcome[21]}, {event.outcome[22]},{" "}
-                    {event.outcome[23]}, {event.outcome[24]},{" "}
-                    {event.outcome[25]}, {event.outcome[26]},{" "}
-                    {event.outcome[27]}, {event.outcome[28]},{" "}
-                    {event.outcome[29]}, {event.outcome[30]},{" "}
-                    {event.outcome[31]}
-                  </Text>
-                  <br />
-                </div>
-          //    )
+              //      event.post1 && (
+              <div>
+                <Text size="12px" weight="200">
+                  {" "}
+                  {event.timestamp}, {event.Epoch}
+                  {": "}{event.outcome[0]}, {event.outcome[1]},{" "}
+                  {event.outcome[2]}, {event.outcome[3]}, {event.outcome[4]},{" "}
+                  {event.outcome[5]}, {event.outcome[6]}, {event.outcome[7]},{" "}
+                  {event.outcome[8]}, {event.outcome[9]}, {event.outcome[10]},{" "}
+                  {event.outcome[11]}, {event.outcome[12]},{" "}
+                  {event.outcome[13]}, {event.outcome[14]},{" "}
+                  {event.outcome[15]}, {event.outcome[16]},{" "}
+                  {event.outcome[17]}, {event.outcome[18]},{" "}
+                  {event.outcome[19]}, {event.outcome[20]},{" "}
+                  {event.outcome[21]}, {event.outcome[22]},{" "}
+                  {event.outcome[23]}, {event.outcome[24]},{" "}
+                  {event.outcome[25]}, {event.outcome[26]},{" "}
+                  {event.outcome[27]}, {event.outcome[28]},{" "}
+                  {event.outcome[29]}, {event.outcome[30]},{" "}
+                  {event.outcome[31]}
+                </Text>
+                <br />
+              </div>
+            //    )
           )}
         </div>
       );

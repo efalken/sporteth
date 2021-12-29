@@ -5,8 +5,6 @@ import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
 import Betting from "../../abis/Betting.json";
-var moment = require("moment");
-var momentTz = require("moment-timezone");
 
 
 class EventBetRecord extends Component {
@@ -23,7 +21,7 @@ class EventBetRecord extends Component {
 
   componentDidMount() {
     document.title = "Bet Event Logs";
-      this.getRegBets();
+    this.getRegBets();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -54,10 +52,10 @@ class EventBetRecord extends Component {
               Epoch: Number(element.returnValues.epoch),
               //Offer: Boolean(element.returnValues.Offer).toString(),
               //Offer: element.returnValues.offer,
-              BetSize: Number(element.returnValues.betAmount/10000),
+              BetSize: Number(element.returnValues.betAmount / 10000),
               LongPick: Number(element.returnValues.pick),
               MatchNum: Number(element.returnValues.matchNum),
-              Payoff: Number(element.returnValues.payoff/10000),
+              Payoff: Number(element.returnValues.payoff / 10000),
               Hashoutput: element.returnValues.contractHash,
               BettorAddress: element.returnValues.bettor
             });

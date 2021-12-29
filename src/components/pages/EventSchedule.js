@@ -3,17 +3,13 @@ import { drizzleConnect } from "@drizzle/react-plugin";
 import PropTypes from "prop-types";
 import { autoBind } from "react-extras";
 import Text from "../basics/Text";
-import IndicatorD from "../basics/IndicatorD";
 import Oracle from "../../abis/Oracle.json";
 import { Box, Flex } from "@rebass/grid";
-var moment = require("moment");
-var momentTz = require("moment-timezone");
 
 class EventSchedule extends Component {
   constructor(props, context) {
     super(props);
     autoBind(this);
-
     this.currentContract = this.props.routeParams.contract;
     this.asset_id = 1;
     this.contracts = context.drizzle.contracts;
@@ -23,7 +19,7 @@ class EventSchedule extends Component {
 
   componentDidMount() {
     document.title = "Schedule Event Logs";
-      this.getbetHistoryArray();
+    this.getbetHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {
@@ -59,7 +55,7 @@ class EventSchedule extends Component {
               games: element.returnValues.sched,
               Epoch: element.returnValues.epoch,
               time: Number(element.blockNumber),
-          //    post1: element.returnValues.posted,
+              //    post1: element.returnValues.posted,
             });
           }, this);
           this.matchHistory = pricedata;
@@ -119,26 +115,26 @@ class EventSchedule extends Component {
           <br />
           {this.matchHistory.map(
             (event) =>
-    //          event.post1 && (
-                <div>
-                  <Text size="12px" weight="200">
-                    {" "}
-                    {event.time},{" "},
-                    {event.Epoch},{event.games[0]},{event.games[1]}
-                    ,{event.games[2]},{event.games[3]},{event.games[4]},
-                    {event.games[5]},{event.games[6]},{event.games[7]},
-                    {event.games[8]},{event.games[9]},{event.games[10]},
-                    {event.games[11]},{event.games[12]},{event.games[13]},
-                    {event.games[14]},{event.games[15]},{event.games[16]},
-                    {event.games[17]},{event.games[18]},{event.games[19]},
-                    {event.games[20]},{event.games[21]},{event.games[22]},
-                    {event.games[23]},{event.games[24]},{event.games[25]},
-                    {event.games[26]},{event.games[27]},{event.games[28]},
-                    {event.games[29]},{event.games[30]},{event.games[31]}
-                  </Text>
-                  <br />
-                </div>
-      //        )
+              //          event.post1 && (
+              <div>
+                <Text size="12px" weight="200">
+                  {" "}
+                  {event.time},{" "},
+                  {event.Epoch},{event.games[0]},{event.games[1]}
+                  ,{event.games[2]},{event.games[3]},{event.games[4]},
+                  {event.games[5]},{event.games[6]},{event.games[7]},
+                  {event.games[8]},{event.games[9]},{event.games[10]},
+                  {event.games[11]},{event.games[12]},{event.games[13]},
+                  {event.games[14]},{event.games[15]},{event.games[16]},
+                  {event.games[17]},{event.games[18]},{event.games[19]},
+                  {event.games[20]},{event.games[21]},{event.games[22]},
+                  {event.games[23]},{event.games[24]},{event.games[25]},
+                  {event.games[26]},{event.games[27]},{event.games[28]},
+                  {event.games[29]},{event.games[30]},{event.games[31]}
+                </Text>
+                <br />
+              </div>
+            //        )
           )}
         </div>
       );

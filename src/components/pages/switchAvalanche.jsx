@@ -60,21 +60,21 @@ export async function switchToAvalanche() {
   }
 }
 
-function App() {
-  const chainId = useChainId();
-  console.log("I got back a chainId of", chainId);
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>You are using Chain ID {chainId}.</p>
-        {<p>{chainId}</p>}
-        {chainId === 43113 && <p>You're all set on AVAX!</p>}
-        {chainId !== 43113 && (
-          <button disabled={chainId === 43113} onClick={switchToAvalanche}>
-            Switch to AVAX
-          </button>
-        )}
-      </header>
-    </div>
-  );
-}
+// function App() {
+//   const chainId = useChainId();
+//   console.log("I got back a chainId of", chainId);
+//   return (
+//     <div className="App">
+//       <header className="App-header">
+//         <p>You are using Chain ID {chainId}.</p>
+//         {<p>{chainId}</p>}
+//         {chainId === 43113 && <p>You're all set on AVAX!</p>}
+//         {chainId !== 43113 && (
+//           <button disabled={chainId === 43113} onClick={switchToAvalanche}>
+//             Switch to AVAX
+//           </button>
+//         )}
+//       </header>
+//     </div>
+//   );
+// }

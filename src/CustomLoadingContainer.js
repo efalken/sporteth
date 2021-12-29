@@ -15,7 +15,7 @@ class CustomLoader extends Component {
     super(props);
   }
 
-  async main()  {
+  async main() {
     console.log(this.context);
     const drizz = this.context.drizzle;
     var FOOT0Config = {
@@ -45,6 +45,7 @@ class CustomLoader extends Component {
     this.context.drizzle.addContract(FOOT0Config);
     this.context.drizzle.addContract(FOOT1Config);
     this.context.drizzle.addContract(FOOT2Config);
+
   }
 
   componentDidMount() {

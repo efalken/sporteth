@@ -1,11 +1,9 @@
-import {D} from '../basics/Colors'
-import {Box, Flex} from '@rebass/grid'
+import { D } from '../basics/Colors'
+import { Box, Flex } from '@rebass/grid'
 import React from 'react'
 import Text from '../basics/Text'
 import Button from '../basics/Button'
 import TruncatedAddress from '../basics/TruncatedAddress.js'
-import Input from '../basics/Input.js'
-import Form from '../basics/Form.js'
 
 export default ({
   fields,

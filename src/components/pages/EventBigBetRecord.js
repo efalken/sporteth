@@ -5,15 +5,11 @@ import { autoBind } from "react-extras";
 import Text from "../basics/Text";
 import IndicatorD from "../basics/IndicatorD";
 import BettingContract from "../../abis/Betting.json";
-var moment = require("moment");
-var momentTz = require("moment-timezone");
 
 class EventBigBetRecord extends Component {
   constructor(props, context) {
     super(props);
     autoBind(this);
-
-
     this.currentContract = this.props.routeParams.contract;
     this.contracts = context.drizzle.contracts;
     this.drizzle = context.drizzle;
@@ -22,7 +18,7 @@ class EventBigBetRecord extends Component {
 
   componentDidMount() {
     document.title = "Big Bet Event Logs";
-      this.getbetHistoryArray();
+    this.getbetHistoryArray();
   }
 
   timeConverter(UNIX_timestamp) {

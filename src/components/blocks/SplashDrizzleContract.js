@@ -3,11 +3,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Flex } from '@rebass/grid'
 import { Radius } from '../basics/Style'
-import { B, A, E, K } from '../basics/Colors.js'
-import Text from '../basics/Text.js'
-import Triangle from '../basics/Triangle.js'
+import { B } from '../basics/Colors.js'
 import { If, autoBind } from 'react-extras'
-import Button from '../basics/Button'
 import { useChainId, switchToAvalanche } from "../pages/switchAvalanche";
 
 
@@ -36,7 +33,7 @@ class SplashDrizzleContract extends Component {
                   backgroundColor: B,
                   cursor: "pointer",
                   display: "flex",
-                    borderRadius: "2px",
+                  borderRadius: "2px",
                   alignItems: "center",
                   width: "15em",
                   justifyContent: "flex-end",
@@ -44,12 +41,12 @@ class SplashDrizzleContract extends Component {
                 display="flex"
                 flexDirection="row"
               >
-                <ChainSwitch/>
-                  <a
-                    href={"/betpage"}
-                    style={{ textDecoration: "none" }}
-                  >
-                  </a>
+                <ChainSwitch />
+                <a
+                  href={"/betpage"}
+                  style={{ textDecoration: "none" }}
+                >
+                </a>
               </Box>
             )}
           />
@@ -72,30 +69,34 @@ const mapStateToProps = state => {
   }
 }
 
-const ChainSwitch=()=>{
-    const chainid = useChainId()
-    console.log("chainid", chainid);
-    if (chainid === 43113) {
-      return (<a href="/betpage"><Box><button
-          style={{
-            backgroundColor: "#707070",
-            borderRadius: "2px",
-            cursor: "pointer",
-          }}
-      //    onClick={() => switchToAvalanche()}
+const ChainSwitch = () => {
+  const chainid = useChainId()
+  console.log("chainid", chainid);
+  if (chainid === 43113) {
+    return (<a href="/betpage"><Box><button
+      style={{
+        backgroundColor: "#707070",
+        color: "white",
+        borderRadius: "2px",
+        cursor: "pointer",
+        padding: '10px'
+      }}
+    //    onClick={() => switchToAvalanche()}
     //    href={"/betpage"}
-         > Click Here to Enter Main Betting Page </button></Box></a>)
-    } else {
-      return (<Box><button
-          style={{
-            backgroundColor: "#424242",
-            borderRadius: "2px",
-            cursor: "pointer",
-          }}
-          onClick={() => switchToAvalanche()}
-         > switch to AVAX Network and Enter</button> </Box>)
-    }
+    > Click Here to Enter Main Betting Page </button></Box></a>)
+  } else {
+    return (<Box><button
+      style={{
+        backgroundColor: "#424242",
+        borderRadius: "2px",
+        cursor: "pointer",
+        color: 'white',
+        padding: '10px'
+      }}
+      onClick={() => switchToAvalanche()}
+    > switch to AVAX Network and Enter</button> </Box>)
+  }
 
-     }
+}
 
 export default drizzleConnect(SplashDrizzleContract, mapStateToProps);

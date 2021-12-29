@@ -8,22 +8,17 @@ import { Box, Flex } from "@rebass/grid";
 import Logo from "../basics/Logo";
 import Text from "../basics/Text";
 import Form from "../basics/Form.js";
-import { G, Ggg } from "../basics/Colors";
+import { G } from "../basics/Colors";
 import { autoBind } from "react-extras";
 import ButtonEthScan from "../basics/ButtonEthScan.js";
 import Input from "../basics/Input.js";
 import Button from "../basics/Button.js";
-import ButtonI from "../basics/ButtonI.js";
 import TruncatedAddress from "../basics/TruncatedAddress.js";
 import VBackgroundCom from "../basics/VBackgroundCom";
 import BettingContract from "../../abis/Betting.json";
-import OracleContract from "../../abis/Oracle.json";
-import TokenContract from "../../abis/Token.json";
-import { useChainId, switchToAvalanche } from "./switchAvalanche";
 
 
 var moment = require("moment");
-var Web3 = require("web3");
 
 class BetPagejs extends Component {
   constructor(props, context) {
@@ -32,7 +27,6 @@ class BetPagejs extends Component {
 
     this.contracts = context.drizzle.contracts;
     this.web3 = web3;
-    this.betHistory = [];
     this.currentOfferts = [];
     this.takekeys = {};
     this.chainID = [];
@@ -46,17 +40,20 @@ class BetPagejs extends Component {
       matchPick: null,
       showDecimalOdds: false,
       viewedTxs: 0,
+      betHistory: []
     };
   }
 
   componentDidMount() {
     document.title = "Bet Page";
-    this.getbetHistoryArray();
     setInterval(() => {
       this.findValues();
       //  this.getbetHistoryArray();
       //  this.checkRedeem();
     }, 1000);
+    setImmediate(() => {
+      this.getbetHistoryArray();
+    }, 5000)
   }
 
   handleBetSize(value) {
@@ -78,43 +75,41 @@ class BetPagejs extends Component {
 
   async fundBettor(x) {
     try {
-    const stackId = await  this.contracts["BettingMain"].methods.fundBettor.cacheSend({
-      from: this.props.accounts[0],
-      value: this.state.fundAmount * 1e18,
-    });
-    console.log("stackid", stackId);
-  } catch (error) {console.log("igotanerror",error)}
+      const stackId = await this.contracts["BettingMain"].methods.fundBettor.cacheSend({
+        from: this.props.accounts[0],
+        value: this.state.fundAmount * 1e18,
+      });
+      console.log("stackid", stackId);
+    } catch (error) { console.log("igotanerror", error) }
   }
 
   withdrawBettor(x) {
-    const stackId = this.contracts[
+    this.contracts[
       "BettingMain"
-    ].methods.withdrawBettor.cacheSend(this.state.wdAmount*10000, {
+    ].methods.withdrawBettor.cacheSend(this.state.wdAmount * 10000, {
       from: this.props.accounts[0],
     });
   }
 
-  takeBet() {
-    const stackId = this.contracts[
+  async takeBet() {
+    const stackId = await this.contracts[
       "BettingMain"
     ].methods.bet.cacheSend(
       this.state.matchPick,
       this.state.teamPick,
-      this.state.betAmount*10000,
+      this.state.betAmount * 10000,
       {
         from: this.props.accounts[0],
       }
     );
+    console.log("World", stackId)
   }
 
   redeemBet(x) {
-    const stackId = this.contracts["BettingMain"].methods.redeem.cacheSend(
-      x, {
-        from: this.props.accounts[0],
-
-      }
+    this.contracts["BettingMain"].methods.redeem.cacheSend(
+      x,
+      { from: this.props.accounts[0] }
     );
-    setTimeout(this.getbetHistoryArray(), 5000);
   }
 
   switchOdds() {
@@ -122,7 +117,7 @@ class BetPagejs extends Component {
   }
 
   openEtherscan(txhash) {
-    const url = "https://testnet.snowtrace.io/tx/" + txhash;
+    // const url = "https://testnet.snowtrace.io/tx/" + txhash;
     const urltest = "https://testnet.snowtrace.io/tx/" + txhash;
     console.log("urleric", urltest);
     window.open(urltest, "_blank");
@@ -156,19 +151,21 @@ class BetPagejs extends Component {
               BettorAddress: element.returnValues.bettor,
               Epoch: Number(element.returnValues.epoch),
               timestamp: Number(element.blockNumber.timestamp),
-              BetSize: Number(element.returnValues.betAmount/10000),
-          //    Offer: element.returnValues.Offer,
+              BetSize: Number(element.returnValues.betAmount / 10000),
+              //    Offer: element.returnValues.Offer,
               LongPick: Number(element.returnValues.pick),
               MatchNum: Number(element.returnValues.matchNum),
-              Payoff: Number(0.95 * element.returnValues.payoff /10000),
+              Payoff: Number(0.95 * element.returnValues.payoff / 10000),
 
             });
             takes[element.returnValues.contractHash] = this.contracts[
               "BettingMain"
-            ].methods.checkRedeem.cacheCall(element.returnValues.
-                contractHash).toString();
+            ].methods.checkRedeem.cacheCall(element.returnValues.contractHash).toString();
           }, this);
-          this.betHistory[0] = eventdata;
+          const betHistory = this.state.betHistory;
+          betHistory[0] = eventdata;
+          console.log(betHistory)
+          this.setState({ betHistory });
           this.takekeys = takes;
         }.bind(this)
       );
@@ -317,19 +314,19 @@ class BetPagejs extends Component {
       let newBets0 = this.props.contracts["BettingMain"].margin[
         this.marginKey7
       ].value;
-      if (newBets0 != 2000000000) {
+      if (newBets0 !== 2000000000) {
         newBets = true;
       }
     }
-console.log("newBets", newBets);
+    // console.log("newBets", newBets);
 
-    let tokenAmount = "0";
-    if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
-      let ta = this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value;
-      if (ta) {
-        tokenAmount = ta;
-      }
-    }
+    // let tokenAmount = "0";
+    // if (this.tokenKey in this.props.contracts["TokenMain"].balanceOf) {
+    //   let ta = this.props.contracts["TokenMain"].balanceOf[this.tokenKey].value;
+    //   if (ta) {
+    //     tokenAmount = ta;
+    //   }
+    // }
 
     let betData = [];
     if (this.betDataKey in this.props.contracts["BettingMain"].showBetData) {
@@ -339,6 +336,7 @@ console.log("newBets", newBets);
         betData = st;
       }
     }
+
 
     let scheduleString = ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
 
@@ -373,15 +371,15 @@ console.log("newBets", newBets);
     xdecode = this.unpack256(betData[0]);
 
     if (xdecode[6] > 0) {
-    for (let ii = 0; ii < 32; ii++) {
-      xdecode = this.unpack256(betData[ii]);
-      odds0[ii] = Number(xdecode[6]);
-      odds1[ii] = Number(xdecode[7]);
-      startTimeColumn[ii] = xdecode[5];
-      netLiab[0][ii] = (Number(xdecode[2]) - Number(xdecode[1])) / 10;
-      netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
+      for (let ii = 0; ii < 32; ii++) {
+        xdecode = this.unpack256(betData[ii]);
+        odds0[ii] = Number(xdecode[6]);
+        odds1[ii] = Number(xdecode[7]);
+        startTimeColumn[ii] = xdecode[5];
+        netLiab[0][ii] = (Number(xdecode[2]) - Number(xdecode[1])) / 10;
+        netLiab[1][ii] = (Number(xdecode[3]) - Number(xdecode[0])) / 10;
+      }
     }
-  }
 
 
     let oddsTot = [odds0, odds1];
@@ -443,7 +441,7 @@ console.log("newBets", newBets);
           </td>
           <td>
             {this.state.showDecimalOdds
-              ? (1 + 95 * oddsTot[0][i] /100000).toFixed(3)
+              ? (1 + 95 * oddsTot[0][i] / 100000).toFixed(3)
               : this.getMoneyLine((95 * oddsTot[0][i]) / 100)}
           </td>
           <td style={{ textAlign: "left", paddingLeft: "15px" }}>
@@ -462,7 +460,7 @@ console.log("newBets", newBets);
           </td>
           <td>
             {this.state.showDecimalOdds
-              ? (1 + 95 * oddsTot[1][i]/100000).toFixed(3)
+              ? (1 + 95 * oddsTot[1][i] / 100000).toFixed(3)
               : this.getMoneyLine((95 * oddsTot[1][i]) / 100)}
           </td>
           <td>{moment.unix(startTimeColumn[i]).format("MMMDD-ha")}</td>
@@ -470,7 +468,7 @@ console.log("newBets", newBets);
       );
     }
 
-    console.log("offers", oddsTot[1][1]);
+    // console.log("offers", oddsTot[1][1]);
 
     return (
       <div>
@@ -489,11 +487,11 @@ console.log("newBets", newBets);
                 <Flex style={{ borderTop: `thin solid ${G}` }}></Flex>
               </Box>
               <Box>
-              <Flex
-                mt="20px"
-                flexDirection="row"
-                justifyContent="space-between"
-              ></Flex>
+                <Flex
+                  mt="20px"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                ></Flex>
               </Box>
               <Box>
                 <Flex>
@@ -555,7 +553,7 @@ console.log("newBets", newBets);
                   transform="uppercase"
                   spacing="1px"
                 />
-            <Text>Your available margin: {Number(userBalance).toFixed(3)} ETH</Text>
+                <Text>Your available margin: {Number(userBalance).toFixed(3)} ETH</Text>
               </Box>
               <Box>
                 <Flex
@@ -594,16 +592,16 @@ console.log("newBets", newBets);
               </Box>
 
               {this.props.transactionStack.length > 0 &&
-              this.state.viewedTxs < this.props.transactionStack.length &&
-              this.props.transactionStack[
-                this.props.transactionStack.length - 1
-              ].length === 66 ? (
+                this.state.viewedTxs < this.props.transactionStack.length &&
+                this.props.transactionStack[
+                  this.props.transactionStack.length - 1
+                ].length === 66 ? (
                 <Flex alignItems="center">
                   <ButtonEthScan
                     onClick={() =>
                       this.openEtherscan(
                         this.props.transactionStack[
-                          this.props.transactionStack.length - 1
+                        this.props.transactionStack.length - 1
                         ]
                       )
                     }
@@ -615,7 +613,7 @@ console.log("newBets", newBets);
               ) : null}
               <Box>
                 <Flex>
-                  {Object.keys(this.betHistory).map((id) => (
+                  {Object.keys(this.state.betHistory).map((id) => (
                     <div key={id} style={{ width: "100%", float: "left" }}>
                       <Text> Your active bets</Text>
                       <br />
@@ -628,17 +626,17 @@ console.log("newBets", newBets);
                             <td>BetSize</td>
                             <td>DecOdds</td>
                           </tr>
-                          {this.betHistory[id].map(
+                          {this.state.betHistory[id].map(
                             (event, index) =>
                               //  event.Epoch === this.currW4 &&
-                              event.Epoch == currW4 && (
+                              event.Epoch === currW4 && (
                                 <tr key={index} style={{ width: "33%" }}>
                                   <td>{event.Epoch}</td>
                                   <td>{teamSplit[event.MatchNum][0]}</td>
                                   <td>
                                     {
                                       teamSplit[event.MatchNum][
-                                        event.LongPick + 1
+                                      event.LongPick + 1
                                       ]
                                     }
                                   </td>
@@ -673,7 +671,7 @@ console.log("newBets", newBets);
               </Box>
               <Box>
                 <Flex>
-                  {Object.keys(this.betHistory).map((id) => (
+                  {Object.keys(this.state.betHistory).map((id) => (
                     <div key={id} style={{ width: "100%", float: "left" }}>
                       <Text size="15px">Active Epoch: {currW4}</Text>
                       <br />
@@ -694,7 +692,7 @@ console.log("newBets", newBets);
                             <td>Your Payout</td>
                             <td>Click to Claim</td>
                           </tr>
-                          {this.betHistory[id].map(
+                          {this.state.betHistory[id].map(
                             (event, index) =>
                               //  (event.Epoch = currW4) &&
                               subcontracts[event.Hashoutput] && (
@@ -704,14 +702,14 @@ console.log("newBets", newBets);
                                   <td>
                                     {
                                       teamSplit[event.MatchNum][
-                                        event.LongPick + 1
+                                      event.LongPick + 1
                                       ]
                                     }
                                   </td>
                                   <td>
                                     {(
                                       (event.Payoff +
-                                      event.BetSize)
+                                        event.BetSize)
                                     ).toFixed(3)}
                                   </td>
                                   <td>
@@ -740,17 +738,17 @@ console.log("newBets", newBets);
                 </Flex>
               </Box>
               <Box>
-              <Flex
-                mt="20px"
-                flexDirection="row"
-                justifyContent="space-between"
-              ></Flex>
-              <Flex
-                               style={{
-                                 borderTop: `thin solid ${G}`,
-                               }}
-                             ></Flex>
-                            </Box>
+                <Flex
+                  mt="20px"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                ></Flex>
+                <Flex
+                  style={{
+                    borderTop: `thin solid ${G}`,
+                  }}
+                ></Flex>
+              </Box>
               <Flex
                 mt="5px"
                 flexDirection="row"
@@ -884,7 +882,7 @@ console.log("newBets", newBets);
                 {"  "}
                 Odds:{" "}
                 {(
-                  0.95 * oddsTot[this.state.teamPick][this.state.matchPick]/1000 +
+                  0.95 * oddsTot[this.state.teamPick][this.state.matchPick] / 1000 +
                   1
                 ).toFixed(3)}
                 {" (MoneyLine "}
@@ -908,7 +906,7 @@ console.log("newBets", newBets);
                 Odds:{" "}
                 {(
                   0.95 *
-                    oddsTot[1 - this.state.teamPick][this.state.matchPick]/1000 +
+                  oddsTot[1 - this.state.teamPick][this.state.matchPick] / 1000 +
                   1
                 ).toFixed(3)}
                 {"  "}
@@ -980,24 +978,5 @@ const mapStateToProps = (state) => {
     transactionStack: state.transactionStack,
   };
 };
-
-const ChainCheck=()=>{
-    const chainid = useChainId()
-    return ({chainid})
-}
-
-const ChainSwitch=()=>{
-    const chainid = useChainId()
-    return (<Box>not on Avalanche <button
-        style={{
-          backgroundColor: "#707070",
-          borderRadius: "2px",
-          cursor: "pointer",
-        }}
-        onClick={() => switchToAvalanche()}
-       > switch to Avalanche</button> </Box>)
-}
-
-
 
 export default drizzleConnect(BetPagejs, mapStateToProps);

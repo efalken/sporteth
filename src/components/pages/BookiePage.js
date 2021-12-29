@@ -6,18 +6,13 @@ import Split from "../layout/Split";
 import { Box, Flex } from "@rebass/grid";
 import Logo from "../basics/Logo";
 import Text from "../basics/Text";
-import { G, H } from "../basics/Colors";
+import { G } from "../basics/Colors";
 import LabeledText from "../basics/LabeledText";
 import { autoBind } from "react-extras";
 import Form from "../basics/Form.js";
 import ButtonEthScan from "../basics/ButtonEthScan.js";
-import WarningSign from "../basics/WarningSign";
-import Button from "../basics/Button.js";
-import Token1 from "../../abis/Token.json";
 import TruncatedAddress from "../basics/TruncatedAddress.js";
 import VBackgroundCom from "../basics/VBackgroundCom";
-var moment = require("moment");
-var tokenBal = "";
 
 class BookiePagejs extends Component {
   constructor(props, context) {
@@ -72,7 +67,7 @@ class BookiePagejs extends Component {
 
   wdBook() {
     console.log("sharesToSell", this.state.sharesToSell);
-    const stackId = this.contracts[
+    this.contracts[
       "BettingMain"
     ].methods.withdrawBook.cacheSend(this.state.sharesToSell, {
       from: this.props.accounts[0],
@@ -87,7 +82,7 @@ class BookiePagejs extends Component {
   }
 
   inactivateBook() {
-    const stackId = this.contracts[
+    this.contracts[
       "BettingMain"
     ].methods.inactiveBook.cacheSend();
   }
@@ -168,7 +163,7 @@ class BookiePagejs extends Component {
     if (this.unusedKey in this.props.contracts["BettingMain"].margin) {
       let uc = this.props.contracts["BettingMain"].margin[this.unusedKey].value;
       if (uc) {
-        unusedCapital = uc/10000;
+        unusedCapital = uc / 10000;
       }
     }
 
@@ -178,7 +173,7 @@ class BookiePagejs extends Component {
     if (this.usedKey in this.props.contracts["BettingMain"].margin) {
       let uc = this.props.contracts["BettingMain"].margin[this.usedKey].value;
       if (uc) {
-        usedCapital = uc/10000;
+        usedCapital = uc / 10000;
       }
     }
 
@@ -187,7 +182,7 @@ class BookiePagejs extends Component {
       let bc = this.props.contracts["BettingMain"].margin[this.betCapitalKey]
         .value;
       if (bc) {
-        betCapital = bc/10000;
+        betCapital = bc / 10000;
       }
     }
 
@@ -197,19 +192,19 @@ class BookiePagejs extends Component {
       ].value;
     }
 
-    let bookieStruct = {
-      0: "0",
-      1: "0",
-      shares: "0",
-      outEpoch: "0",
-    };
+    // let bookieStruct = {
+    //   0: "0",
+    //   1: "0",
+    //   shares: "0",
+    //   outEpoch: "0",
+    // };
     let bookieShares = "0";
     let bookieEpoch = "0";
     if (this.sharesKey in this.props.contracts["BettingMain"].lpStruct) {
       let bs = this.props.contracts["BettingMain"].lpStruct[this.sharesKey]
         .value;
       if (bs) {
-        bookieStruct = bs;
+        // bookieStruct = bs;
         bookieShares = bs.shares;
         bookieEpoch = bs.outEpoch;
       }
@@ -236,28 +231,28 @@ class BookiePagejs extends Component {
       (Number(bookieShares) * (Number(unusedCapital) + Number(usedCapital))) /
       Number(totalShares);
 
-      let scheduleString =  ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
+    let scheduleString = ["check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a", "check later...: n/a: n/a"];
 
-      let startTimeColumn = [1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932];
+    let startTimeColumn = [1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932, 1640455932];
 
 
-      let bets0 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+    let bets0 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
-      let bets1 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+    let bets1 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
-      let payoff0 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+    let payoff0 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
-      let payoff1 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+    let payoff1 = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
-      let newBets = false;
-      if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
-        let newBets0 = this.props.contracts["BettingMain"].margin[
-          this.marginKey7
-        ].value;
-        if (newBets0 != 2000000000) {
-          newBets = true;
-        }
+    let newBets = false;
+    if (this.marginKey7 in this.props.contracts["BettingMain"].margin) {
+      let newBets0 = this.props.contracts["BettingMain"].margin[
+        this.marginKey7
+      ].value;
+      if (newBets0 !== 2000000000) {
+        newBets = true;
       }
+    }
 
 
     if (
@@ -386,7 +381,7 @@ class BookiePagejs extends Component {
               </Box>
 
               {this.props.transactionStack.length > 0 &&
-              this.props.transactionStack[0].length === 66 ? (
+                this.props.transactionStack[0].length === 66 ? (
                 <Flex alignItems="center">
                   <ButtonEthScan
                     onClick={() =>

@@ -5,7 +5,6 @@ import Input from './Input'
 import Button from './Button'
 import Text from './Text'
 
-
 export default function Form({ label, inputWidth, placeholder, buttonWidth, buttonLabel, justifyContent, value, onChange, onSubmit, ...props }) {
     return <Box
         {...props}>
@@ -19,7 +18,7 @@ export default function Form({ label, inputWidth, placeholder, buttonWidth, butt
                     backgroundColor: "#910000",
                     borderRadius: "5px",
                     cursor: "pointer",
-                  }} width={buttonWidth} onClick={onSubmit}>{buttonLabel}</Button>
+                }} width={buttonWidth} onClick={onSubmit}>{buttonLabel}</Button>
             </Box>
         </Flex>
     </Box>
