@@ -15,6 +15,7 @@ const drizzleOptions = {
     }
 
   },
+  syncAlways: true,
 
   contracts: [Betting],
   /*  events: {
